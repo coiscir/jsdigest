@@ -54,6 +54,17 @@ log('== Digest ==');
 test(true, !!window.Digest, 'Digest is defined');
 test('string', window.Digest.Version, 'Digest.Version');
 
+space();
+
+log('== Digest.Encoder ==');
+test(true, !!Digest.Encoder, 'Digest.Encoder is defined');
+test(Digest.Encoder, Digest.Encoder([0x41]), 'Digest.Encoder(Array)');
+test(Digest.Encoder, Digest.Encoder('abcd'), 'Digest.Encoder(String)');
+test(Error, function(){ return Digest.Encoder(['a', 'b']); }, 'Invalid Array elements');
+space();
+test('abcd', Digest.Encoder('abcd').string(), 'Digest.Encoder#string');
+test('abcd', Digest.Encoder(Digest.Encoder('abcd')).string(), 'Digest.Encoder#string w/ cloning');
+
 </script>
 
 </body>

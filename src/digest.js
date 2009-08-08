@@ -6,5 +6,6 @@
 "use strict";
 
 <%= include(
-  'digest.core.js'
+  'digest.core.js',
+  'digest.encoder.js'
 ) %>
