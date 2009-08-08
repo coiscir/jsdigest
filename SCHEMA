@@ -1,0 +1,25 @@
+Digest                      # Namespace / Global
+  
+  fn                        # prototype clone
+  
+  Encoder
+    constructor(array)      # 0x0000-0xffff
+    constructor(string)     # \u0000-\uffff
+    
+    # Multi-byte
+    array()                 # 0x0000-0xffff
+    string()                # \u0000-\uffff
+    
+    # Single-byte
+    single()                # 0x00-0xff, truncated
+    multi()                 # 0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
+    ansi()                  # \x00-\xff, truncated
+    unicode()               # \x00-\xff, UTF-8 encoded
+    
+    # RFC-3548 encoding
+    hex()                   # 0-9 a-f (lower)
+    base16()                # 0-9 A-F (upper)
+    base32()                # A-Z 2-7 (upper)
+    base32hex()             # 0-9 a-v (lower)
+    base64()                # A-Z a-z 0-9 + /
+    base64url()             # A-Z a-z 0-9 - _ (url/filename safe)
