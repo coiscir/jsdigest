@@ -74,6 +74,52 @@
     };
     
     
+    /** Single-byte outputs **/
+    
+    // 0x00-0xff, truncated
+    this.single = function single() {
+      for (var i = 0, arr = []; i < sequence.length; i += 1) {
+        arr.push(sequence[i] & 0xff);
+      }
+      return arr;
+    };
+    
+    // 0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
+    this.multi = function multi() {
+      for (var i = 0, arr = []; i < sequence.length; i += 1) {
+        arr.push((sequence[i] >> 8) & 0xff);
+        arr.push((sequence[i] >> 0) & 0xff);
+      }
+      return arr;
+    };
+    
+    // \x00-\xff, truncated
+    this.ansi = function ansi() {
+      for (var i = 0, str = ''; i < sequence.length; i += 1) {
+        str += String.fromCharCode(sequence[i] & 0xff);
+      }
+      return str;
+    };
+    
+    // \x00-\xff, UTF-8 encoded
+    this.unicode = function unicode() {
+      for (var i = 0, code, str = ''; i < sequence.length; i += 1) {
+        code = sequence[i];
+        if (code < 0x80) {
+          str += String.fromCharCode(code);
+        } else if (code < 0x800) {
+          str += String.fromCharCode(0xc0 + ((code >>  6) & 0x1f));
+          str += String.fromCharCode(0x80 + ((code >>  0) & 0x3f));
+        } else {
+          str += String.fromCharCode(0xe0 + ((code >> 12) & 0x0f));
+          str += String.fromCharCode(0x80 + ((code >>  6) & 0x3f));
+          str += String.fromCharCode(0x80 + ((code >>  0) & 0x3f));
+        }
+      }
+      return str;
+    };
+    
+    
     /** Overrides **/
     
     this.valueOf = function valueOf() {
