@@ -78,6 +78,13 @@ test('4142',      Digest.Encoder('AB').base16(),  'Encoder#base16');
 test('IFBA====',  Digest.Encoder('AB').base32(),  'Encoder#base32');
 test('QUI=',      Digest.Encoder('AB').base64(),  'Encoder#base64');
 
+space();
+log('== Hash: MD ==');
+test(true, !!Digest.md4, 'Digest.md4 is defined');
+test(true, !!Digest.md5, 'Digest.md5 is defined');
+test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")');
+test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")');
+
 </script>
 
 </body>

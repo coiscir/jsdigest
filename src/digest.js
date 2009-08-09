@@ -7,5 +7,6 @@
 
 <%= include(
   'digest.core.js',
-  'digest.encoder.js'
+  'digest.encoder.js',
+  'digest.hash.*.js'
 ) %>
