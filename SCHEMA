@@ -1,25 +1,25 @@
-Digest                      # Namespace / Global
+Digest                          # Namespace / Global
   
-  fn                        # prototype clone
+  fn                            # prototype clone
   
   Encoder
-    constructor(array)      # 0x0000-0xffff
-    constructor(string)     # \u0000-\uffff
+    constructor(array)          #=> Array,  0x0000-0xffff
+    constructor(string)         #=> String, \u0000-\uffff
     
     # Multi-byte
-    array()                 # 0x0000-0xffff
-    string()                # \u0000-\uffff
+    array()                     #=> Array,  0x0000-0xffff
+    string()                    #=> String, \u0000-\uffff
     
     # Single-byte
-    single()                # 0x00-0xff, truncated
-    multi()                 # 0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
-    ansi()                  # \x00-\xff, truncated
-    unicode()               # \x00-\xff, UTF-8 encoded
+    single()                    #=> Array,  0x00-0xff, truncated
+    multi()                     #=> Array,  0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
+    ansi()                      #=> String, \x00-\xff, truncated
+    unicode()                   #=> String, \x00-\xff, UTF-8 encoded
     
     # RFC-3548 encoding
-    hex()                   # 0-9 a-f (lower)
-    base16()                # 0-9 A-F (upper)
-    base32()                # A-Z 2-7 (upper)
-    base32hex()             # 0-9 a-v (lower)
-    base64()                # A-Z a-z 0-9 + /
-    base64url()             # A-Z a-z 0-9 - _ (url/filename safe)
+    hex()                       #=> String, 0-9 a-f (lower)
+    base16()                    #=> String, 0-9 A-F (upper)
+    base32()                    #=> String, A-Z 2-7 (upper)
+    base32hex()                 #=> String, 0-9 a-v (lower)
+    base64()                    #=> String, A-Z a-z 0-9 + /
+    base64url()                 #=> String, A-Z a-z 0-9 - _ (url/filename safe)
