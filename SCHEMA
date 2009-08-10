@@ -6,6 +6,7 @@ Digest                          # Namespace / Global
       
       md4(data)                 #=> Encoder(hash)
       md5(data)                 #=> Encoder(hash)
+      sha1(data)                #=> Encoder(hash)
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff
