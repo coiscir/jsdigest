@@ -88,7 +88,11 @@ test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("a
 space();
 log('== Hash: SHA ==');
 test(true, !!Digest.sha1, 'Digest.sha1 is defined');
+test(true, !!Digest.sha224, 'Digest.sha224 is defined');
+test(true, !!Digest.sha256, 'Digest.sha256 is defined');
 test('A9993E364706816ABA3E25717850C26C9CD0D89D', Digest.sha1('abc').base16(), 'Digest.sha1("abc")');
+test('23097D223405D8228642A477BDA255B32AADBCE4BDA0B3F7E36C9DA7', Digest.sha224('abc').base16(), 'Digest.sha224("abc")');
+test('BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD', Digest.sha256('abc').base16(), 'Digest.sha256("abc")');
 
 </script>
 
