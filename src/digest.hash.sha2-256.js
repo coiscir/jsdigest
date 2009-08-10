@@ -166,4 +166,8 @@
     return sha2(data, HASH, 8);
   };
   
+  // MAC configurations
+  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curry: [true]});
+  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curry: [true]});
+  
 }());

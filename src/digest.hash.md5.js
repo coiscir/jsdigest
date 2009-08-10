@@ -137,4 +137,7 @@
     return Digest.Encoder(split(hash));
   };
   
+  // MAC configuration
+  this.Digest.configure(this.Digest.fn.md5, {block: 64, curry: [true]});
+  
 }());
