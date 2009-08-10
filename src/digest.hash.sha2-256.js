@@ -93,14 +93,14 @@
     x = merge(Digest.Encoder(data).single()).concat([bitHi, bitLo]);
     
     for (i = 0, w = []; i < x.length; i += 16) {
-      a = hash[0];
-      b = hash[1];
-      c = hash[2];
-      d = hash[3];
-      e = hash[4];
-      f = hash[5];
-      g = hash[6];
-      h = hash[7];
+      a = hash[0] | 0x0;
+      b = hash[1] | 0x0;
+      c = hash[2] | 0x0;
+      d = hash[3] | 0x0;
+      e = hash[4] | 0x0;
+      f = hash[5] | 0x0;
+      g = hash[6] | 0x0;
+      h = hash[7] | 0x0;
       
       for (t = 0; t < 64; t += 1) {
         if (t < 16) {
