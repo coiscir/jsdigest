@@ -84,15 +84,20 @@ test(true, !!Digest.md4, 'Digest.md4 is defined');
 test(true, !!Digest.md5, 'Digest.md5 is defined');
 test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")');
 test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")');
+test('043f8582f241db351ce627e153e7f0e4', Digest.md4('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md4("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")');
+test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md5("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")');
 
 space();
 log('== Hash: SHA ==');
 test(true, !!Digest.sha1, 'Digest.sha1 is defined');
 test(true, !!Digest.sha224, 'Digest.sha224 is defined');
 test(true, !!Digest.sha256, 'Digest.sha256 is defined');
-test('A9993E364706816ABA3E25717850C26C9CD0D89D', Digest.sha1('abc').base16(), 'Digest.sha1("abc")');
-test('23097D223405D8228642A477BDA255B32AADBCE4BDA0B3F7E36C9DA7', Digest.sha224('abc').base16(), 'Digest.sha224("abc")');
-test('BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD', Digest.sha256('abc').base16(), 'Digest.sha256("abc")');
+test('A9993E364706816ABA3E25717850C26C9CD0D89D',                          Digest.sha1('abc').base16(), 'Digest.sha1("abc")');
+test('23097D223405D8228642A477BDA255B32AADBCE4BDA0B3F7E36C9DA7',          Digest.sha224('abc').base16(), 'Digest.sha224("abc")');
+test('BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD',  Digest.sha256('abc').base16(), 'Digest.sha256("abc")');
+test('84983E441C3BD26EBAAE4AA1F95129E5E54670F1',                          Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').base16(), 'Digest.sha1("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")');
+test('75388B16512776CC5DBA5DA1FD890150B0C6455CB4F58B1952522525',          Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').base16(), 'Digest.sha224("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")');
+test('248D6A61D20638B8E5C026930C3E6039A33CE45964FF2167F6ECEDD419DB06C1',  Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').base16(), 'Digest.sha256("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")');
 
 </script>
 
