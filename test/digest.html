@@ -99,6 +99,31 @@ test('84983E441C3BD26EBAAE4AA1F95129E5E54670F1',                          Digest
 test('75388B16512776CC5DBA5DA1FD890150B0C6455CB4F58B1952522525',          Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').base16(), 'Digest.sha224("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")');
 test('248D6A61D20638B8E5C026930C3E6039A33CE45964FF2167F6ECEDD419DB06C1',  Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').base16(), 'Digest.sha256("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")');
 
+var hmac_1_txt  = 'Hi There';
+var hmac_1_key1 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
+var hmac_1_key2 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
+var hmac_7_txt1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data';
+var hmac_7_key1 = '\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa';
+var hmac_7_txt2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.';
+var hmac_7_key2 = '\xaa' + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1;
+
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key2 += hmac_7_key1;
+
+space();
+log('== HMAC ==');
+test('9294727a3638bb1c13f48ef8158bfc9d',          Digest.hmac(Digest.md5,  hmac_1_key1, hmac_1_txt).hex(),  'RFC 2202 - Test 1 - HMAC-MD5');
+test('6f630fad67cda0ee1fb1f562db3aa53e',          Digest.hmac(Digest.md5,  hmac_7_key1, hmac_7_txt1).hex(), 'RFC 2202 - Test 7 - HMAC-MD5');
+test('b617318655057264e28bc0b6fb378c8ef146be00',  Digest.hmac(Digest.sha1, hmac_1_key2, hmac_1_txt).hex(),  'RFC 2202 - Test 1 - HMAC-SHA-1');
+test('e8e99d0f45237d786d6bbaa7965c7808bbff1a91',  Digest.hmac(Digest.sha1, hmac_7_key1, hmac_7_txt1).hex(), 'RFC 2202 - Test 7 - HMAC-SHA-1');
+space();
+test('896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22',          Digest.hmac(Digest.sha224, hmac_1_key2, hmac_1_txt).hex(),  'RFC 4231 - Test 1 - HMAC-SHA-224');
+test('3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1',          Digest.hmac(Digest.sha224, hmac_7_key2, hmac_7_txt2).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-224');
+test('b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7',  Digest.hmac(Digest.sha256, hmac_1_key2, hmac_1_txt).hex(),  'RFC 4231 - Test 1 - HMAC-SHA-256');
+test('9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2',  Digest.hmac(Digest.sha256, hmac_7_key2, hmac_7_txt2).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-256');
+
 </script>
 
 </body>

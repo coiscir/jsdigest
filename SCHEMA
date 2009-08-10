@@ -10,6 +10,11 @@ Digest                          # Namespace / Global
       sha1 (data, ansi=false)
       sha224 (data, ansi=false)
       sha256 (data, ansi=false)
+    
+    [mac]                       # MAC function definitions
+    [mac](...)                  #=> Encoder(hash)
+      
+      hmac (hash, hkey, data, ansi=false)
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff
