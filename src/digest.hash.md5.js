@@ -12,7 +12,7 @@
     var a, b, c, d, i, t, tmp, x,
       bytes, bitHi, bitLo,
       padlen, padding,
-      HASH = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
+      hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
       X = [
         0, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, // Round 1
         1, 6, 11,  0,  5, 10, 15,  4,  9, 14,  3,  8, 13,  2,  7, 12, // Round 2
@@ -111,12 +111,12 @@
     data += padding;
     x = merge(Digest.Encoder(data).single()).concat([bitLo, bitHi]);
     
-    // update HASH
+    // update hash
     for (i = 0; i < x.length; i += 16) {
-      a = HASH[0];
-      b = HASH[1];
-      c = HASH[2];
-      d = HASH[3];
+      a = hash[0];
+      b = hash[1];
+      c = hash[2];
+      d = hash[3];
       
       for (t = 0; t < 64; t += 1) {
         a = calc(t, a, b, c, d, x[i + X[t]], AC[t]);
@@ -128,13 +128,13 @@
         a = tmp;
       }
       
-      HASH[0] += a;
-      HASH[1] += b;
-      HASH[2] += c;
-      HASH[3] += d;
+      hash[0] += a;
+      hash[1] += b;
+      hash[2] += c;
+      hash[3] += d;
     }
     
-    return Digest.Encoder(split(HASH));
+    return Digest.Encoder(split(hash));
   };
   
 }());

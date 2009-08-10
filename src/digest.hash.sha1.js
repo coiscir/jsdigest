@@ -12,7 +12,7 @@
     var a, b, c, d, e, i, t, tmp, w, x,
       bytes, bitHi, bitLo,
       padlen, padding,
-      HASH = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
+      hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
     
     function rotl(x, n) {
       return ((x << n) | (x >>> (32 - n)));
@@ -84,13 +84,13 @@
     data += padding;
     x = merge(Digest.Encoder(data).single()).concat([bitHi, bitLo]);
     
-    // update HASH
+    // update hash
     for (i = 0, w = []; i < x.length; i += 16) {
-      a = HASH[0];
-      b = HASH[1];
-      c = HASH[2];
-      d = HASH[3];
-      e = HASH[4];
+      a = hash[0];
+      b = hash[1];
+      c = hash[2];
+      d = hash[3];
+      e = hash[4];
       
       for (t = 0; t < 80; t += 1) {
         if (t < 16) {
@@ -107,14 +107,14 @@
         a = tmp;
       }
       
-      HASH[0] += a;
-      HASH[1] += b;
-      HASH[2] += c;
-      HASH[3] += d;
-      HASH[4] += e;
+      hash[0] += a;
+      hash[1] += b;
+      hash[2] += c;
+      hash[3] += d;
+      hash[4] += e;
     }
     
-    return Digest.Encoder(split(HASH));
+    return Digest.Encoder(split(hash));
   };
   
 }());
