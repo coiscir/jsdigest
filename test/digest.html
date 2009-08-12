@@ -74,7 +74,7 @@ test('\xC2\xA2',      Digest.Encoder('\u00A2').unicode(), 'UTF-8 encode U+00A2')
 test('\xE2\x82\xAC',  Digest.Encoder('\u20AC').unicode(), 'UTF-8 encode U+20AC');
 
 space();
-log('== RFC-3548 Encoding ==');
+log('== RFC-4648 Encoding ==');
 test('AB',        Digest.Encoder('AB').string(),  'Encoder#string');
 test('4142',      Digest.Encoder('AB').base16(),  'Encoder#base16');
 test('IFBA====',  Digest.Encoder('AB').base32(),  'Encoder#base32');

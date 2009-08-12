@@ -32,7 +32,7 @@ Digest                          # Namespace / Global
     ansi()                      #=> String, \x00-\xff, truncated
     unicode()                   #=> String, \x00-\xff, UTF-8 encoded
     
-    # RFC-3548 encoding
+    # RFC-4648 encoding
     hex()                       #=> String, 0-9 a-f (lower)
     base16()                    #=> String, 0-9 A-F (upper)
     base32()                    #=> String, A-Z 2-7 (upper)

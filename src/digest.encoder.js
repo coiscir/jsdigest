@@ -120,7 +120,7 @@
     };
     
     
-    /** RFC-3548 - Base-16 **/
+    /** RFC-4648 - Base-16 **/
     
     function toBase16(chars) {
       var i = 0, str = '',
@@ -144,7 +144,7 @@
     };
     
     
-    /** RFC-3548 - Base-32 **/
+    /** RFC-4648 - Base-32 **/
     
     function toBase32(chars) {
       var i = 0, str = '', rem = null,
@@ -205,7 +205,7 @@
     };
     
     
-    /** RFC-3548 - Base-64 **/
+    /** RFC-4648 - Base-64 **/
     
     function toBase64(chars) {
       var i = 0, str = '', rem = null,
