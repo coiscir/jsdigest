@@ -4,6 +4,22 @@ jsDigest
 Cryptographic Hash and MAC functions for JavaScript.
 
 
+Functions
+---
+
+### Hash Algorithms ###
+
+ * MD4
+ * MD5
+ * SHA-1
+ * SHA-256 (SHA-224)
+ * SHA-512 (SHA-384)
+
+### MAC ###
+
+ * HMAC
+
+
 Syntax
 ---
 
