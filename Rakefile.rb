@@ -23,8 +23,14 @@ end
 
 ################
 ## Operations
+def version
+  if File.exists?('VERSION')
+    IO.readlines('VERSION').join.strip
+  end
+end
+
 def make(release)
-  version = Time.now.utc.strftime('%Y.%m%d')
+  #version = Time.now.utc.strftime('%Y.%m%d')
   
   print $/ + '== Build :: ' + version.to_s + $/
   
@@ -78,7 +84,7 @@ module Builder
     end
     
     def version
-      @ver + (@rel ? '-rel' : '-wip')
+      @ver
     end
   end
   
