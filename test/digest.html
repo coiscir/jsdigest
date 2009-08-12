@@ -50,6 +50,8 @@ function test(expect, trial, message) {
 <script type="text/javascript" src="../lib/digest.js"></script>
 <script type="text/javascript">
 
+var timer = new Date().getTime();
+
 log('== Digest ==');
 test(true, !!window.Digest, 'Digest is defined');
 test('string', window.Digest.Version, 'Digest.Version');
@@ -139,6 +141,8 @@ test('6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e7
 test('87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854',  Digest.hmac(Digest.sha512, hmac_1_key2, hmac_1_txt).hex(),  'RFC 4231 - Test 1 - HMAC-SHA-512');
 test('e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58',  Digest.hmac(Digest.sha512, hmac_7_key2, hmac_7_txt2).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-512');
 
+space();
+log('' + (new Date().getTime() - timer) + 'ms');
 </script>
 
 </body>
