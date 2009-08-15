@@ -30,7 +30,7 @@ Digest                          # Namespace / Global
     single()                    #=> Array,  0x00-0xff, truncated
     multi()                     #=> Array,  0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
     ansi()                      #=> String, \x00-\xff, truncated
-    unicode()                   #=> String, \x00-\xff, UTF-8 encoded
+    utf8()                      #=> String, \x00-\xff, UTF-8 encoded
     
     # RFC-4648 encoding
     hex()                       #=> String, 0-9 a-f (lower)

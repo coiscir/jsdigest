@@ -83,7 +83,7 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'unicode']();
+    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
     
     // pad data
     bytes = data.length;

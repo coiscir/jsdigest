@@ -195,7 +195,7 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'unicode']();
+    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
     
     var HASH = [
       [0xcbbb9d5d, 0xc1059ed8], [0x629a292a, 0x367cd507],
@@ -213,7 +213,7 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'unicode']();
+    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
     
     var HASH = [
       [0x6a09e667, 0xf3bcc908], [0xbb67ae85, 0x84caa73b],

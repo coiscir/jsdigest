@@ -102,7 +102,7 @@
     };
     
     // \x00-\xff, UTF-8 encoded
-    this.unicode = function unicode() {
+    this.utf8 = function utf8() {
       for (var i = 0, code, str = ''; i < sequence.length; i += 1) {
         code = sequence[i];
         if (code < 0x80) {
