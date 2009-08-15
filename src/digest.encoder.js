@@ -7,7 +7,8 @@
   this.Digest.Encoder = function Encoder(input) {
     
     // iterator, internal buffer
-    var i, sequence = null;
+    var i, sequence = null,
+      isUtf8 = /^(([\xe0-\xef][\x80-\xbf][\x80-\xbf])|([\xc0-\xdf][\x80-\xbf])|([\x00-\x7f]))+$/;
     
     // check type by structure using Function#apply
     function isArray(arr) {
@@ -18,6 +19,30 @@
       } catch (e) {
         return false;
       }
+    }
+    
+    function fromUtf8(str) {
+      var i, code, arr;
+      for (i = 0, arr = []; i < str.length; i += 1) {
+        code = str.charCodeAt(i);
+        if (code < 0x80) {
+          arr.push(code);
+        } else if ((code >= 0xc0) && (code <= 0xdf)) {
+          code  = (str.charCodeAt(i + 0) & 0x1f) << 6;
+          code |= (str.charCodeAt(i + 1) & 0x3f);
+          arr.push(code);
+          i += 1;
+        } else if ((code >= 0xe0) && (code < 0xef)) {
+          code  = (str.charCodeAt(i + 0) & 0x0f) << 12;
+          code |= (str.charCodeAt(i + 1) & 0x3f) << 6;
+          code |= (str.charCodeAt(i + 2) & 0x3f);
+          arr.push(code);
+          i += 2;
+        } else {
+          throw new Error('Cannot decode as UTF-8 (Index: ' + i + ')');
+        }
+      }
+      return arr;
     }
     
     
@@ -47,8 +72,12 @@
     
     // handle constructor(String)
     if ('string' === typeof input) {
-      for (i = 0, sequence = []; i < input.length; i += 1) {
-        sequence.push(input.charCodeAt(i));
+      if (isUtf8.test(input)) {
+        sequence = fromUtf8(input);
+      } else {
+        for (i = 0, sequence = []; i < input.length; i += 1) {
+          sequence.push(input.charCodeAt(i));
+        }
       }
     }
     

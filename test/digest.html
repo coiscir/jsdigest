@@ -73,6 +73,8 @@ log('== UTF-8 Encoding ==');
 test('\x24',          Digest.Encoder('\u0024').utf8(), 'UTF-8 encode U+0024');
 test('\xC2\xA2',      Digest.Encoder('\u00A2').utf8(), 'UTF-8 encode U+00A2');
 test('\xE2\x82\xAC',  Digest.Encoder('\u20AC').utf8(), 'UTF-8 encode U+20AC');
+space();
+test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(), 'Prevent dual-encoding UTF-8');
 
 space();
 log('== RFC-4648 Encoding ==');
