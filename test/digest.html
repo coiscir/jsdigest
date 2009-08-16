@@ -5,7 +5,7 @@
   <title>jsDigest</title>
   <style>
     #results { margin: 0; padding: 0; list-style: none; }
-    #results li { font: normal 9pt/1.3 "Courier New"; }
+    #results li { font: normal 9pt/1.3 "Courier New"; white-space: pre; }
     span.pass { color: #0a0; }
     span.fail { color: #f00; }
   </style>
@@ -88,9 +88,10 @@ log('== Hash: MD ==');
 test(true, !!Digest.md4, 'Digest.md4 is defined');
 test(true, !!Digest.md5, 'Digest.md5 is defined');
 space();
-test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")');
-test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")');
+test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")         ');
 test('043f8582f241db351ce627e153e7f0e4', Digest.md4('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md4("A..Za..z0..9")');
+space();
+test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")         ');
 test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md5("A..Za..z0..9")');
 
 space();
@@ -101,19 +102,19 @@ test(true, !!Digest.sha256, 'Digest.sha256 is defined');
 test(true, !!Digest.sha384, 'Digest.sha384 is defined');
 test(true, !!Digest.sha512, 'Digest.sha512 is defined');
 space();
-test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'Digest.sha1("abc")');
+test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'Digest.sha1("abc")       ');
 test('84983e441c3bd26ebaae4aa1f95129e5e54670f1', Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha1("abcd..nopq")');
 space();
-test('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', Digest.sha224('abc').hex(), 'Digest.sha224("abc")');
+test('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', Digest.sha224('abc').hex(), 'Digest.sha224("abc")       ');
 test('75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha224("abcd..nopq")');
 space();
-test('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', Digest.sha256('abc').hex(), 'Digest.sha256("abc")');
+test('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', Digest.sha256('abc').hex(), 'Digest.sha256("abc")       ');
 test('248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha256("abcd..nopq")');
 space();
-test('cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', Digest.sha384('abc').hex(), 'Digest.sha384("abc")');
+test('cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', Digest.sha384('abc').hex(), 'Digest.sha384("abc")               ');
 test('09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039', Digest.sha384('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu').hex(), 'Digest.sha224("abcdefgh..nopqrstu")');
 space();
-test('ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', Digest.sha512('abc').hex(), 'Digest.sha512("abc")');
+test('ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', Digest.sha512('abc').hex(), 'Digest.sha512("abc")               ');
 test('8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', Digest.sha512('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu').hex(), 'Digest.sha256("abcdefgh..nopqrstu")');
 
 var hmac_1_txt  = 'Hi There';
