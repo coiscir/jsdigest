@@ -5,18 +5,18 @@ Digest                          # Namespace / Global
     [hash]                      # Hash function definitions
     [hash](...)                 #=> Encoder(hash)
       
-      md4 (data, ansi=false)
-      md5 (data, ansi=false)
-      sha1 (data, ansi=false)
-      sha224 (data, ansi=false)
-      sha256 (data, ansi=false)
-      sha384 (data, ansi=false)
-      sha512 (data, ansi=false)
+      md4 (data, utf8=true)
+      md5 (data, utf8=true)
+      sha1 (data, utf8=true)
+      sha224 (data, utf8=true)
+      sha256 (data, utf8=true)
+      sha384 (data, utf8=true)
+      sha512 (data, utf8=true)
     
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)
       
-      hmac (hash, hkey, data, ansi=false)
+      hmac (hash, hkey, data, utf8=true)
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff

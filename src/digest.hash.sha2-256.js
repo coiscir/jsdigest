@@ -134,13 +134,13 @@
     return Digest.Encoder(split(hash.slice(0, part)));
   }
   
-  this.Digest.fn.sha224 = function sha224(data, ansi) {
+  this.Digest.fn.sha224 = function sha224(data, utf8) {
     if ('string' !== typeof data) {
       throw new Error('Data must be a String');
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
+    if (false !== utf8) data = Digest.Encoder(data).utf8();
     
     var HASH = [
       0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
@@ -150,13 +150,13 @@
     return sha2(data, HASH, 7);
   };
   
-  this.Digest.fn.sha256 = function sha256(data, ansi) {
+  this.Digest.fn.sha256 = function sha256(data, utf8) {
     if ('string' !== typeof data) {
       throw new Error('Data must be a String');
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
+    if (false !== utf8) data = Digest.Encoder(data).utf8();
     
     var HASH = [
       0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
@@ -167,7 +167,7 @@
   };
   
   // MAC configurations
-  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curry: [true]});
-  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curry: [true]});
+  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curry: [false]});
+  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curry: [false]});
   
 }());

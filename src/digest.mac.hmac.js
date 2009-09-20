@@ -4,7 +4,7 @@
 
 (function () {
   
-  this.Digest.fn.hmac = function hmac(hash, hkey, data, ansi) {
+  this.Digest.fn.hmac = function hmac(hash, hkey, data, utf8) {
     var i, akey, ipad, opad;
     
     // verify arguments
@@ -24,7 +24,7 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
+    if (false !== utf8) data = Digest.Encoder(data).utf8();
     
     // prepare akey
     if (hkey.length > hash.block) {

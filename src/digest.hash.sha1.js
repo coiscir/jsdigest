@@ -4,7 +4,7 @@
 
 (function () {
   
-  this.Digest.fn.sha1 = function sha1(data, ansi) {
+  this.Digest.fn.sha1 = function sha1(data, utf8) {
     if ('string' !== typeof data) {
       throw new Error('Data must be a String');
     }
@@ -68,7 +68,7 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    data = Digest.Encoder(data)[true === ansi ? 'ansi' : 'utf8']();
+    if (false !== utf8) data = Digest.Encoder(data).utf8();
     
     // pad data
     bytes = data.length;
@@ -118,6 +118,6 @@
   };
   
   // MAC configuration
-  this.Digest.configure(this.Digest.fn.sha1, {block: 64, curry: [true]});
+  this.Digest.configure(this.Digest.fn.sha1, {block: 64, curry: [false]});
   
 }());
