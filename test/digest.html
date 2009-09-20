@@ -50,6 +50,19 @@ function test(expect, trial, message) {
 <script type="text/javascript" src="../lib/digest.js"></script>
 <script type="text/javascript">
 
+var hmac_1_txt  = 'Hi There';
+var hmac_1_key1 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
+var hmac_1_key2 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
+var hmac_7_txt1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data';
+var hmac_7_key1 = '\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa';
+var hmac_7_txt2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.';
+var hmac_7_key2 = '\xaa' + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1;
+
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
+hmac_7_key2 += hmac_7_key1;
+
 var timer = new Date().getTime();
 
 log('== Digest ==');
@@ -116,19 +129,6 @@ test('09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a55
 space();
 test('ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', Digest.sha512('abc').hex(), 'Digest.sha512("abc")               ');
 test('8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', Digest.sha512('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu').hex(), 'Digest.sha256("abcdefgh..nopqrstu")');
-
-var hmac_1_txt  = 'Hi There';
-var hmac_1_key1 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
-var hmac_1_key2 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
-var hmac_7_txt1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data';
-var hmac_7_key1 = '\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa';
-var hmac_7_txt2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.';
-var hmac_7_key2 = '\xaa' + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1;
-
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key2 += hmac_7_key1;
 
 space();
 log('== HMAC ==');
