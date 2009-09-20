@@ -1,10 +1,21 @@
 jsDigest
 ===
 
-Cryptographic Hash and MAC functions for JavaScript.
+jsDigest enables the use of Cryptographic Hash Functions in JavaScript, aimed to offer the following attributes:
+
+ * **Simplicity** -- Using the core syntax of `Digest.hash(data).output()`, simply choose a hash function, give it your data, and choose an output format.
+
+ * **Namespacing** -- Containing all of jsDigest within the `Digest` object, grealy reducing the number of globals and the potential for conflicts.
+
+ * **64-Bit Support** -- Including SHA-512 and SHA-384.
 
 
-Functions
+### Origin ###
+
+jsDigest was inspired by the desire to understand hash functions and their implementations.
+
+
+Supports
 ---
 
 ### Hash Algorithms ###
@@ -36,3 +47,9 @@ Syntax
 
     var hash = Digest.md5('data').hex();
     var hmac = Digest.hmac(Digest.sha1, 'key', 'data').base64();
+
+
+----
+
+Copyright (c) 2009 Jonathan Lonowski  
+jsDigest is released under the MIT License
