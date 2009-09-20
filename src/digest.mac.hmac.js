@@ -24,7 +24,9 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) data = Digest.Encoder(data).utf8();
+    if (false !== utf8) {
+      data = Digest.Encoder(data).utf8();
+    }
     
     // prepare akey
     if (hkey.length > hash.block) {

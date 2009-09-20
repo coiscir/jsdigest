@@ -140,7 +140,9 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) data = Digest.Encoder(data).utf8();
+    if (false !== utf8) {
+      data = Digest.Encoder(data).utf8();
+    }
     
     var HASH = [
       0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
@@ -156,7 +158,9 @@
     }
     
     // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) data = Digest.Encoder(data).utf8();
+    if (false !== utf8) {
+      data = Digest.Encoder(data).utf8();
+    }
     
     var HASH = [
       0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
