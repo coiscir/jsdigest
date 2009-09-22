@@ -16,7 +16,7 @@ Digest                          # Namespace / Global
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)
       
-      hmac (hash, hkey, data, utf8=true)
+      hmac (hash, data, hkey, utf8=true)
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff

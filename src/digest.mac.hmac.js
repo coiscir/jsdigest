@@ -4,18 +4,18 @@
 
 (function () {
   
-  this.Digest.fn.hmac = function hmac(hash, hkey, data, utf8) {
+  this.Digest.fn.hmac = function hmac(hash, data, hkey, utf8) {
     var i, akey, ipad, opad;
     
     // verify arguments
     if ('function' !== typeof hash) {
       throw new Error('Hash must be a function');
     }
-    if ('string' !== typeof hkey) {
-      throw new Error('Key must be a string');
-    }
     if ('string' !== typeof data) {
       throw new Error('Data must be a string');
+    }
+    if ('string' !== typeof hkey) {
+      throw new Error('Key must be a string');
     }
     
     // verify hash configuration
@@ -26,6 +26,7 @@
     // single-byte encode data, either UTF-8 or truncated
     if (false !== utf8) {
       data = Digest.Encoder(data).utf8();
+      hkey = Digest.Encoder(hkey).utf8();
     }
     
     // prepare akey
