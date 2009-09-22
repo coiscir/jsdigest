@@ -1,13 +1,19 @@
 jsDigest
 ===
 
-jsDigest enables the use of Cryptographic Hash Functions in JavaScript, aimed to offer the following attributes:
+A Message Digest module for JavaScript.
 
- * **Simplicity** -- Using the core syntax of `Digest.hash(data).output()`, simply choose a hash function, give it your data, and choose an output format.
+### Features ###
 
- * **Namespacing** -- Containing all of jsDigest within the `Digest` object, grealy reducing the number of globals and the potential for conflicts.
+ * **Cross-Browser Support** -- Internet Explorer 5.5, Firefox 2, Chrome 2, Opera 9
 
- * **64-Bit Support** -- Including SHA-512 and SHA-384.
+ * **Namespacing** -- jsDigest is contained within a single global object -- `Digest`.
+
+ * **Simplicity** -- Hash data in a single line, choosing both hash function and output format -- `Digest.md5('abc').hex()`
+
+ * **Unicode Support** -- jsDigest functions encode message data in UTF-8, by default. ANSI encoding, alternatively.
+
+ * **64-Bit Support** -- Includes 64-bit algorithms, including SHA-512 and SHA-384.
 
 
 ### Origin ###
@@ -18,7 +24,7 @@ jsDigest was inspired by the desire to understand hash functions and their imple
 Supports
 ---
 
-### Hash Algorithms ###
+### Hash Functions ###
 
  * MD4
  * MD5
@@ -40,13 +46,19 @@ Supports
 Syntax
 ---
 
-    Digest.hash(data [, ansi]).output()
-    Digest.mac(hash, key, data [, ansi]).output()
+    Digest.hash(data [, utf8]).output()
+    Digest.mac(hash, key, data [, utf8]).output()
 
 #### Examples ####
 
-    var hash = Digest.md5('data').hex();
-    var hmac = Digest.hmac(Digest.sha1, 'key', 'data').base64();
+    // MD4('message'), UTF-8 encoded, Hex output
+    Digest.md4('message').hex();
+
+    // SHA-1('message'), ANSI encoded, Base-16 output
+    Digest.sha1('message', false).base16();
+
+    // HMAC-MD5('secret key', 'message'), UTF-8 encoded, Base-64 output
+    Digest.hmac(Digest.md5, 'secret key', 'message'). base64();
 
 
 ----
