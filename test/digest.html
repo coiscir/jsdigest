@@ -3,49 +3,12 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   <title>jsDigest</title>
-  <style>
-    #results { margin: 0; padding: 0; list-style: none; }
-    #results li { font: normal 9pt/1.3 "Courier New"; white-space: pre; }
-    span.pass { color: #0a0; }
-    span.fail { color: #f00; }
-  </style>
+  <link rel="stylesheet" type="text/css" href="test.css" />
 </head>
 
 <body>
 <ul id="results"></ul>
-
-<script type="text/javascript">
-Error.prototype.toString = function () {
-  return 'Error: ' + this.message;
-};
-
-function log(message) {
-  document.getElementById('results').innerHTML +=
-    '<li>' + String(message) + '&nbsp;</li>';
-}
-
-function space() {
-  log('');
-}
-
-function test(expect, trial, message) {
-  var result, passed,
-    pass = '<span class="pass">PASS</span>',
-    fail = '<span class="fail">FAIL</span>';
-  
-  try {
-    result = 'function' === typeof trial ? trial() : trial;
-  } catch (e) {
-    result = e;
-  }
-  
-  passed = expect === result ||
-    ('string' === typeof expect && expect === typeof result) ||
-    ('function' === typeof expect && result instanceof expect);
-  
-  log((passed ? pass : fail) + ': ' + message + ' {' + result + '}');
-}
-</script>
+<script type="text/javascript" src="test.js"></script>
 
 <script type="text/javascript" src="../lib/digest.js"></script>
 <script type="text/javascript">
