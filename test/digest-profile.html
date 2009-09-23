@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>jsDigest</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../lib/digest.js"></script>
+<script type="text/javascript">
+var start = new Date().getTime();
+
+Digest.md4('', false).hex();
+Digest.md4('abc').base16();
+Digest.md4('message', false).base32();
+Digest.md4('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.md4('1234567890123456789012345678901234567890123456789012345', false).base64();
+Digest.md4('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.md5('', false).hex();
+Digest.md5('abc').base16();
+Digest.md5('message', false).base32();
+Digest.md5('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.md5('1234567890123456789012345678901234567890123456789012345', false).base64();
+Digest.md5('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha1('', false).hex();
+Digest.sha1('abc').base16();
+Digest.sha1('message', false).base32();
+Digest.sha1('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha1('1234567890123456789012345678901234567890123456789012345', false).base64();
+Digest.sha1('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha224('', false).hex();
+Digest.sha224('abc').base16();
+Digest.sha224('message', false).base32();
+Digest.sha224('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha224('1234567890123456789012345678901234567890123456789012345', false).base64();
+Digest.sha224('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha256('', false).hex();
+Digest.sha256('abc').base16();
+Digest.sha256('message', false).base32();
+Digest.sha256('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha256('1234567890123456789012345678901234567890123456789012345', false).base64();
+Digest.sha256('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha384('', false).hex();
+Digest.sha384('abc').base16();
+Digest.sha384('message', false).base32();
+Digest.sha384('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha384('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901', false).base64();
+Digest.sha384('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
+
+Digest.sha512('', false).hex();
+Digest.sha512('abc').base16();
+Digest.sha512('message', false).base32();
+Digest.sha512('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha512('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901', false).base64();
+Digest.sha512('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
+
+document.write(new Date().getTime() - start, 'ms');
+</script>
+
+</body>
+</html>
