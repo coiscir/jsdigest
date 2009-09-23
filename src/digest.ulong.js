@@ -4,12 +4,9 @@
 
 (function () {
   
-  function uint(x) {
-    return x | 0x0;
-  }
-  
   function ulong(x) {
-    return [uint(x[0]), uint(x[1])];
+    return [(x[0] | 0x0), (x[1] | 0x0)];
+    //return [uint(x[0]), uint(x[1])];
   }
   
   /* uint functions */
@@ -47,8 +44,8 @@
   }
   
   function ulong_shl(x, n) {
-    var a = uint(x[0]),
-        b = uint(x[1]),
+    var a = x[0] | 0x0,
+        b = x[1] | 0x0,
         c = n >= 32 ? (b << (n - 32)) :
             n === 0 ? a : ((a << n) | (b >>> (32 - n))),
         d = n >= 32 ? 0x0 : (b << n);
@@ -56,8 +53,8 @@
   }
   
   function ulong_shr(x, n) {
-    var a = uint(x[0]),
-        b = uint(x[1]),
+    var a = x[0] | 0x0,
+        b = x[1] | 0x0,
         c = n >= 32 ? 0x0 : (a >>> n),
         d = n >= 32 ? (a >>> (n - 32)) :
             n === 0 ? b : ((a << (32 - n)) | (b >>> n));
@@ -73,23 +70,19 @@
   }
   
   function ulong_add(x, y) {
-    x = ulong(x);
-    y = ulong(y);
     var b = x[1] + y[1],
         a = x[0] + y[0] + (uint_lt(b, x[1]) ? 0x1 : 0x0);
     return ulong([a, b]);
   }
   
   function ulong_subt(x, y) {
-    x = ulong(x);
-    y = ulong(y);
     var b = x[1] - y[1],
         a = x[0] - y[1] - (uint_gt(b, x[1]) ? 0x1 : 0x0);
     return ulong([a, b]);
   }
   
   function ulong_mult(x, y) {
-    var i, a = ulong([0x0, 0x0]);
+    var i, a = [0x0, 0x0];
     for (i = 0; i < 64; i += 1) {
       if (ulong_shr(y, i)[1] & 0x1) {
         a = ulong_add(a, ulong_shl(x, i));
