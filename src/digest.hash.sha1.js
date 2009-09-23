@@ -120,6 +120,6 @@
   };
   
   // MAC configuration
-  this.Digest.configure(this.Digest.fn.sha1, {block: 64, curry: [false]});
+  this.Digest.configure(this.Digest.fn.sha1, {block: 64, curri: 0, curry: [null, false]});
   
 }());

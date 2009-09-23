@@ -171,7 +171,7 @@
   };
   
   // MAC configurations
-  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curry: [false]});
-  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curry: [false]});
+  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curri: 0, curry: [null, false]});
+  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curri: 0, curry: [null, false]});
   
 }());

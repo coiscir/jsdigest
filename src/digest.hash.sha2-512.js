@@ -230,7 +230,7 @@
   };
   
   // MAC configurations
-  this.Digest.configure(this.Digest.fn.sha384, {block: 128, curry: [false]});
-  this.Digest.configure(this.Digest.fn.sha512, {block: 128, curry: [false]});
+  this.Digest.configure(this.Digest.fn.sha384, {block: 128, curri: 0, curry: [null, false]});
+  this.Digest.configure(this.Digest.fn.sha512, {block: 128, curri: 0, curry: [null, false]});
   
 }());

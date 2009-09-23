@@ -128,6 +128,6 @@
   };
   
   // MAC configuration
-  this.Digest.configure(this.Digest.fn.md4, {block: 64, curry: [false]});
+  this.Digest.configure(this.Digest.fn.md4, {block: 64, curri: 0, curry: [null, false]});
   
 }());

@@ -10,11 +10,15 @@
     
     this.configure = function configure(fn, cfg) {
       if ('function' === typeof fn) {
-        fn.block = Number(cfg.block) || 0;
+        var block = cfg.block || 0,  // block size in bytes
+            curri = cfg.curri || 0,  // arguments index to insert data
+            curry = cfg.curry || []; // unfinished arguments array
         
-        var curry = cfg.curry || [];
+        fn.block = block;
         fn.curry = function (data) {
-          return fn.apply(null, [data].concat(curry));
+          var args = [].concat(curry);
+          args[curri] = data;
+          return fn.apply(null, args);
         };
       }
     };
