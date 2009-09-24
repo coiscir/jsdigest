@@ -4,19 +4,35 @@ Digest                          # Namespace / Global
     
     [hash]                      # Hash function definitions
     [hash](...)                 #=> Encoder(hash)
+    [hash](data, utf8=true)
       
-      md4 (data, utf8=true)
-      md5 (data, utf8=true)
-      sha1 (data, utf8=true)
-      sha224 (data, utf8=true)
-      sha256 (data, utf8=true)
-      sha384 (data, utf8=true)
-      sha512 (data, utf8=true)
+      md4(...)
+      md5(...)
+      sha1(...)
+      sha224(...)
+      sha256(...)
+      sha384(...)
+      sha512(...)
+    
+    [keyed]                     # Keyed hash function definitions
+    [keyed](...)                #=> Encoder(hash)
+    [keyed](data, key, utf8=true)
     
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)
+    [mac](hash, data, key, utf8=true)
       
-      hmac (hash, data, hkey, utf8=true)
+      hmac(...)
+  
+  
+  configure(function, config)   # Configure a Hash for use with MACs
+    
+    config = {
+      block : Number(...),      # function's block size in bytes
+      curri : Number(...),      # index of `curry` to replace with data
+      curry : Array<Object>     # unfinished arguments array
+    }
+  
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff
