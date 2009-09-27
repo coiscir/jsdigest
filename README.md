@@ -61,6 +61,23 @@ Syntax
     Digest.hmac(Digest.md5, 'message', 'secret key'). base64();
 
 
+Building
+----
+
+Building jsDigest requires:
+
+ * A copy of the [jsDigest source tree](http://github.com/coiscir/jsdigest)
+ * [**Ruby 1.8** or later](http://ruby-lang.org/)
+ * [**Rake 0.8.7** or later](http://rake.rubyforge.org/)
+ * [**jsmin 1.0.1** or later](http://rubyforge.org/projects/riposte/)
+
+From within the source tree:
+
+ * `rake build` - Compiles full and minified distributables.
+ * `rake release` - Compiles versioned distributables.
+
+
+Credits
 ----
 
 Copyright (c) 2009 Jonathan Lonowski  
