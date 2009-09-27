@@ -143,7 +143,9 @@ module Builder
     def named(file, min, ver)
       ext  = File.extname(file)
       name = File.basename(file, ext)
-      return name + (ver ? '-' + ver : '') + (min ? '' : '-dev') + ext
+      (name, build) = name.split('-', 2)
+      suffix = min ? nil : 'dev'
+      return [name, ver, build, suffix].reject{|x| x.nil?}.join('-') + ext
     end
   end
 end
