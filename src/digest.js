@@ -6,10 +6,4 @@
 
 "use strict";
 
-<%= include(
-  'digest.core.js',
-  'digest.encoder.js',
-  'digest.ulong.js',
-  'digest.hash.*.js',
-  'digest.mac.*.js'
-) %>
+<%= include('global.js', 'encoder.js', 'ulong.js', 'hash-*.js', 'mac-*.js') %>
