@@ -100,7 +100,7 @@ module Builder
       @rel  = release
       
       minify = [false, true]
-      builds = @rel ? [nil, @ver] : [nil]
+      builds = @rel ? [@ver] : [nil]
       
       minify.each do |min|
         @min = min
