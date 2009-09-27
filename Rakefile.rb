@@ -99,7 +99,7 @@ module Builder
       @ver  = version
       @rel  = release
       
-      minify = [true, false]
+      minify = @rel ? [true] : [true, false]
       builds = @rel ? [@ver] : [nil]
       
       minify.each do |min|
