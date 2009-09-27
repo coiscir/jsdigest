@@ -54,10 +54,25 @@ test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(), 'P
 
 space();
 log('== RFC-4648 Encoding ==');
-test('AB',        Digest.Encoder('AB').string(),  'Encoder#string');
-test('4142',      Digest.Encoder('AB').base16(),  'Encoder#base16');
-test('IFBA====',  Digest.Encoder('AB').base32(),  'Encoder#base32');
-test('QUI=',      Digest.Encoder('AB').base64(),  'Encoder#base64');
+test('AB',        Digest.Encoder('AB').string(),  'string');
+test('4142',      Digest.Encoder('AB').base16(),  'base16');
+test('IFBA====',  Digest.Encoder('AB').base32(),  'base32');
+test('QUI=',      Digest.Encoder('AB').base64(),  'base64');
+space();
+test('fo',     Digest.Encoder('fo').string(),     'string');
+test('foobar', Digest.Encoder('foobar').string(), 'string');
+space();
+test('Zm8=',     Digest.Encoder('fo').base64(),     'base64');
+test('Zm9vYmFy', Digest.Encoder('foobar').base64(), 'base64');
+space();
+test('MZXQ====',         Digest.Encoder('fo').base32(),     'base32');
+test('MZXW6YTBOI======', Digest.Encoder('foobar').base32(), 'base32');
+space();
+test('CPNG====',         Digest.Encoder('fo').base32hex().toUpperCase(),     'base32hex');
+test('CPNMUOJ1E8======', Digest.Encoder('foobar').base32hex().toUpperCase(), 'base32hex');
+space();
+test('666F',         Digest.Encoder('fo').base16(),     'base16');
+test('666F6F626172', Digest.Encoder('foobar').base16(), 'base16');
 
 space();
 log('== Hash: MD ==');
