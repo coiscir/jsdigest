@@ -116,7 +116,7 @@ test('87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6
 test('e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', Digest.hmac(Digest.sha512, hmac_7_txt2, hmac_7_key2, false).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-512');
 
 space();
-log('' + (new Date().getTime() - timer) + 'ms');
+timed(new Date().getTime() - timer);
 </script>
 
 </body>

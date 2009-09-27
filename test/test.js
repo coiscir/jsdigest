@@ -11,6 +11,10 @@ function space() {
   log('');
 }
 
+function timed(ms) {
+  log('' + (ms / 1000).toFixed(3) + ' s');
+}
+
 function test(expect, trial, message) {
   var result, passed,
     pass = '<span class="pass">PASS</span>',
