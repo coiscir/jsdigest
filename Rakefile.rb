@@ -99,7 +99,7 @@ module Builder
       @ver  = version
       @rel  = release
       
-      minify = [false, true]
+      minify = [true, false]
       builds = @rel ? [@ver] : [nil]
       
       minify.each do |min|
@@ -143,7 +143,7 @@ module Builder
     def named(file, min, ver)
       ext  = File.extname(file)
       name = File.basename(file, ext)
-      return name + (ver ? '-' + ver : '') + (min ? '-min' : '') + ext
+      return name + (ver ? '-' + ver : '') + (min ? '' : '-dev') + ext
     end
   end
 end
