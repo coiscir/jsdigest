@@ -1,0 +1,22 @@
+Sep 27, 2009    1.0.2
+
+  Order of arguments:
+  - Function are a reduction of `(function, message, key, encoding)`.
+  
+  `ulong` helper functions:
+  - Revised to reduce runtime.
+
+
+Sep 21, 2009    1.0.1
+
+  Digest.Encoder unicode support:
+  - Rename `unicode` to `utf8` to be more specific.
+  - Add UTF-8 decoding to Digest.Encoder.
+  
+  Encoding arguments:
+  - Renamed `ansi` to `utf8` with default value of `true`.
+
+
+Aug 12, 2009    1.0.0
+
+  Initial release.
