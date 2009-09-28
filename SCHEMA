@@ -18,6 +18,10 @@ Digest                          # Namespace / Global
     [keyed](...)                #=> Encoder(hash)
     [keyed](data, key, utf8=true)
     
+    [var]                       # Variable-length hash function definitions
+    [var](...)                  #=> Encoder(hash)
+    [var](len, data, key, utf8=true)
+    
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)
     [mac](hash, data, key, utf8=true)
