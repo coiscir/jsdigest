@@ -1,3 +1,15 @@
+Sep 27, 2009    1.0.3
+
+  Added SCHEMA for variable-length hash functions.
+
+  Add jsDigest More:
+  - Including MD6-PAR and MD6-SEQ
+  
+  Development:
+  - Renamed source files to shorten them.
+  - Changed suffix names to `digest.js` (minified) and `digest-dev.js` (full)
+
+
 Sep 27, 2009    1.0.2
 
   Order of arguments:
