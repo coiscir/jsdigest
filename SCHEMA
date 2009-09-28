@@ -21,6 +21,9 @@ Digest                          # Namespace / Global
     [var]                       # Variable-length hash function definitions
     [var](...)                  #=> Encoder(hash)
     [var](len, data, key, utf8=true)
+      
+      md6par(...) {0 < len <= 512} [more]
+      md6seq(...) {0 < len <= 512} [more]
     
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)

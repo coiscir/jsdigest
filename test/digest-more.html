@@ -13,6 +13,30 @@
 <script type="text/javascript" src="../lib/digest.js"></script>
 <script type="text/javascript" src="../lib/digest-more.js"></script>
 <script type="text/javascript">
+var md6_block = '\x11\x22\x33\x44\x55\x66\x77';
+while (md6_block.length < 800) md6_block += md6_block;
+var md6_block_400 = md6_block.substr(0, 400);
+var md6_block_800 = md6_block.substr(0, 800);
+var md6_block_600 = md6_block.substr(0, 600);
+
+var md6_start = new Date().getTime();
+
+log('== MD6 ==');
+test(true, !!Digest.md6par, 'Digest.md6par is defined');
+test(true, !!Digest.md6seq, 'Digest.md6seq is defined');
+space();
+test('7538e7552a2e9cc94be251f73ce9cf67d4739b4b3f114e483ea38ab0', Digest.md6par(224, md6_block_400).hex(), 'MD6-PAR-224 1 Block, Key 0');
+test('fb75daf08d970c19f49b34ec768fea1a74583a5b1d1df2149a61cb36e120d197', Digest.md6par(256, md6_block_400, '111222333').hex(), 'MD6-PAR-256 1 Block, Key 9');
+test('614cec06b9a0332f8c14d7d4f29934e4f39b91046c1c2cd1fa9f84fc3ed2e89efb583003b2fc9e996cb690a8be68dbf2', Digest.md6par(384, md6_block_800).hex(), 'MD6-PAR-384 2-Block, Key 0');
+test('48e8dbfee51e36b0c549925ed9740df0d4e0aa9d46c5ec5bd7749a8c023b91582bb3fa07b311a4d3e774ebf5b5beffe806eea425c37af320ef06ff241bcb32e4', Digest.md6par(512, md6_block_800, '111222333').hex(), 'MD6-PAR-512 2-Block, Key 9');
+space();
+test('b81b7d4d84c3df8104b447445e6d87693f62fe91380b01ecc4bb0af4', Digest.md6seq(224, md6_block_400).hex(), 'MD6-SEQ-224 1-Block');
+test('e9eaf4c30140a4e7649a34b6d4976a930bf5681ea8a7e1a2471a1035d8eebb95', Digest.md6seq(256, md6_block_600).hex(), 'MD6-SEQ-256 2-Block');
+test('de4f6f3715d87cefbb339eeae677a8594c7949a61ecf694dc12fd3243b42517a356b60837a2bffbd39a18401cb74db02', Digest.md6seq(384, md6_block_400).hex(), 'MD6-SEQ-384 1-Block');
+test('753c2fd701db4a9d4244ffd7e873858c10b9820193ac7e34202b3c94ca8b809e8fca74cd7eb46eebbd15a204bd236113c700a71cb582e06fab3fa321ad2cffcd', Digest.md6seq(512, md6_block_600).hex(), 'MD6-SEQ-512 2-Block');
+
+space();
+timed(new Date().getTime() - md6_start);
 </script>
 
 </body>
