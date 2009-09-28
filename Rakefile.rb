@@ -34,8 +34,10 @@ def make(release)
   
   print $/ + '== Build :: ' + version.to_s + $/
   
-  Builder.build('src', 'lib', 'digest.js', version, release) do |path|
-    print ' + ' + path + $/
+  ['digest.js', 'digest-more.js'].each do |start|
+    Builder.build('src', 'lib', start, version, release) do |path|
+      print ' + ' + path + $/
+    end
   end
 end
 
