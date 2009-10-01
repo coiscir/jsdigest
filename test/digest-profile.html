@@ -11,7 +11,14 @@
 <script type="text/javascript" src="test.js"></script>
 
 <script type="text/javascript" src="../lib/digest.js"></script>
+<script type="text/javascript" src="../lib/digest-more.js"></script>
 <script type="text/javascript">
+var md6_block = '\x11\x22\x33\x44\x55\x66\x77';
+while (md6_block.length < 800) md6_block += md6_block;
+var md6_block_400 = md6_block.substr(0, 400);
+var md6_block_800 = md6_block.substr(0, 800);
+var md6_block_600 = md6_block.substr(0, 600);
+
 var start = new Date().getTime();
 
 Digest.md4('', false).hex();
@@ -62,6 +69,12 @@ Digest.sha512('message', false).base32();
 Digest.sha512('abcdefghijklmnopqrstuvwxyz').base32hex();
 Digest.sha512('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901', false).base64();
 Digest.sha512('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
+
+Digest.md6par(224, md6_block_400).hex();
+Digest.md6seq(256, md6_block_600).hex();
+Digest.md6par(384, md6_block_400).hex();
+Digest.md6seq(512, md6_block_600).hex();
+Digest.md6par(512, md6_block_800, '111222333').hex();
 
 timed(new Date().getTime() - start);
 </script>
