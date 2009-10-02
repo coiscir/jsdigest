@@ -24,9 +24,10 @@ end
 ################
 ## Operations
 def version
-  if File.exists?('VERSION')
-    IO.readlines('VERSION').join.strip
+  if @version.nil? and File.exists?('VERSION')
+    @version = IO.readlines('VERSION').join.strip
   end
+  return @version
 end
 
 def make(release)
