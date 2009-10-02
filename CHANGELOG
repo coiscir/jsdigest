@@ -1,3 +1,8 @@
+Current
+
+  Change UTF-8 decoding in Digest.Encoder to prevent accidental decoding.
+
+
 Sep 27, 2009    1.0.3
 
   Added SCHEMA for variable-length hash functions.

@@ -21,30 +21,6 @@
       }
     }
     
-    function fromUtf8(str) {
-      var i, code, arr;
-      for (i = 0, arr = []; i < str.length; i += 1) {
-        code = str.charCodeAt(i);
-        if (code < 0x80) {
-          arr.push(code);
-        } else if ((code >= 0xc0) && (code <= 0xdf)) {
-          code  = (str.charCodeAt(i + 0) & 0x1f) << 6;
-          code |= (str.charCodeAt(i + 1) & 0x3f);
-          arr.push(code);
-          i += 1;
-        } else if ((code >= 0xe0) && (code < 0xef)) {
-          code  = (str.charCodeAt(i + 0) & 0x0f) << 12;
-          code |= (str.charCodeAt(i + 1) & 0x3f) << 6;
-          code |= (str.charCodeAt(i + 2) & 0x3f);
-          arr.push(code);
-          i += 2;
-        } else {
-          throw new Error('Cannot decode as UTF-8 (Index: ' + i + ')');
-        }
-      }
-      return arr;
-    }
-    
     
     /** Constructors **/
     
@@ -72,12 +48,8 @@
     
     // handle constructor(String)
     if ('string' === typeof input) {
-      if (isUtf8.test(input)) {
-        sequence = fromUtf8(input);
-      } else {
-        for (i = 0, sequence = []; i < input.length; i += 1) {
-          sequence.push(input.charCodeAt(i));
-        }
+      for (i = 0, sequence = []; i < input.length; i += 1) {
+        sequence.push(input.charCodeAt(i));
       }
     }
     
@@ -132,6 +104,9 @@
     
     // \x00-\xff, UTF-8 encoded
     this.utf8 = function utf8() {
+      if (isUtf8.test(this.string())) {
+        return this.ansi();
+      }
       for (var i = 0, code, str = ''; i < sequence.length; i += 1) {
         code = sequence[i];
         if (code < 0x80) {
