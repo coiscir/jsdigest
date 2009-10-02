@@ -70,8 +70,8 @@ module Builder
       end
     end
     
-    # overload: include(indent, globs...)
-    def include(*globs)
+    # overload: import(indent, globs...)
+    def import(*globs)
       indent = globs.first.is_a?(Numeric) ? globs.shift : 0
       
       files = globs.map {|glob|

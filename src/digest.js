@@ -6,4 +6,4 @@
 
 "use strict";
 
-<%= include('global.js', 'encoder.js', 'ulong.js', 'hash-*.js', 'mac-*.js') %>
+<%= import('global.js', 'encoder.js', 'ulong.js', 'hash-*.js', 'mac-*.js') %>

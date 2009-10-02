@@ -6,4 +6,4 @@
 
 "use strict";
 
-<%= include('more-*.js') %>
+<%= import('more-*.js') %>
