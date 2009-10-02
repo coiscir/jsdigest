@@ -1,24 +1,7 @@
 jsDigest
 ===
 
-A Message Digest module for JavaScript.
-
-### Features ###
-
- * **Cross-Browser Support** -- Internet Explorer 5.5, Firefox 2, Chrome 2, Opera 9
-
- * **Namespacing** -- jsDigest is contained within a single global object -- `Digest`.
-
- * **Simplicity** -- Hash data in a single line, choosing both hash function and output format -- `Digest.md5('abc').hex()`
-
- * **Unicode Support** -- jsDigest functions assume UTF-8 encoding for messages. ANSI encoding, alternatively.
-
- * **64-Bit Support** -- Includes 64-bit algorithms, including SHA-512 and SHA-384.
-
-
-### Origin ###
-
-jsDigest was inspired by the desire to understand hash functions and their implementations.
+A Message Digest module for JavaScript. (IE 5.5+, FF 2+, Chrome 2+, Opera 9+)
 
 
 Supports
@@ -46,19 +29,23 @@ Supports
 Syntax
 ---
 
-    Digest.hash(data [, utf8]).output()
-    Digest.mac(hash, data, key [, utf8]).output()
+    Digest.hash(data, [utf8=true]).output()
+    
+    Digest.mac(hash, data, key, [utf8=true]).output()
 
 #### Examples ####
 
-    // MD4('message'), UTF-8 encoded, Hex output
     Digest.md4('message').hex();
+    Digest.sha1('message').base16();
+    Digest.sha256('message').base32();
+    Digest.sha512('message').base64url();
+    
+    Digest.hmac(Digest.md5, 'message', 'passphrase').hex();
 
-    // SHA-1('message'), ANSI encoded, Base-16 output
-    Digest.sha1('message', false).base16();
+### UTF-8 or ANSI ###
 
-    // HMAC-MD5('message', 'secret key'), UTF-8 encoded, Base-64 output
-    Digest.hmac(Digest.md5, 'message', 'secret key'). base64();
+    Digest.md5('\u20AC').hex() <=>
+    Digest.md5('\xE2\x82\xAC', false).hex()
 
 
 Building
