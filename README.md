@@ -53,7 +53,7 @@ More Support
 
 ***Note**: These functions cannot be used with MACs.*
 
-### SHA-3 Candidates ###
+### Hash Functions ###
 
  * MD6 (PAR, SEQ)
  * Skein (256, 512, 1024)
@@ -62,10 +62,8 @@ More Support
 More Syntax
 ---
 
-    // Variable-length hash functions
     Digest.hash(len, data, [utf8=true]).output()
     
-    // Variable-length, keyed hash functions
     Digest.hash(len, data, key, [utf8=true]).output()
 
 ### Examples ###
