@@ -14,13 +14,17 @@ Digest                          # Namespace / Global
       sha384(...)
       sha512(...)
     
-    [keyed]                     # Keyed hash function definitions
-    [keyed](...)                #=> Encoder(hash)
-    [keyed](data, key, utf8=true)
+    [key]                       # Keyed hash function definitions
+    [key](...)                  #=> Encoder(hash)
+    [key](data, key, utf8=true)
     
-    [var]                       # Variable-length hash function definitions
-    [var](...)                  #=> Encoder(hash)
-    [var](len, data, key, utf8=true)
+    [len]                       # Variable-length hash function definitions
+    [len](...)                  #=> Encoder(hash)
+    [len](len, data, utf8=true)
+    
+    [lenkey]                    # Variable-length, keyed hash function definitions
+    [lenkey](...)               #=> Encoder(hash)
+    [lenkey](len, data, key, utf8=true)
       
       md6par(...) {0 < len <= 512} [more]
       md6seq(...) {0 < len <= 512} [more]
