@@ -33,7 +33,7 @@ Syntax
     
     Digest.mac(hash, data, key, [utf8=true]).output()
 
-#### Examples ####
+### Examples ###
 
     Digest.md4('message').hex();
     Digest.sha1('message').base16();
@@ -46,6 +46,35 @@ Syntax
 
     Digest.md5('\u20AC').hex() <=>
     Digest.md5('\xE2\x82\xAC', false).hex()
+
+
+More Support
+---
+
+***Note**: These functions cannot be used with MACs.*
+
+### SHA-3 Candidates ###
+
+ * MD6 (PAR, SEQ)
+ * Skein (256, 512, 1024)
+
+
+More Syntax
+---
+
+    // Variable-length hash functions
+    Digest.hash(len, data, [utf8=true]).output()
+    
+    // Variable-length, keyed hash functions
+    Digest.hash(len, data, key, [utf8=true]).output()
+
+### Examples ###
+
+    Digest.skein512(384, 'message').hex();
+    Digest.skein512(512, 'message').base32();
+    
+    Digest.md6par(224, 'message', 'passphrase').base16();
+    Digest.md6seq(512, 'message', 'passphrase').base64url();
 
 
 Building
