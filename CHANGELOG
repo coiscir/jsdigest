@@ -1,6 +1,17 @@
 Current
 
+
+Oct 08, 2009    1.0.4
+
+  Added Skein (256, 512, 1024) to jsDigest More.
+  
   Change UTF-8 decoding in Digest.Encoder to prevent accidental decoding.
+  
+  Revise Rakefile:
+  - Add memory for version number
+  - Rename `include` to `import` to prevent conflicts/confusion
+  
+  Added jsDigest More details in README
 
 
 Sep 27, 2009    1.0.3
