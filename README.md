@@ -51,12 +51,12 @@ Syntax
 More Support
 ---
 
-***Note**: These functions cannot be used with MACs.*
-
 ### Hash Functions ###
 
  * MD6 (PAR, SEQ)
  * Skein (256, 512, 1024)
+
+***Note**: These functions cannot be used with MACs.*
 
 
 More Syntax
