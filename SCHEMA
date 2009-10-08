@@ -21,13 +21,17 @@ Digest                          # Namespace / Global
     [len]                       # Variable-length hash function definitions
     [len](...)                  #=> Encoder(hash)
     [len](len, data, utf8=true)
+      
+      skein256(...)             {0 < len < 256}   [more]
+      skein512(...)             {0 < len < 512}   [more]
+      skein1024(...)            {0 < len < 1024}  [more]
     
     [lenkey]                    # Variable-length, keyed hash function definitions
     [lenkey](...)               #=> Encoder(hash)
     [lenkey](len, data, key, utf8=true)
       
-      md6par(...) {0 < len <= 512} [more]
-      md6seq(...) {0 < len <= 512} [more]
+      md6par(...)               {0 < len <= 512}  [more]
+      md6seq(...)               {0 < len <= 512}  [more]
     
     [mac]                       # MAC function definitions
     [mac](...)                  #=> Encoder(hash)
