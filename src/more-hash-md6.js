@@ -177,7 +177,7 @@
       z = (M.length > b ? 0 : 1);
       
       // pad and finalize message
-      while ((M.length % b) > 0) {
+      while ((M.length < 1) || ((M.length % b) > 0)) {
         M.push(0x00);
         P += 8;
       }
@@ -207,7 +207,7 @@
       ];
       
       // pad message
-      while ((M.length % (b - c)) > 0) {
+      while ((M.length < 1) || ((M.length % (b - c)) > 0)) {
         M.push(0x00);
         P += 8;
       }
