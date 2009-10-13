@@ -9,70 +9,78 @@ Supports
 
 ### Hash Functions ###
 
- * MD4
- * MD5
- * SHA-1
- * SHA-256, SHA-224
- * SHA-512, SHA-384
+ * **MD4**
+ * **MD5**
+ * **SHA-1**
+ * **SHA-256** (SHA-224)
+ * **SHA-512** (SHA-384)
 
-### MAC ###
+### MAC Functions ###
 
- * HMAC
+ * **HMAC**
 
-### RFC 4648 Encoding ###
+### Input Encodings ###
 
- * Base-16, Hex
- * Base-32, Base-32 Hex
- * Base-64, Base-64 URL
+ * **UTF-8** (encoded: `"\u20AC" => "\xE2\x82\xAC"`)
+ * **ANSI** (truncated: `"\u20AC" => "\xAC"`)
+
+### Output Formats ###
+
+ * **Base-16** (Hex)
+ * **Base-32** (Base-32 Hex)
+ * **Base-64** (Base-64 URL)
 
 
-Syntax
+Usage
 ---
 
+### Hash Functions ###
+
     Digest.hash(data, [utf8=true]).output()
-    
+
+> #### Examples ####
+> 
+>     Digest.md4('message').hex();
+>     Digest.sha1('message').base16();
+>     Digest.sha512('message').base64url();
+
+
+### MAC Functions ###
+
     Digest.mac(hash, data, key, [utf8=true]).output()
 
-### Examples ###
-
-    Digest.md4('message').hex();
-    Digest.sha1('message').base16();
-    Digest.sha256('message').base32();
-    Digest.sha512('message').base64url();
-    
-    Digest.hmac(Digest.md5, 'message', 'passphrase').hex();
-
-### UTF-8 or ANSI ###
-
-    Digest.md5('\u20AC').hex() <=>
-    Digest.md5('\xE2\x82\xAC', false).hex()
+> #### Examples ####
+> 
+>     Digest.hmac(Digest.md5, 'message', 'passphrase').hex();
+>     Digest.hmac(Digest.sha1, 'message', 'passphrase').base64();
 
 
 More Support
 ---
 
-### Hash Functions ###
+### More Hash Functions ###
 
- * MD6 (PAR, SEQ)
- * Skein (256, 512, 1024)
+ * **MD6** (PAR / SEQ)
+ * **Skein** (256 / 512 / 1024)
 
 ***Note**: These functions cannot be used with MACs.*
 
 
-More Syntax
+More Usage
 ---
 
+### More Hash Functions ###
+
     Digest.hash(len, data, [utf8=true]).output()
-    
     Digest.hash(len, data, key, [utf8=true]).output()
 
-### Examples ###
-
-    Digest.skein512(384, 'message').hex();
-    Digest.skein512(512, 'message').base32();
-    
-    Digest.md6par(224, 'message', 'passphrase').base16();
-    Digest.md6seq(512, 'message', 'passphrase').base64url();
+> #### Examples ####
+> 
+>     Digest.skein512(384, 'message').hex();
+>     Digest.skein512(512, 'message').base32();
+>     
+>     Digest.md6par(224, 'message', 'passphrase').base16();
+>     Digest.md6seq(512, 'message', 'passphrase').base64url();
 
 
 Building
