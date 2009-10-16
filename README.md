@@ -21,8 +21,7 @@ Supports
 
 ### Input Encodings ###
 
- * **UTF-8** (encoded: `"\u20AC" => "\xE2\x82\xAC"`)
- * **ANSI** (truncated: `"\u20AC" => "\xAC"`)
+ * **UTF-8**
 
 ### Output Formats ###
 
