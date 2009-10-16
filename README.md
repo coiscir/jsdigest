@@ -65,10 +65,10 @@ The optional `utf8` argument can be used to specify UTF-8 or ANSI.
 
 > #### Examples ####
 >
->    Digest.md5('message', true)   # UTF-8 encoding
->    Digest.md5('message', false)  # ANSI truncation
->    
->    Digest.md5('message')         # UTF-8 (default)
+>     Digest.md5('message', true)   # UTF-8 encoding
+>     Digest.md5('message', false)  # ANSI truncation
+>     
+>     Digest.md5('message')         # UTF-8 (default)
 
 
 More Support
