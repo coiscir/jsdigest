@@ -2,6 +2,9 @@ require 'rake'
 require 'erb'
 require 'jsmin'
 
+BUILD_FILES = ['digest.js', 'digest-more.js']
+CLEAN_FILES = ['digest.js']
+
 ################
 ## Tasks
 task :default => :build
@@ -35,7 +38,7 @@ def make(release)
   
   print $/ + '== Build :: ' + version.to_s + $/
   
-  ['digest.js', 'digest-more.js'].each do |start|
+  BUILD_FILES.each do |start|
     Builder.build('src', 'lib', start, version, release) do |path|
       print ' + ' + path + $/
     end
@@ -45,8 +48,10 @@ end
 def clean
   print $/ + '== Clean' + $/
   
-  Builder.clean('lib', 'digest.js') do |path|
-    print ' - ' + path + $/
+  CLEAN_FILES.each do |file|
+    Builder.clean('lib', file) do |path|
+      print ' - ' + path + $/
+    end
   end
 end
 
