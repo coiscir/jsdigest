@@ -43,11 +43,11 @@
     }
     
     // finalize padding
-    ipad = Digest.Encoder(ipad).ansi();
-    opad = Digest.Encoder(opad).ansi();
+    ipad = Digest.Encoder(ipad).trunc();
+    opad = Digest.Encoder(opad).trunc();
     
     // finish
-    return hash.curry(opad + hash.curry(ipad + data).ansi());
+    return hash.curry(opad + hash.curry(ipad + data).trunc());
   };
   
 }());

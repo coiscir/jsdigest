@@ -60,7 +60,7 @@ Digest                          # Namespace / Global
     # Single-byte
     single()                    #=> Array,  0x00-0xff, truncated
     multi()                     #=> Array,  0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
-    ansi()                      #=> String, \x00-\xff, truncated
+    trunc()                     #=> String, \x00-\xff, truncated
     utf8()                      #=> String, \x00-\xff, UTF-8 encoded
     
     # RFC-4648 encoding

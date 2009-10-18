@@ -54,21 +54,22 @@ Usage
 >     Digest.hmac(Digest.sha1, 'message', 'passphrase').base64();
 
 
-### Input Encodings ###
+### UTF-8 ###
 
-JavaScript Strings require encoding (or truncating) before hashing.
-
-The optional `utf8` argument can be used to specify UTF-8 or ANSI.
+JavaScript strings require reduction from 16-bit to 8-bit before hashing.
+This is accomplished by either UTF-8 encoding or simply truncating inputs.
 
     utf8("\u20AC") == "\xE2\x82\xAC"
-    ansi("\u20AC") == "\u00AC" || "\xAC"
+    trunc("\u20AC") == "\xAC" || "\u00AC"
+
+The optional `utf8` argument can be used to specify which.
 
 > #### Examples ####
 >
->     Digest.md5('message', true)   # UTF-8 encoding
->     Digest.md5('message', false)  # ANSI truncation
+>     Digest.md5("\u20AC", true)    # UTF-8 encoding
+>     Digest.md5("\u20AC", false)   # 8-bit truncation
 >     
->     Digest.md5('message')         # UTF-8 (default)
+>     Digest.md5("\u20AC")          # UTF-8 (default)
 
 
 More Support

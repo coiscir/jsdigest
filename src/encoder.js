@@ -95,7 +95,7 @@
     };
     
     // \x00-\xff, truncated
-    this.ansi = function ansi() {
+    this.trunc = function trunc() {
       for (var i = 0, str = ''; i < sequence.length; i += 1) {
         str += String.fromCharCode(sequence[i] & 0xff);
       }
@@ -105,7 +105,7 @@
     // \x00-\xff, UTF-8 encoded
     this.utf8 = function utf8() {
       if (isUtf8.test(this.string())) {
-        return this.ansi();
+        return this.trunc();
       }
       for (var i = 0, code, str = ''; i < sequence.length; i += 1) {
         code = sequence[i];
