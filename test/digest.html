@@ -52,7 +52,7 @@ test('\xE2\x82\xAC',  Digest.Encoder('\u20AC').utf8(), 'UTF-8 encode U+20AC');
 space();
 test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(), 'Prevent dual-encoding UTF-8');
 space();
-test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).ansi(), 'Prevent accidental decoding UTF-8');
+test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).trunc(), 'Prevent accidental decoding UTF-8');
 
 space();
 log('== RFC-4648 Encoding ==');
