@@ -1,4 +1,10 @@
-Current
+Oct 31, 2009    1.0.5
+  
+  Fix missing padding of zero-length messages in MD6.
+  
+  Remove ANSI references, changing `ansi` to `trunc`.
+  
+  Explicitly set array lengths in Skein.
 
 
 Oct 08, 2009    1.0.4
