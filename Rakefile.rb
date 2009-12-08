@@ -33,7 +33,7 @@ def version
 end
 
 def make(release)
-  print $/ + '== Build :: ' + version.to_s + $/
+  print 'Build ' + version.to_s + $/
   
   BUILD_FILES.each do |start|
     Builder.build('src', 'lib', start, version, release) do |path|
@@ -43,7 +43,7 @@ def make(release)
 end
 
 def clean
-  print $/ + '== Clean' + $/
+  print 'Clean' + $/
   
   CLEAN_FILES.each do |file|
     Builder.clean('lib', file) do |path|
