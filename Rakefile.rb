@@ -5,6 +5,8 @@ require 'jsmin'
 BUILD_FILES = ['digest.js', 'digest-more.js']
 CLEAN_FILES = ['digest.js']
 
+JSD_VERSION = '1.1.0'
+
 ################
 ## Tasks
 task :default => :build
@@ -27,15 +29,10 @@ end
 ################
 ## Operations
 def version
-  if @version.nil? and File.exists?('VERSION')
-    @version = IO.readlines('VERSION').join.strip
-  end
-  return @version
+  return JSD_VERSION
 end
 
 def make(release)
-  #version = Time.now.utc.strftime('%Y.%m%d')
-  
   print $/ + '== Build :: ' + version.to_s + $/
   
   BUILD_FILES.each do |start|
