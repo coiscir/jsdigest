@@ -7,130 +7,18 @@
 </head>
 
 <body>
-<ul id="results"></ul>
-<script type="text/javascript" src="test.js"></script>
+  <ul id="results"></ul>
 
+<script type="text/javascript" src="test.js"></script>
 <script type="text/javascript" src="../lib/digest.js"></script>
 <script type="text/javascript">
-
-var hmac_1_txt  = 'Hi There';
-var hmac_1_key1 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
-var hmac_1_key2 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b';
-var hmac_7_txt1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data';
-var hmac_7_key1 = '\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa';
-var hmac_7_txt2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.';
-var hmac_7_key2 = '\xaa' + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1;
-
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key1 = hmac_7_key1 + hmac_7_key1;
-hmac_7_key2 += hmac_7_key1;
 
 var timer = new Date().getTime();
 
 log('== Digest ==');
-test(true, !!window.Digest, 'Digest is defined');
-test('string', window.Digest.Version, 'Digest.Version');
-
+test(true, !!this.Digest, 'Digest is defined');
+test('string', Digest.Version, 'Digest.Version');
 space();
-
-log('== Digest.Encoder ==');
-test(true, !!Digest.Encoder, 'Digest.Encoder is defined');
-test(Digest.Encoder, Digest.Encoder([0x41]), 'Digest.Encoder(Array)');
-test(Digest.Encoder, Digest.Encoder('abcd'), 'Digest.Encoder(String)');
-space();
-test(Error, function(){ return Digest.Encoder(['a', 'b']); }, 'Invalid Array elements');
-space();
-test('abcd', Digest.Encoder('abcd').string(), 'Digest.Encoder#string');
-test('abcd', Digest.Encoder(Digest.Encoder('abcd')).string(), 'Digest.Encoder#string w/ cloning');
-
-space();
-log('== UTF-8 Encoding ==');
-test('\x24',          Digest.Encoder('\u0024').utf8(), 'UTF-8 encode U+0024');
-test('\xC2\xA2',      Digest.Encoder('\u00A2').utf8(), 'UTF-8 encode U+00A2');
-test('\xE2\x82\xAC',  Digest.Encoder('\u20AC').utf8(), 'UTF-8 encode U+20AC');
-space();
-test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(), 'Prevent dual-encoding UTF-8');
-space();
-test('\xE2\x82\xAC',  Digest.Encoder(Digest.Encoder('\u20AC').utf8()).trunc(), 'Prevent accidental decoding UTF-8');
-
-space();
-log('== RFC-4648 Encoding ==');
-test('AB',        Digest.Encoder('AB').string(),  'string');
-test('4142',      Digest.Encoder('AB').base16(),  'base16');
-test('IFBA====',  Digest.Encoder('AB').base32(),  'base32');
-test('QUI=',      Digest.Encoder('AB').base64(),  'base64');
-space();
-test('fo',     Digest.Encoder('fo').string(),     'string');
-test('foobar', Digest.Encoder('foobar').string(), 'string');
-space();
-test('Zm8=',     Digest.Encoder('fo').base64(),     'base64');
-test('Zm9vYmFy', Digest.Encoder('foobar').base64(), 'base64');
-space();
-test('MZXQ====',         Digest.Encoder('fo').base32(),     'base32');
-test('MZXW6YTBOI======', Digest.Encoder('foobar').base32(), 'base32');
-space();
-test('CPNG====',         Digest.Encoder('fo').base32hex().toUpperCase(),     'base32hex');
-test('CPNMUOJ1E8======', Digest.Encoder('foobar').base32hex().toUpperCase(), 'base32hex');
-space();
-test('666F',         Digest.Encoder('fo').base16(),     'base16');
-test('666F6F626172', Digest.Encoder('foobar').base16(), 'base16');
-
-space();
-log('== Hash: MD ==');
-test(true, !!Digest.md4, 'Digest.md4 is defined');
-test(true, !!Digest.md5, 'Digest.md5 is defined');
-space();
-test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")         ');
-test('043f8582f241db351ce627e153e7f0e4', Digest.md4('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md4("A..Za..z0..9")');
-space();
-test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")         ');
-test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md5("A..Za..z0..9")');
-
-space();
-log('== Hash: SHA ==');
-test(true, !!Digest.sha1, 'Digest.sha1 is defined');
-test(true, !!Digest.sha224, 'Digest.sha224 is defined');
-test(true, !!Digest.sha256, 'Digest.sha256 is defined');
-test(true, !!Digest.sha384, 'Digest.sha384 is defined');
-test(true, !!Digest.sha512, 'Digest.sha512 is defined');
-space();
-test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'Digest.sha1("abc")       ');
-test('84983e441c3bd26ebaae4aa1f95129e5e54670f1', Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha1("abcd..nopq")');
-space();
-test('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', Digest.sha224('abc').hex(), 'Digest.sha224("abc")       ');
-test('75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha224("abcd..nopq")');
-space();
-test('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', Digest.sha256('abc').hex(), 'Digest.sha256("abc")       ');
-test('248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha256("abcd..nopq")');
-space();
-test('cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', Digest.sha384('abc').hex(), 'Digest.sha384("abc")               ');
-test('09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039', Digest.sha384('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu').hex(), 'Digest.sha224("abcdefgh..nopqrstu")');
-space();
-test('ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', Digest.sha512('abc').hex(), 'Digest.sha512("abc")               ');
-test('8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', Digest.sha512('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu').hex(), 'Digest.sha256("abcdefgh..nopqrstu")');
-
-space();
-log('== HMAC ==');
-test(true, !!Digest.hmac, 'Digest.hmac is defined');
-space();
-test('9294727a3638bb1c13f48ef8158bfc9d', Digest.hmac(Digest.md5, hmac_1_txt,  hmac_1_key1, false).hex(), 'RFC 2202 - Test 1 - HMAC-MD5');
-test('6f630fad67cda0ee1fb1f562db3aa53e', Digest.hmac(Digest.md5, hmac_7_txt1, hmac_7_key1, false).hex(), 'RFC 2202 - Test 7 - HMAC-MD5');
-space();
-test('b617318655057264e28bc0b6fb378c8ef146be00', Digest.hmac(Digest.sha1, hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 2202 - Test 1 - HMAC-SHA-1');
-test('e8e99d0f45237d786d6bbaa7965c7808bbff1a91', Digest.hmac(Digest.sha1, hmac_7_txt1, hmac_7_key1, false).hex(), 'RFC 2202 - Test 7 - HMAC-SHA-1');
-space();
-test('896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22', Digest.hmac(Digest.sha224, hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 4231 - Test 1 - HMAC-SHA-224');
-test('3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1', Digest.hmac(Digest.sha224, hmac_7_txt2, hmac_7_key2, false).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-224');
-space();
-test('b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7', Digest.hmac(Digest.sha256, hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 4231 - Test 1 - HMAC-SHA-256');
-test('9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', Digest.hmac(Digest.sha256, hmac_7_txt2, hmac_7_key2, false).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-256');
-space();
-test('afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6', Digest.hmac(Digest.sha384, hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 4231 - Test 1 - HMAC-SHA-384');
-test('6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e', Digest.hmac(Digest.sha384, hmac_7_txt2, hmac_7_key2, false).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-384');
-space();
-test('87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854', Digest.hmac(Digest.sha512, hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 4231 - Test 1 - HMAC-SHA-512');
-test('e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', Digest.hmac(Digest.sha512, hmac_7_txt2, hmac_7_key2, false).hex(), 'RFC 4231 - Test 7 - HMAC-SHA-512');
 
 space();
 timed(new Date().getTime() - timer);
