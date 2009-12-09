@@ -2,7 +2,7 @@ require 'rake'
 require 'erb'
 require 'jsmin'
 
-BUILD_FILES = ['digest.js', 'digest-more.js']
+BUILD_FILES = ['digest.js']
 CLEAN_FILES = ['digest.js']
 
 JSD_VERSION = '1.1.0'
