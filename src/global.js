@@ -2,11 +2,11 @@
  *  Define Global Object
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function Global(self) {
   
-  this.Digest = new function Digest() {
+  self.Digest = new function Digest() {
     this.Version = '<%= version %>';
     this.fn = this.constructor.prototype;
   }();
   
-}());
+}(this));
