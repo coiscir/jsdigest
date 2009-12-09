@@ -13,41 +13,45 @@ task :default => :build
 
 desc "Build library files."
 task :build do
-  make(false)
+  Operations.build(false)
 end
 
 desc "Build release library files."
 task :release do
-  make(true)
+  Operations.build(true)
 end
 
 desc "Clean all build and release files."
 task :clean do
-  clean
+  Operations.clean
 end
 
 ################
 ## Operations
-def version
-  return JSD_VERSION
-end
-
-def make(release)
-  print 'Build ' + version.to_s + $/
-  
-  BUILD_FILES.each do |start|
-    Builder.build('src', 'lib', start, version, release) do |path|
-      print ' + ' + path + $/
+module Operations
+  class << self
+    def version
+      return JSD_VERSION
     end
-  end
-end
 
-def clean
-  print 'Clean' + $/
-  
-  CLEAN_FILES.each do |file|
-    Builder.clean('lib', file) do |path|
-      print ' - ' + path + $/
+    def build(release)
+      print 'Build ' + version.to_s + $/
+      
+      BUILD_FILES.each do |start|
+        Builder.build('src', 'lib', start, version, release) do |path|
+          print ' + ' + path + $/
+        end
+      end
+    end
+
+    def clean
+      print 'Clean' + $/
+      
+      CLEAN_FILES.each do |file|
+        Builder.clean('lib', file) do |path|
+          print ' - ' + path + $/
+        end
+      end
     end
   end
 end
