@@ -26,6 +26,26 @@ var timer = new Date().getTime();
   document.title = 'jsDigest ' + Digest.Version;
 }());
 
+(function () {
+  var foobar = [102, 111, 111, 98, 97, 114];
+  
+  log('== Convert ==');
+  
+  test('string', Digest.convert.atos(foobar), 'atos(arr)');
+  test(Array, Digest.convert.stoa('foobar'), 'stoa(str)');
+  
+  space();
+  
+  test('string', Digest.convert.atos('foobar'), 'atos(str)');
+  test(Array, Digest.convert.stoa(foobar), 'stoa(arr)');
+  
+  space();
+  
+  test(undefined, Digest.convert.atos(true), 'invalid argument');
+  
+  space();
+}());
+
 log('== Timer ==');
 timed(new Date().getTime() - timer);
 </script>
