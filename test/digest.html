@@ -46,6 +46,75 @@ var timer = new Date().getTime();
   space();
 }());
 
+(function () {
+  log('== Encoder ==');
+  
+  test(Digest.Encoder, Digest.Encoder([0x41]), 'Digest.Encoder(Array)');
+  test(Digest.Encoder, Digest.Encoder('abcd'), 'Digest.Encoder(String)');
+  
+  space();
+  
+  test(Error, function(){ return Digest.Encoder([40, null]); }, 'Invalid Array elements');
+  
+  space();
+  
+  test('abcd', Digest.Encoder('abcd').string(), 'Digest.Encoder#string');
+  test('abcd', Digest.Encoder(Digest.Encoder('abcd')).string(), 'Digest.Encoder#string w/ cloning');
+  
+  space();
+}());
+
+(function () {
+  log('== Encoder :: UTF-8 ==');
+  
+  test(Array, Digest.Encoder('\u0024').utf8(), 'UTF-8 encode U+0024 (' + [0x24].join() + ')');
+  test(Array, Digest.Encoder('\u00A2').utf8(), 'UTF-8 encode U+00A2 (' + [0xc2, 0xa2].join() + ')');
+  test(Array, Digest.Encoder('\u20AC').utf8(), 'UTF-8 encode U+20AC (' + [0xe2, 0x82, 0xac].join() + ')');
+  
+  space();
+  
+  test(Array, Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(), 'Prevent auto re-encoding UTF-8 (' + [0xe2, 0x82, 0xac].join() + ')');
+  test(Array, Digest.Encoder(Digest.Encoder('\u20AC').utf8()).trunc(), 'Prevent auto un-encoding UTF-8 (' + [0xe2, 0x82, 0xac].join() + ')');
+  
+  space();
+}());
+
+(function () {
+  log('== Encoder :: RFC-4648');
+  
+  test('AB',        Digest.Encoder('AB').string(),  'string');
+  test('4142',      Digest.Encoder('AB').base16(),  'base16');
+  test('IFBA====',  Digest.Encoder('AB').base32(),  'base32');
+  test('QUI=',      Digest.Encoder('AB').base64(),  'base64');
+
+  space();
+
+  test('fo',     Digest.Encoder('fo').string(),     'string');
+  test('foobar', Digest.Encoder('foobar').string(), 'string');
+
+  space();
+
+  test('Zm8=',     Digest.Encoder('fo').base64(),     'base64');
+  test('Zm9vYmFy', Digest.Encoder('foobar').base64(), 'base64');
+
+  space();
+
+  test('MZXQ====',         Digest.Encoder('fo').base32(),     'base32');
+  test('MZXW6YTBOI======', Digest.Encoder('foobar').base32(), 'base32');
+
+  space();
+
+  test('CPNG====',         Digest.Encoder('fo').base32hex().toUpperCase(),     'base32hex');
+  test('CPNMUOJ1E8======', Digest.Encoder('foobar').base32hex().toUpperCase(), 'base32hex');
+
+  space();
+
+  test('666F',         Digest.Encoder('fo').base16(),     'base16');
+  test('666F6F626172', Digest.Encoder('foobar').base16(), 'base16');
+  
+  space();
+}());
+
 log('== Timer ==');
 timed(new Date().getTime() - timer);
 </script>
