@@ -15,12 +15,18 @@
 
 var timer = new Date().getTime();
 
-log('== Digest ==');
-test(true, !!this.Digest, 'Digest is defined');
-test('string', Digest.Version, 'Digest.Version');
-space();
+(function () {
+  log('== Digest ==');
+  
+  test(true, !!this.Digest, 'Digest is defined');
+  test('string', Digest.Version, 'Digest.Version');
+  
+  space();
+  
+  document.title = 'jsDigest ' + Digest.Version;
+}());
 
-space();
+log('== Timer ==');
 timed(new Date().getTime() - timer);
 </script>
 
