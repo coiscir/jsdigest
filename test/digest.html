@@ -31,17 +31,17 @@ var timer = new Date().getTime();
   
   log('== Convert ==');
   
-  test('string', Digest.convert.atos(foobar), 'atos(arr)');
-  test(Array, Digest.convert.stoa('foobar'), 'stoa(str)');
+  test('string', Digest.atos(foobar), 'atos(arr)');
+  test(Array, Digest.stoa('foobar'), 'stoa(str)');
   
   space();
   
-  test('string', Digest.convert.atos('foobar'), 'atos(str)');
-  test(Array, Digest.convert.stoa(foobar), 'stoa(arr)');
+  test('string', Digest.atos('foobar'), 'atos(str)');
+  test(Array, Digest.stoa(foobar), 'stoa(arr)');
   
   space();
   
-  test(undefined, Digest.convert.atos(true), 'invalid argument');
+  test(undefined, Digest.atos(true), 'invalid argument');
   
   space();
 }());

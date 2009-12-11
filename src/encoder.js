@@ -23,7 +23,7 @@
     }
     
     // new Encoder(Array) || new Encoder(String)
-    buffer = self.convert.stoa(input);
+    buffer = self.stoa(input);
     
     if ('undefined' === typeof buffer) {
       throw new Error('Encoder input must be a string or an array.');
@@ -48,7 +48,7 @@
     };
     
     this.string = function string() {
-      return self.convert.atos(buffer);
+      return self.atos(buffer);
     };
     
     this.valueOf = this.array;

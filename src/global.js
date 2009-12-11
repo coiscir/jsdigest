@@ -11,42 +11,45 @@
     
     /* Array and String Converting */
     
-    this.convert = {
+    function isArray(array) {
+      return Object.prototype.toString.call(array) === "[object Array]";
+    }
     
-      isArray: function isArray(array) {
-        return Object.prototype.toString.call(array) === "[object Array]";
-      },
-      
-      isString: function isString(string) {
-        return 'string' === typeof string;
-      },
-      
-      atos: function atos(array) {
-        if (this.isArray(array)) {
-          for (var i = 0, l = array.length, string = ''; i < l; i += 1) {
-            string += String.fromCharCode(array[i]);
-          }
-          return string;
+    function isString(string) {
+      return 'string' === typeof string;
+    }
+    
+    function atos(array) {
+      if (isArray(array)) {
+        for (var i = 0, l = array.length, string = ''; i < l; i += 1) {
+          string += String.fromCharCode(array[i]);
         }
-        
-        if (this.isString(array)) {
-          return array.valueOf();
-        }
-      },
-      
-      stoa: function stoa(string) {
-        if (this.isString(string)) {
-          for (var i = 0, l = string.length, array = []; i < l; i += 1) {
-            array.push(string.charCodeAt(i));
-          }
-          return array;
-        }
-        
-        if (this.isArray(string)) {
-          return string.valueOf();
-        }
+        return string;
       }
-    };
+      
+      if (isString(array)) {
+        return array.valueOf();
+      }
+    }
+    
+    function stoa(string) {
+      if (isString(string)) {
+        for (var i = 0, l = string.length, array = []; i < l; i += 1) {
+          array.push(string.charCodeAt(i));
+        }
+        return array;
+      }
+      
+      if (isArray(string)) {
+        return string.valueOf();
+      }
+    }
+    
+    // expose functions
+    this.isArray = isArray;
+    this.isString = isString;
+    this.atos = atos;
+    this.stoa = stoa;
     
     
     /* Ensure Unsigned Int and Long Values */
