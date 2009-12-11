@@ -13,7 +13,29 @@
 <script type="text/javascript" src="../lib/digest-dev.js"></script>
 <script type="text/javascript">
 
-var timer = new Date().getTime();
+var timer,
+hmac_1_txt  = 'Hi There',
+hmac_1_key1 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b',
+hmac_1_key2 = '\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b',
+hmac_7_txt1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
+hmac_7_key1 = '\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa',
+hmac_7_txt2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.',
+hmac_7_key2 = '\xaa' + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1 + hmac_7_key1;
+
+hmac_7_key1 += hmac_7_key1;
+hmac_7_key1 += hmac_7_key1;
+hmac_7_key1 += hmac_7_key1;
+hmac_7_key2 += hmac_7_key1;
+
+hmac_1_txt  = Digest.Encoder(hmac_1_txt);
+hmac_1_key1 = Digest.Encoder(hmac_1_key1);
+hmac_1_key2 = Digest.Encoder(hmac_1_key2);
+hmac_7_txt1 = Digest.Encoder(hmac_7_txt1);
+hmac_7_key1 = Digest.Encoder(hmac_7_key1);
+hmac_7_txt2 = Digest.Encoder(hmac_7_txt2);
+hmac_7_key2 = Digest.Encoder(hmac_7_key2);
+
+timer = new Date().getTime();
 
 (function () {
   log('== Digest ==');
@@ -134,6 +156,23 @@ var timer = new Date().getTime();
   
   test('a448017aaf21d8525fc10ae87aa6729d', Digest.md4('abc').hex(), 'Digest.md4("abc")         ');
   test('043f8582f241db351ce627e153e7f0e4', Digest.md4('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md4("A..Za..z0..9")');
+  
+  space();
+}());
+
+(function () {
+  log('== MD5 ==');
+  test(true, !!Digest.md5, 'Digest.md5 is defined');
+  
+  space();
+  
+  test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'Digest.md5("abc")         ');
+  test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'Digest.md5("A..Za..z0..9")');
+  
+  space();
+  
+  test('9294727a3638bb1c13f48ef8158bfc9d', Digest.md5(hmac_1_txt,  hmac_1_key1).hex(), 'RFC 2202 - Test 1 - HMAC-MD5');
+  test('6f630fad67cda0ee1fb1f562db3aa53e', Digest.md5(hmac_7_txt1, hmac_7_key1).hex(), 'RFC 2202 - Test 7 - HMAC-MD5');
   
   space();
 }());
