@@ -3,6 +3,7 @@
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
 (function MD4(self) {
+  'Copyright (c) 1990 Ronald L. Rivest';
   
   function merge(input) {
     var i, j, l, output = [];
