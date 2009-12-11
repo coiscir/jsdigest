@@ -2,48 +2,46 @@
  *  MD4 (c) 1990 Ronald L. Rivest
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function MD4(self) {
   
-  this.Digest.fn.md4 = function md4(data, utf8) {
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
+  function merge(input) {
+    var i, j, l, output = [];
+    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
+      output[i] = ((input[j]) & 0xff) |
+        ((input[j + 1] <<  8) & 0xff00) |
+        ((input[j + 2] << 16) & 0xff0000) |
+        ((input[j + 3] << 24) & 0xff000000);
     }
-    
-    var a, b, c, d, i, t, tmp, x,
+    return output;
+  }
+  
+  function split(input) {
+    var i, l, output = [];
+    for (i = 0, l = input.length; i < l; i += 1) {
+      output.push((input[i] >>  0) & 0xff);
+      output.push((input[i] >>  8) & 0xff);
+      output.push((input[i] >> 16) & 0xff);
+      output.push((input[i] >> 24) & 0xff);
+    }
+    return output;
+  }
+  
+  function rotl(x, n) {
+    return ((x << n) | (x >>> (32 - n)));
+  }
+  
+  // define hash function
+  
+  function main(data) {
+    var a, b, c, d, i, l, t, tmp, x,
       bytes, bitHi, bitLo,
-      padlen, padding,
+      padlen, padding = [0x80],
       hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
       X = [
         0, 1, 2,  3, 4,  5, 6,  7, 8, 9, 10, 11, 12, 13, 14, 15, // Round 1
         0, 4, 8, 12, 1,  5, 9, 13, 2, 6, 10, 14,  3,  7, 11, 15, // Round 2
         0, 8, 4, 12, 2, 10, 6, 14, 1, 9,  5, 13,  3, 11,  7, 15  // Round 3
       ];
-    
-    function rotl(x, n) {
-      return ((x << n) | (x >>> (32 - n)));
-    }
-    
-    function merge(input) {
-      var i, j, output = [];
-      for (i = 0, j = 0; j < input.length; i += 1, j = (i * 4)) {
-        output[i] = ((input[j]) & 0xff) |
-          ((input[j + 1] <<  8) & 0xff00) |
-          ((input[j + 2] << 16) & 0xff0000) |
-          ((input[j + 3] << 24) & 0xff000000);
-      }
-      return output;
-    }
-    
-    function split(input) {
-      var i, output = [];
-      for (i = 0; i < input.length; i += 1) {
-        output.push((input[i] >>  0) & 0xff);
-        output.push((input[i] >>  8) & 0xff);
-        output.push((input[i] >> 16) & 0xff);
-        output.push((input[i] >> 24) & 0xff);
-      }
-      return output;
-    }
     
     function func(t, x, y, z) {
       switch (Math.floor(t / 16)) {
@@ -82,27 +80,19 @@
       return rotl((a + func(t, b, c, d) + x + konst(t)), shift(t));
     }
     
-    // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-    }
-    
-    // pad data
+    // use bit-length to pad data
     bytes = data.length;
     bitLo = (bytes * 8) & 0xffffffff;
     bitHi = (bytes * 8 / Math.pow(2, 32)) & 0xffffffff;
     
-    padding = '\x80';
     padlen = ((bytes % 64) < 56 ? 56 : 120) - (bytes % 64);
     while (padding.length < padlen) {
-      padding += '\x00';
+      padding.push(0x0);
     }
     
-    data += padding;
-    x = merge(Digest.Encoder(data).single()).concat([bitLo, bitHi]);
+    x = merge(data.concat(padding)).concat([bitLo, bitHi]);
     
-    // update hash
-    for (i = 0; i < x.length; i += 16) {
+    for (i = 0, l = x.length; i < l; i += 16) {
       a = hash[0];
       b = hash[1];
       c = hash[2];
@@ -124,10 +114,20 @@
       hash[3] += d;
     }
     
-    return Digest.Encoder(split(hash));
+    return self.Encoder(split(hash));
+  }
+  
+  // expose hash function
+  
+  self.fn.md4 = function md4(data, hkey) {
+    data = self.Encoder.ready(data);
+    hkey = self.Encoder.ready(hkey);
+    
+    if (self.isInput(hkey)) {
+      return self.hmac(main, data, hkey, 64);
+    } else {
+      return main(data);
+    }
   };
   
-  // MAC configuration
-  this.Digest.configure(this.Digest.fn.md4, {block: 64, curri: 0, curry: [null, false]});
-  
-}());
+}(Digest));
