@@ -115,6 +115,17 @@ var timer = new Date().getTime();
   space();
 }());
 
+(function () {
+  var rotr = Digest.rotr;
+  
+  log('== ULong ==');
+  
+  test(0x12345678, Digest.rotl([0x12345678, 0x0])[1], 'Exposed functions can access private members.');
+  test(0x12345678, rotr([0x12345678, 0x0])[1], 'Functions work as local aliases.');
+  
+  space();
+}());
+
 log('== Timer ==');
 timed(new Date().getTime() - timer);
 </script>
