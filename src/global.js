@@ -19,6 +19,10 @@
       return 'string' === typeof string;
     }
     
+    function isInput(input) {
+      return isArray(input) || isString(input);
+    }
+    
     function atos(array) {
       if (isArray(array)) {
         for (var i = 0, l = array.length, string = ''; i < l; i += 1) {
@@ -48,6 +52,7 @@
     // expose functions
     this.isArray = isArray;
     this.isString = isString;
+    this.isInput = isInput;
     this.atos = atos;
     this.stoa = stoa;
     
