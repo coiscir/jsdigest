@@ -232,4 +232,14 @@
     
   };
   
+  self.Encoder.ready = function ready(input) {
+    if (self.isInput(input)) {
+      if (self.isString(input)) {
+        return self.Encoder(input).utf8();
+      } else {
+        return self.Encoder(input).trunc();
+      }
+    }
+  };
+  
 }(Digest));
