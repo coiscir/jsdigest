@@ -6,4 +6,4 @@
 
 "use strict";
 
-<%= import('global.js', 'encoder.js') %>
+<%= import('global.js', 'encoder.js', 'hmac.js') %>
