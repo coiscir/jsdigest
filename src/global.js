@@ -20,7 +20,7 @@
     }
     
     function isInput(input) {
-      return isArray(input) || isString(input);
+      return isArray(input) || isString(input) || input instanceof self.Digest.Encoder;
     }
     
     function atos(array) {
