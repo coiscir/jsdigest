@@ -2,44 +2,43 @@
  *  SHA-1 (c) 2006 The Internet Society
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function SHA1(self) {
+  'Copyright (c) 2006 The Internet Society';
   
-  this.Digest.fn.sha1 = function sha1(data, utf8) {
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
+  function merge(input) {
+    var i, j, output = [];
+    for (i = 0, j = 0; j < input.length; i += 1, j = (i * 4)) {
+      output[i] = 
+        ((input[j + 0] & 0xff) << 24) |
+        ((input[j + 1] & 0xff) << 16) |
+        ((input[j + 2] & 0xff) <<  8) |
+        ((input[j + 3] & 0xff) <<  0);
     }
-    
-    var a, b, c, d, e, i, t, tmp, w, x,
+    return output;
+  }
+  
+  function split(input) {
+    var i, output = [];
+    for (i = 0; i < input.length; i += 1) {
+      output.push((input[i] >> 24) & 0xff);
+      output.push((input[i] >> 16) & 0xff);
+      output.push((input[i] >>  8) & 0xff);
+      output.push((input[i] >>  0) & 0xff);
+    }
+    return output;
+  }
+  
+  function rotl(x, n) {
+    return ((x << n) | (x >>> (32 - n)));
+  }
+  
+  // define hash function
+  
+  function main(data) {
+    var a, b, c, d, e, i, l, t, tmp, w, x,
       bytes, bitHi, bitLo,
-      padlen, padding,
+      padlen, padding = [0x80],
       hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
-    
-    function rotl(x, n) {
-      return ((x << n) | (x >>> (32 - n)));
-    }
-    
-    function merge(input) {
-      var i, j, output = [];
-      for (i = 0, j = 0; j < input.length; i += 1, j = (i * 4)) {
-        output[i] = 
-          ((input[j + 0] & 0xff) << 24) |
-          ((input[j + 1] & 0xff) << 16) |
-          ((input[j + 2] & 0xff) <<  8) |
-          ((input[j + 3] & 0xff) <<  0);
-      }
-      return output;
-    }
-    
-    function split(input) {
-      var i, output = [];
-      for (i = 0; i < input.length; i += 1) {
-        output.push((input[i] >> 24) & 0xff);
-        output.push((input[i] >> 16) & 0xff);
-        output.push((input[i] >>  8) & 0xff);
-        output.push((input[i] >>  0) & 0xff);
-      }
-      return output;
-    }
     
     function func(t, b, c, d) {
       switch (Math.floor(t / 20)) {
@@ -67,27 +66,20 @@
       }
     }
     
-    // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-    }
-    
-    // pad data
+    // use bit-length to pad data
     bytes = data.length;
     bitLo = (bytes * 8) & 0xffffffff;
     bitHi = (bytes * 8 / Math.pow(2, 32)) & 0xffffffff;
     
-    padding = '\x80';
     padlen = ((bytes % 64) < 56 ? 56 : 120) - (bytes % 64);
     while (padding.length < padlen) {
-      padding += '\x00';
+      padding.push(0x0);
     }
     
-    data += padding;
-    x = merge(Digest.Encoder(data).single()).concat([bitHi, bitLo]);
+    x = merge(data.concat(padding)).concat([bitHi, bitLo]);
     
     // update hash
-    for (i = 0, w = []; i < x.length; i += 16) {
+    for (i = 0, l = x.length, w = []; i < l; i += 16) {
       a = hash[0];
       b = hash[1];
       c = hash[2];
@@ -116,10 +108,20 @@
       hash[4] += e;
     }
     
-    return Digest.Encoder(split(hash));
+    return self.Encoder(split(hash));
+  }
+  
+  // expose hash function
+  
+  self.fn.sha1 = function sha1(data, hkey) {
+    data = self.Encoder.ready(data);
+    hkey = self.Encoder.ready(hkey);
+    
+    if (self.isInput(hkey)) {
+      return self.hmac(main, data, hkey, 64);
+    } else {
+      return main(data);
+    }
   };
   
-  // MAC configuration
-  this.Digest.configure(this.Digest.fn.sha1, {block: 64, curri: 0, curry: [null, false]});
-  
-}());
+}(Digest));

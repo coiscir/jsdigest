@@ -177,6 +177,23 @@ timer = new Date().getTime();
   space();
 }());
 
+(function () {
+  log('== SHA-1 ==');
+  test(true, !!Digest.sha1, 'Digest.sha1 is defined');
+  
+  space();
+  
+  test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'Digest.sha1("abc")       ');
+  test('84983e441c3bd26ebaae4aa1f95129e5e54670f1', Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'Digest.sha1("abcd..nopq")');
+  
+  space();
+
+  test('b617318655057264e28bc0b6fb378c8ef146be00', Digest.sha1(hmac_1_txt,  hmac_1_key2, false).hex(), 'RFC 2202 - Test 1 - HMAC-SHA-1');
+  test('e8e99d0f45237d786d6bbaa7965c7808bbff1a91', Digest.sha1(hmac_7_txt1, hmac_7_key1, false).hex(), 'RFC 2202 - Test 7 - HMAC-SHA-1');
+  
+  space();
+}());
+
 log('== Timer ==');
 timed(new Date().getTime() - timer);
 </script>
