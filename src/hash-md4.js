@@ -93,6 +93,7 @@
     
     x = merge(data.concat(padding)).concat([bitLo, bitHi]);
     
+    // update hash
     for (i = 0, l = x.length; i < l; i += 16) {
       a = hash[0];
       b = hash[1];
