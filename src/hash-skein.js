@@ -2,82 +2,13 @@
  *  Skein 1.2 (c) 2009 Bruce Schneier, et al.
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function SKEIN(self) {
+  'Copyright (c) 2009 Bruce Schneier, et al.';
   
-  function skein(digest, len, data, utf8) {
-    if (!(0 < len && len <= digest)) {
-      throw new Error('Digest len is out of range (0 < len <= ' + digest + ')');
-    }
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
-    }
-    
-    function add(x, y) {
-      return Digest.ulong.add(x, y);
-    }
-    function xor(x, y) {
-      return Digest.ulong.xor(x, y);
-    }
-    function rotl(x, n) {
-      return Digest.ulong.rotl(x, n);
-    }
-    
-    function merge(input) {
-      var i, j, output = [];
-      for (i = 0, j = 0; j < input.length; i += 1, j = (i * 8)) {
-        output[i] = [
-          ((input[j + 4] & 0xff) <<  0) |
-          ((input[j + 5] & 0xff) <<  8) |
-          ((input[j + 6] & 0xff) << 16) |
-          ((input[j + 7] & 0xff) << 24),
-          ((input[j + 0] & 0xff) <<  0) |
-          ((input[j + 1] & 0xff) <<  8) |
-          ((input[j + 2] & 0xff) << 16) |
-          ((input[j + 3] & 0xff) << 24)
-        ];
-      }
-      return output;
-    }
-    
-    function split(input) {
-      var i, output = [];
-      for (i = 0; i < input.length; i += 1) {
-        output.push((input[i][1] >>  0) & 0xff);
-        output.push((input[i][1] >>  8) & 0xff);
-        output.push((input[i][1] >> 16) & 0xff);
-        output.push((input[i][1] >> 24) & 0xff);
-        output.push((input[i][0] >>  0) & 0xff);
-        output.push((input[i][0] >>  8) & 0xff);
-        output.push((input[i][0] >> 16) & 0xff);
-        output.push((input[i][0] >> 24) & 0xff);
-      }
-      return output;
-    }
-    
-    function tweak(pos, type, fst, fin) {
-      var int0, int1, int2, int3;
-      int3 = pos | 0x0;
-      int2 = (pos / Math.pow(2, 32)) | 0x0;
-      int1 = (pos / Math.pow(2, 64)) | 0x0;
-      int0 = ((fin && 0x80) | (fst && 0x40) | type) << 24;
-      return split([[int2, int3], [int0, int1]]);
-    }
-    tweak.KEY = 0x00;
-    tweak.CONFIG = 0x04;
-    tweak.PERSONALIZE = 0x08;
-    tweak.PUBLICKEY = 0x10;
-    tweak.NONCE = 0x14;
-    tweak.MESSAGE = 0x30;
-    tweak.OUT = 0x3F;
-    
-    // Encode inputs unless disabled
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-    }
-    
-    var CONST, C, G, K, No, Nb, Nr, Nw, PI, R,
-      Km = [0x55555555, 0x55555555];
-      
+  var
+    add = self.add,
+    xor = self.xor,
+    rotl = self.rotl,
     CONST = {
       256 : {
         Nb: 32,
@@ -128,14 +59,68 @@
         ]
       }
     };
+  
+  function merge(input) {
+    var i, j, l, output = [];
+    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
+      output[i] = [
+        ((input[j + 4] & 0xff) <<  0) |
+        ((input[j + 5] & 0xff) <<  8) |
+        ((input[j + 6] & 0xff) << 16) |
+        ((input[j + 7] & 0xff) << 24),
+        ((input[j + 0] & 0xff) <<  0) |
+        ((input[j + 1] & 0xff) <<  8) |
+        ((input[j + 2] & 0xff) << 16) |
+        ((input[j + 3] & 0xff) << 24)
+      ];
+    }
+    return output;
+  }
+  
+  function split(input) {
+    var i, l, output = [];
+    for (i = 0, l = input.length; i < l; i += 1) {
+      output.push((input[i][1] >>  0) & 0xff);
+      output.push((input[i][1] >>  8) & 0xff);
+      output.push((input[i][1] >> 16) & 0xff);
+      output.push((input[i][1] >> 24) & 0xff);
+      output.push((input[i][0] >>  0) & 0xff);
+      output.push((input[i][0] >>  8) & 0xff);
+      output.push((input[i][0] >> 16) & 0xff);
+      output.push((input[i][0] >> 24) & 0xff);
+    }
+    return output;
+  }
+  
+  function tweak(pos, type, fst, fin) {
+    var int0, int1, int2, int3;
+    int3 = pos | 0x0;
+    int2 = (pos / Math.pow(2, 32)) | 0x0;
+    int1 = (pos / Math.pow(2, 64)) | 0x0;
+    int0 = ((fin && 0x80) | (fst && 0x40) | type) << 24;
+    return split([[int2, int3], [int0, int1]]);
+  }
+  tweak.KEY = 0x00;
+  tweak.CONFIG = 0x04;
+  tweak.PERSONALIZE = 0x08;
+  tweak.PUBLICKEY = 0x10;
+  tweak.NONCE = 0x14;
+  tweak.MESSAGE = 0x30;
+  tweak.OUT = 0x3F;
+  
+  // define hash function
+  
+  function skein(digest, size, data, key) {
+    var C, G, No, Nb, Nr, Nw, PI, R,
+      Km = [0x55555555, 0x55555555];
     
     // establish Skein "constants" in scope
-    No = len;
+    No = size;
     Nb = CONST[digest].Nb;
     Nr = CONST[digest].Nr;
     Nw = CONST[digest].Nw;
-    PI = CONST[digest].PI;
-    R  = CONST[digest].R;
+    PI = CONST[digest].PI.slice(0);
+    R  = CONST[digest].R.slice(0);
     
     function mix0(x, y) {
       return add(x, y);
@@ -210,7 +195,7 @@
     }
     
     function ubi(G, M, type) {
-      var i, k, K, H, N, fst, fin, pos;
+      var i, k, l, K, H, N, fst, fin, pos;
       K = [];
       H = [].concat(G);
       M = [].concat(M);
@@ -228,7 +213,7 @@
       }
       
       // cycle through each block in the message
-      for (k = 0, pos = 0; k < K.length; k += 1) {
+      for (k = 0, pos = 0, l = K.length; k < l; k += 1) {
         pos += Nb;
         fst = k === 0;
         fin = k === (K.length - 1);
@@ -245,22 +230,23 @@
     }
     
     // cut hash to len, reducing last byte when ((len % 8) != 0)
-    function cut(G) {
-      var H, L, R;
-      L = Math.floor((No + 7) / 8);
-      R = No % 8;
-      H = G.slice(0, L);
+    function cut(size, hash) {
+      var
+        length = Math.floor((size + 7) / 8),
+        remain = size % 8;
       
-      if (R > 0) {
-        H[L - 1] &= (0xff << (8 - R));
+      hash = hash.slice(0, length);
+      
+      if (remain > 0) {
+        hash[length - 1] &= (0xff << (8 - remain));
       }
       
-      return H;
+      return hash;
     }
     
     // build initial chain value (key)
-    K = [];
-    K.length = Nb;
+    G = [];
+    G.length = Nb;
     
     // build config byte array
     C = [];
@@ -270,23 +256,40 @@
     C.length = 32;
     
     // process blocks
-    G = ubi(K, C, tweak.CONFIG);
-    G = ubi(G, Digest.Encoder(data).single(), tweak.MESSAGE);
+    if (key) {
+      G = ubi(G, key, tweak.KEY);
+    }
+    G = ubi(G, C, tweak.CONFIG);
+    G = ubi(G, data, tweak.MESSAGE);
     G = ubi(G, [0, 0, 0, 0, 0, 0, 0, 0], tweak.OUT);
     
-    return Digest.Encoder(cut(G));
+    return self.Encoder(cut(No, G));
   }
   
-  this.Digest.skein256 = function skein256(len, data, utf8) {
-    return skein(256, len, data, utf8);
+  // expose hash function
+  
+  self.fn.skein256 = function skein256(size, data, key) {
+    size = (0 < size && size <= 256) ? size : 256;
+    data = self.Encoder.ready(data);
+    key  = self.Encoder.ready(key);
+    
+    return skein(256, size, data, key);
   };
   
-  this.Digest.skein512 = function skein512(len, data, utf8) {
-    return skein(512, len, data, utf8);
+  self.fn.skein512 = function skein512(size, data, key) {
+    size = (0 < size && size <= 512) ? size : 512;
+    data = self.Encoder.ready(data);
+    key  = self.Encoder.ready(key);
+    
+    return skein(512, size, data, key);
   };
   
-  this.Digest.skein1024 = function skein1024(len, data, utf8) {
-    return skein(1024, len, data, utf8);
+  self.fn.skein1024 = function skein1024(size, data, key) {
+    size = (0 < size && size <= 1024) ? size : 1024;
+    data = self.Encoder.ready(data);
+    key  = self.Encoder.ready(key);
+    
+    return skein(1024, size, data, key);
   };
   
-}());
+}(Digest));
