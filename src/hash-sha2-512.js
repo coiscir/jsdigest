@@ -46,6 +46,8 @@
     return output;
   }
   
+  // define hash function
+  
   function main(size, data) {
     var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,
