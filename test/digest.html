@@ -102,7 +102,7 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== Encoder :: RFC-4648');
+  log('== Encoder :: RFC-4648 ==');
   
   test('AB',        Digest.Encoder('AB').string(),  'string');
   test('4142',      Digest.Encoder('AB').base16(),  'base16');
