@@ -6,4 +6,4 @@
 
 "use strict";
 
-<%= import('global.js', 'encoder.js', 'hmac.js', 'hash-{md[45],sha1}.js') %>
+<%= import('global.js', 'encoder.js', 'hmac.js', 'hash-{md[45],sha{1,2-2*}}.js') %>

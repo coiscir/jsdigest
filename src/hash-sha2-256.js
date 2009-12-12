@@ -2,12 +2,57 @@
  *  SHA (c) 2006 The Internet Society
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function SHA256(self) {
+  'Copyright (c) 2006 The Internet Society';
   
-  function sha2(data, hash, part) {
-    var a, b, c, d, e, f, g, h, i, t, tmp1, tmp2, w, x,
+  function merge(input) {
+    var i, j, l, output = [];
+    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
+      output[i] = 
+        ((input[j + 0] & 0xff) << 24) |
+        ((input[j + 1] & 0xff) << 16) |
+        ((input[j + 2] & 0xff) <<  8) |
+        ((input[j + 3] & 0xff) <<  0);
+    }
+    return output;
+  }
+  
+  function split(input) {
+    var i, l, output = [];
+    for (i = 0, l = input.length; i < l; i += 1) {
+      output.push((input[i] >> 24) & 0xff);
+      output.push((input[i] >> 16) & 0xff);
+      output.push((input[i] >>  8) & 0xff);
+      output.push((input[i] >>  0) & 0xff);
+    }
+    return output;
+  }
+  
+  function rotr(x, n) {
+    return ((x >>> n) | (x << (32 - n)));
+  }
+  
+  function shr(x, n) {
+    return x >>> n;
+  }
+  
+  // define hash function
+  
+  function main(size, data) {
+    var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,
-      padlen, padding,
+      padlen, padding = [0x80],
+      part = Math.ceil(size / 32),
+      hash = ({
+        224: [
+          0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+          0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+        ],
+        256: [
+          0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+          0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+        ]
+      })[size],
       K = [
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -26,37 +71,6 @@
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
       ];
-    
-    function rotr(x, n) {
-      return ((x >>> n) | (x << (32 - n)));
-    }
-    
-    function shr(x, n) {
-      return x >>> n;
-    }
-    
-    function merge(input) {
-      var i, j, output = [];
-      for (i = 0, j = 0; j < input.length; i += 1, j = (i * 4)) {
-        output[i] = 
-          ((input[j + 0] & 0xff) << 24) |
-          ((input[j + 1] & 0xff) << 16) |
-          ((input[j + 2] & 0xff) <<  8) |
-          ((input[j + 3] & 0xff) <<  0);
-      }
-      return output;
-    }
-    
-    function split(input) {
-      var i, output = [];
-      for (i = 0; i < input.length; i += 1) {
-        output.push((input[i] >> 24) & 0xff);
-        output.push((input[i] >> 16) & 0xff);
-        output.push((input[i] >>  8) & 0xff);
-        output.push((input[i] >>  0) & 0xff);
-      }
-      return output;
-    }
     
     function bSig0(x) {
       return rotr(x,  2) ^ rotr(x, 13) ^ rotr(x, 22);
@@ -78,21 +92,20 @@
       return (x & y) ^ (x & z) ^ (y & z);
     }
     
-    // pad data
+    // use bit-length to pad data
     bytes = data.length;
     bitLo = (bytes * 8) & 0xffffffff;
     bitHi = (bytes * 8 / Math.pow(2, 32)) & 0xffffffff;
     
-    padding = '\x80';
     padlen = ((bytes % 64) < 56 ? 56 : 120) - (bytes % 64);
     while (padding.length < padlen) {
-      padding += '\x00';
+      padding.push(0x0);
     }
     
-    data += padding;
-    x = merge(Digest.Encoder(data).single()).concat([bitHi, bitLo]);
+    x = merge(data.concat(padding)).concat([bitHi, bitLo]);
     
-    for (i = 0, w = []; i < x.length; i += 16) {
+    // update hash
+    for (i = 0, w = [], l = x.length; i < l; i += 16) {
       a = hash[0] | 0x0;
       b = hash[1] | 0x0;
       c = hash[2] | 0x0;
@@ -131,47 +144,39 @@
       hash[7] += h;
     }
     
-    return Digest.Encoder(split(hash.slice(0, part)));
+    return self.Encoder(split(hash.slice(0, part)));
   }
   
-  this.Digest.fn.sha224 = function sha224(data, utf8) {
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
+  function main224(data) {
+    return main(224, data);
+  }
+  
+  function main256(data) {
+    return main(256, data);
+  }
+  
+  // expose hash function
+  
+  self.fn.sha224 = function sha224(data, hkey) {
+    data = self.Encoder.ready(data);
+    hkey = self.Encoder.ready(hkey);
+    
+    if (self.isInput(hkey)) {
+      return self.hmac(main224, data, hkey, 64);
+    } else {
+      return main224(data);
     }
-    
-    // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-    }
-    
-    var HASH = [
-      0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
-      0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
-    ];
-    
-    return sha2(data, HASH, 7);
   };
   
-  this.Digest.fn.sha256 = function sha256(data, utf8) {
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
+  self.fn.sha256 = function sha256(data, hkey) {
+    data = self.Encoder.ready(data);
+    hkey = self.Encoder.ready(hkey);
+    
+    if (self.isInput(hkey)) {
+      return self.hmac(main256, data, hkey, 64);
+    } else {
+      return main256(data);
     }
-    
-    // single-byte encode data, either UTF-8 or truncated
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-    }
-    
-    var HASH = [
-      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-      0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-    ];
-    
-    return sha2(data, HASH, 8);
   };
   
-  // MAC configurations
-  this.Digest.configure(this.Digest.fn.sha224, {block: 64, curri: 0, curry: [null, false]});
-  this.Digest.configure(this.Digest.fn.sha256, {block: 64, curri: 0, curry: [null, false]});
-  
-}());
+}(Digest));
