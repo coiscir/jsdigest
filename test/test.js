@@ -11,6 +11,12 @@ function space() {
   log('');
 }
 
+function section(header) {
+  space();
+  log(header);
+  space();
+}
+
 function timed(ms) {
   log('' + (ms / 1000).toFixed(3) + ' s');
 }
@@ -30,5 +36,5 @@ function test(expect, trial, message) {
     ('string' === typeof expect && expect === typeof result) ||
     ('function' === typeof expect && result instanceof expect);
   
-  log((passed ? pass : fail) + ': ' + message + ' {' + result + '}');
+  log((passed ? pass : fail) + ': ' + message.replace(/ /g, '&nbsp;') + ' {' + result + '}');
 }

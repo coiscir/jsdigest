@@ -38,7 +38,7 @@ hmac_7_key2 = Digest.Encoder(hmac_7_key2);
 timer = new Date().getTime();
 
 (function () {
-  log('== Digest ==');
+  section('== Digest ==');
   
   test(true, !!this.Digest, 'Digest is defined');
   test('string', Digest.Version, 'Digest.Version');
@@ -51,7 +51,7 @@ timer = new Date().getTime();
 (function () {
   var foobar = [102, 111, 111, 98, 97, 114];
   
-  log('== Convert ==');
+  section('== Convert ==');
   
   test('string', Digest.atos(foobar), 'atos(arr)');
   test(Array, Digest.stoa('foobar'), 'stoa(str)');
@@ -69,7 +69,7 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== Encoder ==');
+  section('== Encoder ==');
   
   test(Digest.Encoder, Digest.Encoder([0x41]), 'Digest.Encoder(Array)');
   test(Digest.Encoder, Digest.Encoder('abcd'), 'Digest.Encoder(String)');
@@ -87,7 +87,7 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== Encoder :: UTF-8 ==');
+  section('== Encoder :: UTF-8 ==');
   
   test(Array, Digest.Encoder('\u0024').utf8(), 'UTF-8 encode U+0024 (' + [0x24].join() + ')');
   test(Array, Digest.Encoder('\u00A2').utf8(), 'UTF-8 encode U+00A2 (' + [0xc2, 0xa2].join() + ')');
@@ -102,7 +102,7 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== Encoder :: RFC-4648 ==');
+  section('== Encoder :: RFC-4648 ==');
   
   test('AB',        Digest.Encoder('AB').string(),  'string');
   test('4142',      Digest.Encoder('AB').base16(),  'base16');
@@ -140,7 +140,7 @@ timer = new Date().getTime();
 (function () {
   var rotr = Digest.rotr;
   
-  log('== ULong ==');
+  section('== ULong ==');
   
   test(0x12345678, Digest.rotl([0x12345678, 0x0])[1], 'Exposed functions can access private members.');
   test(0x12345678, rotr([0x12345678, 0x0])[1], 'Functions work as local aliases.');
@@ -149,7 +149,8 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== MD4 ==');
+  section('== MD4 ==');
+  
   test(true, !!Digest.md4, 'Digest.md4 is defined');
   
   space();
@@ -161,13 +162,14 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== MD5 ==');
+  section('== MD5 ==');
+  
   test(true, !!Digest.md5, 'Digest.md5 is defined');
   
   space();
   
-  test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'MD5 - "abc"         ');
-  test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'MD5 - "A..Za..z0..9"');
+  test('900150983cd24fb0d6963f7d28e17f72', Digest.md5('abc').hex(), 'MD5 - "abc"               ');
+  test('d174ab98d277d9f5a5611c2c9f419d9f', Digest.md5('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789').hex(), 'MD5 - "A..Za..z0..9"      ');
   
   space();
   
@@ -178,13 +180,14 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== SHA-1 ==');
+  section('== SHA-1 ==');
+  
   test(true, !!Digest.sha1, 'Digest.sha1 is defined');
   
   space();
   
-  test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'SHA-1 - "abc"       ');
-  test('84983e441c3bd26ebaae4aa1f95129e5e54670f1', Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-1 - "abcd..nopq"');
+  test('a9993e364706816aba3e25717850c26c9cd0d89d', Digest.sha1('abc').hex(), 'SHA-1 - "abc"               ');
+  test('84983e441c3bd26ebaae4aa1f95129e5e54670f1', Digest.sha1('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-1 - "abcd..nopq"        ');
   
   space();
 
@@ -195,19 +198,20 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== SHA-2 :: 32-bit ==');
+  section('== SHA-2 :: 32-bit ==');
+  
   test(true, !!Digest.sha224, 'Digest.sha224 is defined');
   test(true, !!Digest.sha256, 'Digest.sha256 is defined');
   
   space();
   
-  test('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', Digest.sha224('abc').hex(), 'SHA-224 - "abc"       ');
-  test('75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-224 - "abcd..nopq"');
+  test('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', Digest.sha224('abc').hex(), 'SHA-224 - "abc"               ');
+  test('75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', Digest.sha224('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-224 - "abcd..nopq"        ');
   
   space();
   
-  test('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', Digest.sha256('abc').hex(), 'SHA-256 - "abc"       ');
-  test('248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-256 - "abcd..nopq"');
+  test('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', Digest.sha256('abc').hex(), 'SHA-256 - "abc"               ');
+  test('248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', Digest.sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq').hex(), 'SHA-256 - "abcd..nopq"        ');
   
   space();
 
@@ -223,7 +227,8 @@ timer = new Date().getTime();
 }());
 
 (function () {
-  log('== SHA-2 :: 64-bit ==');
+  section('== SHA-2 :: 64-bit ==');
+  
   test(true, !!Digest.sha384, 'Digest.sha384 is defined');
   test(true, !!Digest.sha512, 'Digest.sha512 is defined');
   
