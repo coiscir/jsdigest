@@ -3,76 +3,51 @@
  *  Based on the 2009-04-15 revision 
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function () {
+(function MD6(self) {
+  'Copyright (c) 2009 Ronald L. Rivest, et al.';
   
-  function md6core(len, data, key, levels, utf8) {
-    if (!(0 < len && len <= 512)) {
-      throw new Error('Digest len is out of range (0 < len <= 512)');
+  var
+    ulong = self.ulong,
+    and = self.and,
+    xor = self.xor,
+    shr = self.shr,
+    shl = self.shl;
+  
+  function merge(input) {
+    var i, j, l, output = [];
+    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
+      output[i] = [
+        ((input[j + 0] & 0xff) << 24) |
+        ((input[j + 1] & 0xff) << 16) |
+        ((input[j + 2] & 0xff) <<  8) |
+        ((input[j + 3] & 0xff) <<  0),
+        ((input[j + 4] & 0xff) << 24) |
+        ((input[j + 5] & 0xff) << 16) |
+        ((input[j + 6] & 0xff) <<  8) |
+        ((input[j + 7] & 0xff) <<  0)
+      ];
     }
-    if (!(0 <= levels && levels <= 64)) {
-      throw new Error('Levels is out of range (0 <= len <= 64)');
+    return output;
+  }
+  
+  function split(input) {
+    var i, l, output = [];
+    for (i = 0, l = input.length; i < l; i += 1) {
+      output.push((input[i][0] >> 24) & 0xff);
+      output.push((input[i][0] >> 16) & 0xff);
+      output.push((input[i][0] >>  8) & 0xff);
+      output.push((input[i][0] >>  0) & 0xff);
+      output.push((input[i][1] >> 24) & 0xff);
+      output.push((input[i][1] >> 16) & 0xff);
+      output.push((input[i][1] >>  8) & 0xff);
+      output.push((input[i][1] >>  0) & 0xff);
     }
-    if ('string' !== typeof data) {
-      throw new Error('Data must be a String');
-    }
-    if (key && 'string' !== typeof key) {
-      throw new Error('Key must be a String if defined');
-    }
-    
-    function ulong(x) {
-      return Digest.ulong.ulong(x);
-    }
-    function and(x, y) {
-      return Digest.ulong.and(x, y);
-    }
-    function xor(x, y) {
-      return Digest.ulong.xor(x, y);
-    }
-    function shr(x, n) {
-      return Digest.ulong.shr(x, n);
-    }
-    function shl(x, n) {
-      return Digest.ulong.shl(x, n);
-    }
-    
-    function merge(input) {
-      var i, j, output = [];
-      for (i = 0, j = 0; j < input.length; i += 1, j = (i * 8)) {
-        output[i] = [
-          ((input[j + 0] & 0xff) << 24) |
-          ((input[j + 1] & 0xff) << 16) |
-          ((input[j + 2] & 0xff) <<  8) |
-          ((input[j + 3] & 0xff) <<  0),
-          ((input[j + 4] & 0xff) << 24) |
-          ((input[j + 5] & 0xff) << 16) |
-          ((input[j + 6] & 0xff) <<  8) |
-          ((input[j + 7] & 0xff) <<  0)
-        ];
-      }
-      return output;
-    }
-    
-    function split(input) {
-      var i, output = [];
-      for (i = 0; i < input.length; i += 1) {
-        output.push((input[i][0] >> 24) & 0xff);
-        output.push((input[i][0] >> 16) & 0xff);
-        output.push((input[i][0] >>  8) & 0xff);
-        output.push((input[i][0] >>  0) & 0xff);
-        output.push((input[i][1] >> 24) & 0xff);
-        output.push((input[i][1] >> 16) & 0xff);
-        output.push((input[i][1] >>  8) & 0xff);
-        output.push((input[i][1] >>  0) & 0xff);
-      }
-      return output;
-    }
-    
-    // Encode inputs unless disabled
-    if (false !== utf8) {
-      data = Digest.Encoder(data).utf8();
-      key = Digest.Encoder(key || '').utf8();
-    }
-    
+    return output;
+  }
+  
+  // define hash function
+  
+  function main(size, data, key, levels) {
     var b, c, n, d, M, K, k, r, L, ell, S0, Sm, Q, t, rs, ls;
     
     // block sizes in bytes
@@ -83,12 +58,11 @@
     n = 89; // words passed to f()
     
     // required arguments, digest length and message
-    d = len; // digest length
-    M = Digest.Encoder(data).single(); // single-byte character codes
+    d = size; // digest length
+    M = data; // single-byte character codes
     
     // prepare key and key length
-    K = (key || '').substr(0, 64);
-    K = Digest.Encoder(K).single();
+    K = key.slice(0, 64);
     k = K.length;
     
     // pad K
@@ -124,6 +98,7 @@
     rs = [10,  5, 13, 10, 11, 12,  2,  7, 14, 15,  7, 13, 11, 7, 6, 12];
     ls = [11, 24,  9, 16, 15,  9, 27, 15,  6,  2, 29,  8, 15, 5, 31, 9];
     
+    // main compression function
     function f(N) {
       var i, j, s, x, S = ulong(S0), A = [].concat(N);
       
@@ -144,6 +119,7 @@
       return A.slice(A.length - 16);
     }
     
+    // "middle-man" -- prepare U and V for f()
     function mid(B, C, i, p, z) {
       var U, V;
       
@@ -172,8 +148,9 @@
       return f([].concat(Q, K, [U, V], C, B));
     }
     
+    // parallel compression
     function par(M) {
-      var i, p, z, P = 0, B = [], C = [];
+      var i, l, p, z, P = 0, B = [], C = [];
       z = (M.length > b ? 0 : 1);
       
       // pad and finalize message
@@ -190,7 +167,7 @@
       }
       
       // compress B blocks into C
-      for (i = 0, p = 0; i < B.length; i += 1, p = 0) {
+      for (i = 0, p = 0, l = B.length; i < l; i += 1, p = 0) {
         p = (i === (B.length - 1)) ? P : 0;
         C = C.concat(mid(B[i], [], i, p, z));
       }
@@ -198,8 +175,9 @@
       return split(C);
     }
     
+    // sequential compression
     function seq(M) {
-      var i, p, z, P = 0, B = [], C = [
+      var i, l, p, z, P = 0, B = [], C = [
         [0x0, 0x0], [0x0, 0x0], [0x0, 0x0], [0x0, 0x0],
         [0x0, 0x0], [0x0, 0x0], [0x0, 0x0], [0x0, 0x0],
         [0x0, 0x0], [0x0, 0x0], [0x0, 0x0], [0x0, 0x0],
@@ -220,7 +198,7 @@
       }
       
       // cycle through B, updating C
-      for (i = 0, p = 0; i < B.length; i += 1, p = 0) {
+      for (i = 0, p = 0, l = B.length; i < l; i += 1, p = 0) {
         p = (i === (B.length - 1)) ? P : 0;
         z = (i === (B.length - 1)) ? 1 : 0;
         C = mid(B[i], C, i, p, z);
@@ -229,20 +207,46 @@
       return split(C);
     }
     
+    // trim hash to length
+    function cut(size, hash) {
+      var
+        length = Math.floor(size / 8),
+        remain = size % 8;
+      
+      hash = hash.slice(hash.length - length);
+      
+      if (remain > 0) {
+        hash[length - 1] &= (0xff << (8 - remain));
+      }
+      
+      return hash;
+    }
+    
+    // level iteration
     do {
       ell += 1;
       M = ell > L ? seq(M) : par(M);
     } while (M.length !== c);
     
-    return Digest.Encoder(M.slice(M.length - (d / 8)));
+    return self.Encoder(cut(d, M));
   }
   
-  this.Digest.fn.md6par = function md6par(len, data, key, utf8) {
-    return md6core(len, data, key, 64, utf8);
+  // expose hash function
+  
+  self.fn.md6par = function md6par(size, data, key) {
+    size = (0 < size && size <= 512) ? size : 512;
+    data = self.Encoder.ready(data);
+    key  = self.Encoder.ready(key) || []; // key is required for main()
+    
+    return main(size, data, key, 64);
   };
   
-  this.Digest.fn.md6seq = function md6seq(len, data, key, utf8) {
-    return md6core(len, data, key, 0, utf8);
+  self.fn.md6seq = function md6seq(size, data, key) {
+    size = (0 < size && size <= 512) ? size : 512;
+    data = self.Encoder.ready(data);
+    key  = self.Encoder.ready(key) || []; // key is required for main()
+    
+    return main(size, data, key, 0);
   };
   
-}());
+}(Digest));
