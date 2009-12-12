@@ -210,7 +210,7 @@
     // trim hash to length
     function cut(size, hash) {
       var
-        length = Math.floor(size / 8),
+        length = Math.floor((size + 7) / 8),
         remain = size % 8;
       
       hash = hash.slice(hash.length - length);
