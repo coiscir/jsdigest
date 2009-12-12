@@ -5,6 +5,10 @@
 (function MD4(self) {
   'Copyright (c) 1990 Ronald L. Rivest';
   
+  function rotl(x, n) {
+    return ((x << n) | (x >>> (32 - n)));
+  }
+  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
@@ -25,10 +29,6 @@
       output.push((input[i] >> 24) & 0xff);
     }
     return output;
-  }
-  
-  function rotl(x, n) {
-    return ((x << n) | (x >>> (32 - n)));
   }
   
   // define hash function

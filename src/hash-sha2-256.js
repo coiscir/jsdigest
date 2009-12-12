@@ -5,6 +5,14 @@
 (function SHA256(self) {
   'Copyright (c) 2006 The Internet Society';
   
+  function rotr(x, n) {
+    return ((x >>> n) | (x << (32 - n)));
+  }
+  
+  function shr(x, n) {
+    return x >>> n;
+  }
+  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
@@ -26,14 +34,6 @@
       output.push((input[i] >>  0) & 0xff);
     }
     return output;
-  }
-  
-  function rotr(x, n) {
-    return ((x >>> n) | (x << (32 - n)));
-  }
-  
-  function shr(x, n) {
-    return x >>> n;
   }
   
   // define hash function
