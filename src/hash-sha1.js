@@ -6,8 +6,8 @@
   'Copyright (c) 2006 The Internet Society';
   
   function merge(input) {
-    var i, j, output = [];
-    for (i = 0, j = 0; j < input.length; i += 1, j = (i * 4)) {
+    var i, j, l, output = [];
+    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
       output[i] = 
         ((input[j + 0] & 0xff) << 24) |
         ((input[j + 1] & 0xff) << 16) |
@@ -18,8 +18,8 @@
   }
   
   function split(input) {
-    var i, output = [];
-    for (i = 0; i < input.length; i += 1) {
+    var i, l, output = [];
+    for (i = 0, l = input.length; i < l; i += 1) {
       output.push((input[i] >> 24) & 0xff);
       output.push((input[i] >> 16) & 0xff);
       output.push((input[i] >>  8) & 0xff);
@@ -79,7 +79,7 @@
     x = merge(data.concat(padding)).concat([bitHi, bitLo]);
     
     // update hash
-    for (i = 0, l = x.length, w = []; i < l; i += 16) {
+    for (i = 0, w = [], l = x.length; i < l; i += 16) {
       a = hash[0];
       b = hash[1];
       c = hash[2];
