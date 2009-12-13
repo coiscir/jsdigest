@@ -1,3 +1,33 @@
+Dec 13, 2009    1.1.0
+  
+  Combined jsDigest More into jsDigest.
+  
+  Revise basic hash functions to handle HMAC themselves.
+    - Simplified HMAC, resulting in not being as well-suited for direct use.
+    - Removed Digest.configure.
+  
+  Changed input encoding rules:
+    - All Strings are UTF-8 encoded.
+    - All Array elements are truncated.
+    - Digest.Encoder objects treated the same as Arrays.
+  
+  Define utility functions for handling inputs:
+    - Digest.atos -- "Array to String" conversion.
+    - Digest.stoa -- "String to Array" conversion.
+    - Digest.isInput -- Limit acceptable input types.
+    - Digest.Encoder.ready -- Process an input per above encoding rules.
+  
+  Shrunk Digest.Encoder by limiting input encodings to Array output only.
+    - `split`, `trunc`, and `utf8`
+  
+  Development:
+    - Added copyright strings so they're included in minified build.
+    - Moved common functions to the closures rather than inside an algorithm.
+    - Reduced Exceptions thrown from jsDigest.
+    - Removed `ulong` namespace/object, attaching functions directly to `Digest`.
+    - Using `self` alias within closures.
+
+
 Oct 31, 2009    1.0.5
   
   Fix missing padding of zero-length messages in MD6.
