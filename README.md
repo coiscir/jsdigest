@@ -98,7 +98,7 @@ Don't want UTF-8 encoding? Use the utility functions to counter:
     Digest.sha512('message', 'passphrase').base32();
     
     # Variable-Length Algorithms
-    Digest.md6(256, 'message', 'passphrase').base64url();
+    Digest.md6par(256, 'message', 'passphrase').base64url();
     Digest.md6seq(512, 'message', 'passphrase').base64();
     
     # Odd Bit-Length
