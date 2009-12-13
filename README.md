@@ -35,13 +35,36 @@ Usage
 
 ### Syntax ###
 
-For most algorithms:
+HMAC-Keyed Hash Functions:
 
     Digest.hash(data, [key]).output();
+    
+  * `Digest.md4`
+  * `Digest.md5`
+  * `Digest.sha1`
+  * `Digest.sha224`
+  * `Digest.sha256`
+  * `Digest.sha384`
+  * `Digest.sha512`
 
-MD6 and Skein also require an output size:
+Keyed Hash Functions w/ Sizeable Outputs:
 
     Digest.hash(size, data, [key]).output();
+    
+  * `Digest.md6par`
+  * `Digest.md6seq`
+  * `Digest.skein256`
+  * `Digest.shein512`
+  * `Digest.shein1024`
+
+Outputs:
+
+  * `hex` -- Lowercase Base-16 (`0..9 a..f`)
+  * `base16` -- Uppercase Base-16 (`0..9 A..F`)
+  * `base32` -- Normal Base-32 (`A-Z 2-7`)
+  * `base32hex` -- Alt Base-32 (`0-9 a-v`)
+  * `base64` -- Normal Base-64 (`A-Z a-z 0-9 + /`)
+  * `base64url` -- Alt Base-64 (`A-Z a-z 0-9 - _`)
 
 ### Arguments ###
 
