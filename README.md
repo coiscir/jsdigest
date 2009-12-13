@@ -7,7 +7,7 @@ A Message Digest module for JavaScript. (IE 5.5+, FF 2+, Chrome 2+, Opera 9+)
 Supports
 ---
 
-### Hash Functions ###
+#### Hash Functions ####
 
 * **MD4**
 * **MD5**
@@ -19,11 +19,11 @@ Supports
 * **SHA-512**
 * **Skein** (256, 512, 1024)
 
-### Input Encoding ###
+#### Input Encoding ####
 
 * **UTF-8**
 
-### Output (RFC 4648) Encoding ###
+#### Output (RFC 4648) Encoding ####
 
 * **Base-16** / Hex
 * **Base-32** (Hex)
