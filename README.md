@@ -59,8 +59,8 @@ Keyed Hash Functions w/ Sizeable Outputs:
 
 Outputs:
 
-    * hex         # { 0..9 a..f }
-    * base16      # { 0..9 A..F }
+    * hex         # { 0-9 a-f }
+    * base16      # { 0-9 A-F }
     * base32      # { A-Z 2-7 }
     * base32hex   # { 0-9 a-v }
     * base64      # { A-Z a-z 0-9 + / }
