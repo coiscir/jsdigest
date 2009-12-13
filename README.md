@@ -103,9 +103,9 @@ So, each input must be converted to a **byte array** before hashing.
 The exact conversion used depends on the input's original type:
 
 * Strings are **UTF-8 encoded** by their character codes.
-* Arrays are considered **ready** and are simply **truncated** to bytes.
+* Arrays are considered **ready** and elements are **truncated** to bytes.
 
-Don't want UTF-8 encoding? Use the utility functions to counter:
+So, don't want UTF-8 encoding? Use `stoa` to counter:
 
     Digest.hash(Digest.stoa('message')).output();
 
@@ -128,8 +128,9 @@ Don't want UTF-8 encoding? Use the utility functions to counter:
     Digest.skein1024(1001, 'message', 'passphrase').hex();
     Digest.skein256(99, 'message', 'passphrase').base16();
     
-    # Prevent UTF-8 encoding with `stoa`
-    Digest.sha1(Digest.stoa('message')).hex();
+    # Prevent UTF-8 encoding with `stoa` or byte arrays directly
+    Digest.md5(Digest.stoa('message')).base16();
+    Digest.sha1([0x0F, 0x4B, 0x87, 0xC3]).hex();
 
 
 Building jsDigest
