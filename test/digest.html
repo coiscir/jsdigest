@@ -47,19 +47,19 @@ md6_block_800 = md6_block.substr(0, 800);
 md6_block_600 = md6_block.substr(0, 600);
 
 // disable UTF-8 encoding
-hmac_1_txt  = Digest.Encoder(hmac_1_txt);
-hmac_1_key1 = Digest.Encoder(hmac_1_key1);
-hmac_1_key2 = Digest.Encoder(hmac_1_key2);
-hmac_7_txt1 = Digest.Encoder(hmac_7_txt1);
-hmac_7_key1 = Digest.Encoder(hmac_7_key1);
-hmac_7_txt2 = Digest.Encoder(hmac_7_txt2);
-hmac_7_key2 = Digest.Encoder(hmac_7_key2);
+hmac_1_txt  = Digest.stoa(hmac_1_txt);
+hmac_1_key1 = Digest.stoa(hmac_1_key1);
+hmac_1_key2 = Digest.stoa(hmac_1_key2);
+hmac_7_txt1 = Digest.stoa(hmac_7_txt1);
+hmac_7_key1 = Digest.stoa(hmac_7_key1);
+hmac_7_txt2 = Digest.stoa(hmac_7_txt2);
+hmac_7_key2 = Digest.stoa(hmac_7_key2);
 
-skein_kat_FF = Digest.Encoder(skein_kat_FF);
-skein_kat_E0 = Digest.Encoder(skein_kat_E0);
-skein_kat_C0 = Digest.Encoder(skein_kat_C0);
-skein_kat_80 = Digest.Encoder(skein_kat_80);
-skein_kat_00 = Digest.Encoder(skein_kat_00);
+skein_kat_FF = Digest.stoa(skein_kat_FF);
+skein_kat_E0 = Digest.stoa(skein_kat_E0);
+skein_kat_C0 = Digest.stoa(skein_kat_C0);
+skein_kat_80 = Digest.stoa(skein_kat_80);
+skein_kat_00 = Digest.stoa(skein_kat_00);
 
 // start timer and tests
 timer = new Date().getTime();
