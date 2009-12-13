@@ -2,9 +2,9 @@ Digest                          # Namespace / Global
   
   fn                            # prototype clone
     
-    [hash]                      # Hash function definitions
-    [hash](...)                 #=> Encoder(hash)
-    [hash](data, utf8=true)
+    [hash]                      # HMAC-Keyed Hash Functions
+    [hash](...)                 #=> Encoder(result)
+    [hash](data, hkey)
       
       md4(...)
       md5(...)
@@ -14,59 +14,44 @@ Digest                          # Namespace / Global
       sha384(...)
       sha512(...)
     
-    [key]                       # Keyed hash function definitions
-    [key](...)                  #=> Encoder(hash)
-    [key](data, key, utf8=true)
-    
-    [len]                       # Variable-length hash function definitions
-    [len](...)                  #=> Encoder(hash)
-    [len](len, data, utf8=true)
+    [keyed]                     # Keyed Hash Functions
+    [keyed](...)                #=> Encoder(result)
+    [keyed](len, data, key, utf8=true)
       
-      skein256(...)             {0 < len < 256}   [more]
-      skein512(...)             {0 < len < 512}   [more]
-      skein1024(...)            {0 < len < 1024}  [more]
-    
-    [lenkey]                    # Variable-length, keyed hash function definitions
-    [lenkey](...)               #=> Encoder(hash)
-    [lenkey](len, data, key, utf8=true)
-      
-      md6par(...)               {0 < len <= 512}  [more]
-      md6seq(...)               {0 < len <= 512}  [more]
+      md6par(...)               {0 < len <= 512}
+      md6seq(...)               {0 < len <= 512}
+      skein256(...)             {0 < len <= 256}
+      skein512(...)             {0 < len <= 512}
+      skein1024(...)            {0 < len <= 1024}
     
     [mac]                       # MAC function definitions
-    [mac](...)                  #=> Encoder(hash)
-    [mac](hash, data, key, utf8=true)
+    [mac](...)                  #=> Encoder(result)
+    [mac](hash, data, hkey, block)
       
       hmac(...)
-  
-  
-  configure(function, config)   # Configure a Hash for use with MACs
-    
-    config = {
-      block : Number(...),      # function's block size in bytes
-      curri : Number(...),      # index of `curry` to replace with data
-      curry : Array<Object>     # unfinished arguments array
-    }
   
   
   Encoder
     constructor(array)          #=> Array,  0x0000-0xffff
     constructor(string)         #=> String, \u0000-\uffff
+    constructor(Encoder)        #=> cloning
     
     # Multi-byte
     array()                     #=> Array,  0x0000-0xffff
     string()                    #=> String, \u0000-\uffff
     
-    # Single-byte
-    single()                    #=> Array,  0x00-0xff, truncated
-    multi()                     #=> Array,  0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
-    trunc()                     #=> String, \x00-\xff, truncated
-    utf8()                      #=> String, \x00-\xff, UTF-8 encoded
+    # Input Encodings
+    split()                     #=> Array, 0x00-0xff, [0xHHhh] => [0xHH, 0xhh]
+    trunc()                     #=> Array, 0x00-0xff, [0xHHhh] => [0xhh]
+    utf8()                      #=> Array, 0x00-0xff, UTF-8 encoded
     
-    # RFC-4648 encoding
+    # Output (RFC-4648) Encodings
     hex()                       #=> String, 0-9 a-f (lower)
     base16()                    #=> String, 0-9 A-F (upper)
     base32()                    #=> String, A-Z 2-7 (upper)
     base32hex()                 #=> String, 0-9 a-v (lower)
     base64()                    #=> String, A-Z a-z 0-9 + /
     base64url()                 #=> String, A-Z a-z 0-9 - _ (url/filename safe)
+
+  Encoding.ready                # Encode input by type
+  Encoding.ready(input)         #=> Array, 0x00-0xff
