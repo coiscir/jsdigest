@@ -59,12 +59,12 @@ Keyed Hash Functions w/ Sizeable Outputs:
 
 Outputs:
 
-  * `hex` -- Lowercase Base-16 (`0..9 a..f`)
-  * `base16` -- Uppercase Base-16 (`0..9 A..F`)
-  * `base32` -- Normal Base-32 (`A-Z 2-7`)
-  * `base32hex` -- Alt Base-32 (`0-9 a-v`)
-  * `base64` -- Normal Base-64 (`A-Z a-z 0-9 + /`)
-  * `base64url` -- Alt Base-64 (`A-Z a-z 0-9 - _`)
+  * `hex`       -- (`0..9 a..f`)
+  * `base16`    -- (`0..9 A..F`)
+  * `base32`    -- (`A-Z 2-7`)
+  * `base32hex` -- (`0-9 a-v`)
+  * `base64`    -- (`A-Z a-z 0-9 + /`)
+  * `base64url` -- (`A-Z a-z 0-9 - _`)
 
 ### Arguments ###
 
