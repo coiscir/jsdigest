@@ -2,7 +2,8 @@
  *  Define Global Object and Core Utilities
 **~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-(function JSD(self) {
+(function JSD() {
+  var self = this;
   
   self.Digest = new function Digest() {
     this.Version = '<%= version %>';
@@ -163,4 +164,4 @@
     
   }();
   
-}(this));
+}());
