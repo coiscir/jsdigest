@@ -222,12 +222,12 @@
     
     // A-Z a-z 0-9 + /
     this.base64 = function base64() {
-      return toBase64('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/');
+      return toBase64('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split(''));
     };
     
     // A-Z a-z 0-9 - _ (url/filename safe)
     this.base64url = function base64url() {
-      return toBase64('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_');
+      return toBase64('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'.split(''));
     };
     
   };
