@@ -1,3 +1,9 @@
+Dec 23, 2009    1.1.1
+  
+  Bug fix release:
+    - Base-64 encoding would fail in IE6.
+
+
 Dec 13, 2009    1.1.0
   
   Combined jsDigest More into jsDigest.
