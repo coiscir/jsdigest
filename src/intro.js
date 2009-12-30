@@ -1,9 +1,12 @@
-/**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *  jsDigest (c) 2009 Jonathan Lonowski
+/**!
+ *  jsDigest v@VERSION (@RELEASE)
  *  http://github.com/coiscir/jsdigest/
+ *
+ *  Copyright (c) 2009 Jonathan Lonowski
  *  Released and distributed under the MIT License.
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
+**/
 
 "use strict";
 
-<%= import('global.js', 'encoder.js', 'hmac.js', 'hash-*.js') %>
+(function (host) {
+  host = host || this;

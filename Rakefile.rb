@@ -1,160 +1,82 @@
+require 'rubygems'
 require 'rake'
-require 'erb'
 require 'jsmin'
 
-BUILD_FILES = ['digest.js']
-CLEAN_FILES = ['digest.js']
+@root = File.dirname(__FILE__)
+@dest = 'lib'
+@src = 'src'
 
-JSD_VERSION = '1.1.1'
+@version = `git describe --tags --abbrev=0`.strip
+@release = `git log -n 1 --format="%ci"`.strip
 
-################
-## Tasks
-task :default => :build
+@create = 'digest.js'
+@globs = ['intro', 'core', 'encoder', 'hmac', 'hash/*', 'outro']
+@asis = ['intro', 'outro']
 
-desc "Build library files."
-task :build do
-  Operations.build(false)
-end
-
-desc "Build release library files."
-task :release do
-  Operations.build(true)
-end
-
-desc "Clean all build and release files."
-task :clean do
-  Operations.clean
-end
-
-################
-## Operations
-module Operations
-  class << self
-    def version
-      return JSD_VERSION
-    end
-
-    def build(release)
-      print 'Build ' + version.to_s + $/
-      
-      BUILD_FILES.each do |start|
-        Builder.build('src', 'lib', start, version, release) do |path|
-          print ' + ' + path + $/
-        end
-      end
-    end
-
-    def clean
-      print 'Clean' + $/
-      
-      CLEAN_FILES.each do |file|
-        Builder.clean('lib', file) do |path|
-          print ' - ' + path + $/
-        end
-      end
-    end
-  end
-end
-
-################
-## Builder
-module Builder
-  module Reader
-    def parse(file, minify)
-      unless File.file?(file) && File.readable?(file)
-        raise "Cannot read file: '#{file}'"
-      end
-      
-      Dir.chdir(File.dirname(file)) do
-        src = IO.readlines(File.basename(file)).join
-        src = ERB.new(src, nil, '<>').result(binding).strip + $/
-        
-        if minify
-          src = JSMin.minify(src).gsub(/ ?\n ?/, ' ').strip
-        end
-        
-        return src
-      end
-    end
+def import
+  if @imported.nil?
+    ext = File.extname(@create)
     
-    # overload: import(indent, globs...)
-    def import(*globs)
-      indent = globs.first.is_a?(Numeric) ? globs.shift : 0
+    Dir.chdir(File.join(@root, @src)) do
+      files = @globs.map {|glob| Dir.glob(glob + ext).sort }.flatten
       
-      files = globs.map {|glob|
-        Dir.glob(glob).sort
-      }.flatten
-      
-      srcs = files.map {|file|
-        parse(file, @min).gsub(/^/, (' ' * indent))
-      }
-      
-      return srcs.join($/).rstrip
-    end
-    
-    def version
-      @ver
+      @imported = files.map {|file|
+        indent = @asis.include?(File.basename(file, ext)) ? 0 : 2
+        
+        IO.readlines(file).join.rstrip.
+          gsub(/^/, (' ' * indent)) + $/
+      }.join($/)
     end
   end
   
-  class << self
-    include Reader
-    
-    def build(source, destination, start, version, release)
-      @root = File.dirname(__FILE__)
-      @src  = source
-      @dest = destination
-      @file = start
-      @ver  = version
-      @rel  = release
-      
-      minify = @rel ? [true] : [true, false]
-      builds = @rel ? [@ver] : [nil]
-      
-      minify.each do |min|
-        @min = min
-        
-        start = File.join(@root, @src, @file)
-        final = parse(start, false)
-        
-        builds.each do |ver|
-          path = File.join(@root, @dest, named(@file, @min, ver))
-          File.open(path, 'w+b') do |file|
-            file << final
-          end
-        end
-      end
-      
-      builds.each do |ver|
-        minify.each do |min|
-          yield File.join(@dest, named(@file, min, ver))
-        end
-      end
-    end
-    
-    def clean(dest, start)
-      return if start.nil? or start.empty?
-      
-      root = File.dirname(__FILE__)
-      
-      Dir.chdir(File.join(root, dest)) do
-        ext  = File.extname(start)
-        name = File.basename(start, ext)
-        
-        Dir.glob(name + "*" + ext).sort.each do |file|
-          if File.file?(file)
-            yield File.join(dest, file) if File.delete(file) > 0
-          end
-        end
-      end
-    end
-    
-    def named(file, min, ver)
-      ext  = File.extname(file)
-      name = File.basename(file, ext)
-      (name, build) = name.split('-', 2)
-      suffix = min ? nil : 'dev'
-      return [name, ver, build, suffix].reject{|x| x.nil?}.join('-') + ext
+  return @imported
+end
+
+def getpath(dev)
+  file = @create
+  
+  if dev
+    ext = File.extname(file)
+    base = File.basename(file, ext)
+    file = base + '-dev' + ext
+  end
+  
+  File.join(@dest, file)
+end
+
+def sub(source)
+  source.
+    gsub(/@VERSION/, @version).
+    gsub(/@RELEASE/, @release).
+    sub('/**!', '/**')
+end
+
+task :default => [:min, :dev]
+
+task :dev do
+  path = getpath(true)
+  source = import
+  
+  Dir.chdir(@root) do
+    File.open(path, 'w+b') do |out|
+      out << sub(source)
     end
   end
+  
+  print ' + ' + path + $/
+end
+
+task :min do
+  path = getpath(false)
+  
+  comment = import.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
+  source = comment + JSMin.minify(import).gsub(/ ?\n ?/, ' ').strip
+  
+  Dir.chdir(@root) do
+    File.open(path, 'w+b') do |out|
+      out << sub(source).rstrip + $/
+    end
+  end
+  
+  print ' + ' + path + $/
 end

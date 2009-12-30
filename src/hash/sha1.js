@@ -1,8 +1,5 @@
-/**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *  SHA-1 (c) 2006 The Internet Society
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
-
-(function SHA1(self) {
+// SHA-1 (c) 2006 The Internet Society
+(function () {
   'Copyright (c) 2006 The Internet Society';
   
   function rotl(x, n) {
@@ -124,4 +121,4 @@
     }
   };
   
-}(Digest));
+}());

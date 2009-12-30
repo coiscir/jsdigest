@@ -1,8 +1,5 @@
-/**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *  SHA (c) 2006 The Internet Society
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
-
-(function SHA256(self) {
+// SHA-2 256 (c) 2006 The Internet Society
+(function () {
   'Copyright (c) 2006 The Internet Society';
   
   function rotr(x, n) {
@@ -179,4 +176,4 @@
     }
   };
   
-}(Digest));
+}());

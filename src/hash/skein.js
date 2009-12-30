@@ -1,8 +1,5 @@
-/**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *  Skein 1.2 (c) 2009 Bruce Schneier, et al.
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
-
-(function SKEIN(self) {
+// Skein 1.2 (c) 2009 Bruce Schneier, et al.
+(function SKEIN() {
   'Copyright (c) 2009 Bruce Schneier, et al.';
   
   var
@@ -292,4 +289,4 @@
     return skein(1024, size, data, key);
   };
   
-}(Digest));
+}());

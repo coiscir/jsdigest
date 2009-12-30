@@ -1,9 +1,5 @@
-/**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *  MD6 (c) 2009 Ronald L. Rivest, et al.
- *  Based on the 2009-04-15 revision 
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
-
-(function MD6(self) {
+// MD6 r2009-04-15 (c) 2009 Ronald L. Rivest, et al.
+(function () {
   'Copyright (c) 2009 Ronald L. Rivest, et al.';
   
   var
@@ -249,4 +245,4 @@
     return main(size, data, key, 0);
   };
   
-}(Digest));
+}());
