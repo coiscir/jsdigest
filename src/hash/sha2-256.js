@@ -2,14 +2,6 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function rotr(x, n) {
-    return ((x >>> n) | (x << (32 - n)));
-  }
-  
-  function shr(x, n) {
-    return x >>> n;
-  }
-  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
@@ -70,16 +62,16 @@
       ];
     
     function bSig0(x) {
-      return rotr(x,  2) ^ rotr(x, 13) ^ rotr(x, 22);
+      return rotr_32(x,  2) ^ rotr_32(x, 13) ^ rotr_32(x, 22);
     }
     function bSig1(x) {
-      return rotr(x,  6) ^ rotr(x, 11) ^ rotr(x, 25);
+      return rotr_32(x,  6) ^ rotr_32(x, 11) ^ rotr_32(x, 25);
     }
     function sSig0(x) {
-      return rotr(x,  7) ^ rotr(x, 18) ^ shr(x,  3);
+      return rotr_32(x,  7) ^ rotr_32(x, 18) ^ (x >>> 3);
     }
     function sSig1(x) {
-      return rotr(x, 17) ^ rotr(x, 19) ^ shr(x, 10);
+      return rotr_32(x, 17) ^ rotr_32(x, 19) ^ (x >>> 10);
     }
     
     function ch(x, y, z) {

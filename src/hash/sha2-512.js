@@ -2,15 +2,6 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  var
-    ulong = self.ulong,
-    add = self.add,
-    and = self.and,
-    xor = self.xor,
-    not = self.not,
-    rotr = self.rotr,
-    shr = self.shr;
-  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
@@ -108,23 +99,23 @@
       ];
     
     function bSig0(x) {
-      return xor(xor(rotr(x, 28), rotr(x, 34)), rotr(x, 39));
+      return xor_64(xor_64(rotr_64(x, 28), rotr_64(x, 34)), rotr_64(x, 39));
     }
     function bSig1(x) {
-      return xor(xor(rotr(x, 14), rotr(x, 18)), rotr(x, 41));
+      return xor_64(xor_64(rotr_64(x, 14), rotr_64(x, 18)), rotr_64(x, 41));
     }
     function sSig0(x) {
-      return xor(xor(rotr(x,  1), rotr(x,  8)), shr(x, 7));
+      return xor_64(xor_64(rotr_64(x,  1), rotr_64(x,  8)), shr_64(x, 7));
     }
     function sSig1(x) {
-      return xor(xor(rotr(x, 19), rotr(x, 61)), shr(x, 6));
+      return xor_64(xor_64(rotr_64(x, 19), rotr_64(x, 61)), shr_64(x, 6));
     }
     
     function ch(x, y, z) {
-      return xor(and(x, y), and(not(x), z));
+      return xor_64(and_64(x, y), and_64(not_64(x), z));
     }
     function maj(x, y, z) {
-      return xor(xor(and(x, y), and(x, z)), and(y, z));
+      return xor_64(xor_64(and_64(x, y), and_64(x, z)), and_64(y, z));
     }
     
     // use bit-length to pad data
@@ -160,29 +151,29 @@
         if (t < 16) {
           w[t] = ulong(x[i + t]);
         } else {
-          w[t] = add(add(sSig1(w[t - 2]), w[t - 7]), add(sSig0(w[t - 15]), w[t - 16]));
+          w[t] = add_64(add_64(sSig1(w[t - 2]), w[t - 7]), add_64(sSig0(w[t - 15]), w[t - 16]));
         }
         
-        tmp1 = add(add(add(h, bSig1(e)), ch(e, f, g)), add(K[t], w[t]));
-        tmp2 = add(bSig0(a), maj(a, b, c));
+        tmp1 = add_64(add_64(add_64(h, bSig1(e)), ch(e, f, g)), add_64(K[t], w[t]));
+        tmp2 = add_64(bSig0(a), maj(a, b, c));
         h = ulong(g);
         g = ulong(f);
         f = ulong(e);
-        e = add(d, tmp1);
+        e = add_64(d, tmp1);
         d = ulong(c);
         c = ulong(b);
         b = ulong(a);
-        a = add(tmp1, tmp2);
+        a = add_64(tmp1, tmp2);
       }
       
-      hash[0] = add(hash[0], a);
-      hash[1] = add(hash[1], b);
-      hash[2] = add(hash[2], c);
-      hash[3] = add(hash[3], d);
-      hash[4] = add(hash[4], e);
-      hash[5] = add(hash[5], f);
-      hash[6] = add(hash[6], g);
-      hash[7] = add(hash[7], h);
+      hash[0] = add_64(hash[0], a);
+      hash[1] = add_64(hash[1], b);
+      hash[2] = add_64(hash[2], c);
+      hash[3] = add_64(hash[3], d);
+      hash[4] = add_64(hash[4], e);
+      hash[5] = add_64(hash[5], f);
+      hash[6] = add_64(hash[6], g);
+      hash[7] = add_64(hash[7], h);
     }
     
     return self.Encoder(split(hash.slice(0, part)));

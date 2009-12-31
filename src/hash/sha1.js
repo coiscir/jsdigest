@@ -2,10 +2,6 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function rotl(x, n) {
-    return ((x << n) | (x >>> (32 - n)));
-  }
-  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
@@ -87,13 +83,13 @@
         if (t < 16) {
           w[t] = x[i + t];
         } else {
-          w[t] = rotl((w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16]), 1);
+          w[t] = rotl_32((w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16]), 1);
         }
         
-        tmp = (rotl(a, 5) + func(t, b, c, d) + e + w[t] + konst(t));
+        tmp = (rotl_32(a, 5) + func(t, b, c, d) + e + w[t] + konst(t));
         e = d;
         d = c;
-        c = rotl(b, 30);
+        c = rotl_32(b, 30);
         b = a;
         a = tmp;
       }

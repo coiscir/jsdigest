@@ -2,13 +2,6 @@
 (function () {
   'Copyright (c) 2009 Ronald L. Rivest, et al.';
   
-  var
-    ulong = self.ulong,
-    and = self.and,
-    xor = self.xor,
-    shr = self.shr,
-    shl = self.shl;
-  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
@@ -101,15 +94,15 @@
       for (j = 0, i = n; j < r; j += 1, i += 16) {
         for (s = 0; s < 16; s += 1) {
           x = ulong(S);
-          x = xor(x, A[i + s - t[5]]);
-          x = xor(x, A[i + s - t[0]]);
-          x = xor(x, and(A[i + s - t[1]], A[i + s - t[2]]));
-          x = xor(x, and(A[i + s - t[3]], A[i + s - t[4]]));
-          x = xor(x, shr(x, rs[s]));
-          A[i + s] = xor(x, shl(x, ls[s]));
+          x = xor_64(x, A[i + s - t[5]]);
+          x = xor_64(x, A[i + s - t[0]]);
+          x = xor_64(x, and_64(A[i + s - t[1]], A[i + s - t[2]]));
+          x = xor_64(x, and_64(A[i + s - t[3]], A[i + s - t[4]]));
+          x = xor_64(x, shr_64(x, rs[s]));
+          A[i + s] = xor_64(x, shl_64(x, ls[s]));
         }
         
-        S = xor(xor(shl(S, 1), shr(S, (64 - 1))), and(S, Sm));
+        S = xor_64(xor_64(shl_64(S, 1), shr_64(S, (64 - 1))), and_64(S, Sm));
       }
       
       return A.slice(A.length - 16);

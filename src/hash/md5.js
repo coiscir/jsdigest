@@ -2,10 +2,6 @@
 (function () {
   'Copyright (c) 1992 Ronald L. Rivest';
   
-  function rotl(x, n) {
-    return ((x << n) | (x >>> (32 - n)));
-  }
-  
   function merge(input) {
     var i, j, l, output = [];
     for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
@@ -87,7 +83,7 @@
     }
     
     function calc(t, a, b, c, d, x, ac) {
-      return rotl((a + func(t, b, c, d) + x + ac), shift(t)) + b;
+      return rotl_32((a + func(t, b, c, d) + x + ac), shift(t)) + b;
     }
     
     // use bit-length to pad data
