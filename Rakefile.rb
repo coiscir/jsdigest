@@ -10,7 +10,7 @@ require 'jsmin'
 @release = `git log -n 1 --format="%ci"`.strip
 
 @create = 'digest.js'
-@globs = ['intro', 'core', 'encoder', 'hmac', 'hash/*', 'outro']
+@globs = ['intro', 'core', 'math', 'encoder', 'hmac', 'hash/*', 'outro']
 @asis = ['intro', 'outro']
 
 def import
