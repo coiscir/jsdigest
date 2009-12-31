@@ -2,30 +2,6 @@
 (function () {
   'Copyright (c) 1992 Ronald L. Rivest';
   
-  function merge(input) {
-    var i, j, l, output = [];
-    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
-      output[i] = ((input[j]) & 0xff) |
-        ((input[j + 1] <<  8) & 0xff00) |
-        ((input[j + 2] << 16) & 0xff0000) |
-        ((input[j + 3] << 24) & 0xff000000);
-    }
-    return output;
-  }
-  
-  function split(input) {
-    var i, l, output = [];
-    for (i = 0, l = input.length; i < l; i += 1) {
-      output.push((input[i] >>  0) & 0xff);
-      output.push((input[i] >>  8) & 0xff);
-      output.push((input[i] >> 16) & 0xff);
-      output.push((input[i] >> 24) & 0xff);
-    }
-    return output;
-  }
-  
-  // define hash function
-  
   function main(data) {
     var a, b, c, d, i, l, t, tmp, x,
       bytes, bitHi, bitLo,
@@ -96,7 +72,7 @@
       padding.push(0x0);
     }
     
-    x = merge(data.concat(padding)).concat([bitLo, bitHi]);
+    x = merge_LSB_32(data.concat(padding)).concat([bitLo, bitHi]);
     
     // update hash
     for (i = 0, l = x.length; i < l; i += 16) {
@@ -121,7 +97,7 @@
       hash[3] += d;
     }
     
-    return self.Encoder(split(hash));
+    return self.Encoder(split_LSB_32(hash));
   }
   
   // expose hash function

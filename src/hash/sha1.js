@@ -2,31 +2,6 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function merge(input) {
-    var i, j, l, output = [];
-    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 4)) {
-      output[i] = 
-        ((input[j + 0] & 0xff) << 24) |
-        ((input[j + 1] & 0xff) << 16) |
-        ((input[j + 2] & 0xff) <<  8) |
-        ((input[j + 3] & 0xff) <<  0);
-    }
-    return output;
-  }
-  
-  function split(input) {
-    var i, l, output = [];
-    for (i = 0, l = input.length; i < l; i += 1) {
-      output.push((input[i] >> 24) & 0xff);
-      output.push((input[i] >> 16) & 0xff);
-      output.push((input[i] >>  8) & 0xff);
-      output.push((input[i] >>  0) & 0xff);
-    }
-    return output;
-  }
-  
-  // define hash function
-  
   function main(data) {
     var a, b, c, d, e, i, l, t, tmp, w, x,
       bytes, bitHi, bitLo,
@@ -69,7 +44,7 @@
       padding.push(0x0);
     }
     
-    x = merge(data.concat(padding)).concat([bitHi, bitLo]);
+    x = merge_MSB_32(data.concat(padding)).concat([bitHi, bitLo]);
     
     // update hash
     for (i = 0, w = [], l = x.length; i < l; i += 16) {
@@ -101,7 +76,7 @@
       hash[4] += e;
     }
     
-    return self.Encoder(split(hash));
+    return self.Encoder(split_MSB_32(hash));
   }
   
   // expose hash function

@@ -2,40 +2,6 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function merge(input) {
-    var i, j, l, output = [];
-    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
-      output[i] = [
-        ((input[j + 0] & 0xff) << 24) |
-        ((input[j + 1] & 0xff) << 16) |
-        ((input[j + 2] & 0xff) <<  8) |
-        ((input[j + 3] & 0xff) <<  0),
-        ((input[j + 4] & 0xff) << 24) |
-        ((input[j + 5] & 0xff) << 16) |
-        ((input[j + 6] & 0xff) <<  8) |
-        ((input[j + 7] & 0xff) <<  0)
-      ];
-    }
-    return output;
-  }
-  
-  function split(input) {
-    var i, l, output = [];
-    for (i = 0, l = input.length; i < l; i += 1) {
-      output.push((input[i][0] >> 24) & 0xff);
-      output.push((input[i][0] >> 16) & 0xff);
-      output.push((input[i][0] >>  8) & 0xff);
-      output.push((input[i][0] >>  0) & 0xff);
-      output.push((input[i][1] >> 24) & 0xff);
-      output.push((input[i][1] >> 16) & 0xff);
-      output.push((input[i][1] >>  8) & 0xff);
-      output.push((input[i][1] >>  0) & 0xff);
-    }
-    return output;
-  }
-  
-  // define hash function
-  
   function main(size, data) {
     var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,
@@ -134,7 +100,7 @@
       padding.push(0x0);
     }
     
-    x = merge(data.concat(padding)).concat([bitHi, bitLo]);
+    x = merge_MSB_64(data.concat(padding)).concat([bitHi, bitLo]);
     
     // update hash
     for (i = 0, l = x.length; i < l; i += 16) {
@@ -176,7 +142,7 @@
       hash[7] = add_64(hash[7], h);
     }
     
-    return self.Encoder(split(hash.slice(0, part)));
+    return self.Encoder(split_MSB_64(hash.slice(0, part)));
   }
   
   function main384(data) {

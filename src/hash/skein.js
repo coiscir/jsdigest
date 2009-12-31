@@ -53,45 +53,13 @@
     }
   };
   
-  function merge(input) {
-    var i, j, l, output = [];
-    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
-      output[i] = [
-        ((input[j + 4] & 0xff) <<  0) |
-        ((input[j + 5] & 0xff) <<  8) |
-        ((input[j + 6] & 0xff) << 16) |
-        ((input[j + 7] & 0xff) << 24),
-        ((input[j + 0] & 0xff) <<  0) |
-        ((input[j + 1] & 0xff) <<  8) |
-        ((input[j + 2] & 0xff) << 16) |
-        ((input[j + 3] & 0xff) << 24)
-      ];
-    }
-    return output;
-  }
-  
-  function split(input) {
-    var i, l, output = [];
-    for (i = 0, l = input.length; i < l; i += 1) {
-      output.push((input[i][1] >>  0) & 0xff);
-      output.push((input[i][1] >>  8) & 0xff);
-      output.push((input[i][1] >> 16) & 0xff);
-      output.push((input[i][1] >> 24) & 0xff);
-      output.push((input[i][0] >>  0) & 0xff);
-      output.push((input[i][0] >>  8) & 0xff);
-      output.push((input[i][0] >> 16) & 0xff);
-      output.push((input[i][0] >> 24) & 0xff);
-    }
-    return output;
-  }
-  
   function tweak(pos, type, fst, fin) {
     var int0, int1, int2, int3;
     int3 = pos | 0x0;
     int2 = (pos / Math.pow(2, 32)) | 0x0;
     int1 = (pos / Math.pow(2, 64)) | 0x0;
     int0 = ((fin && 0x80) | (fst && 0x40) | type) << 24;
-    return split([[int2, int3], [int0, int1]]);
+    return split_LSB_64([[int2, int3], [int0, int1]]);
   }
   tweak.KEY = 0x00;
   tweak.CONFIG = 0x04;
@@ -124,9 +92,9 @@
     
     function threefish(K, T, P) {
       var c, d, e, i, j, k, ks, t, p, s, v;
-      k = merge(K);
-      t = merge(T);
-      p = merge(P);
+      k = merge_LSB_64(K);
+      t = merge_LSB_64(T);
+      p = merge_LSB_64(P);
       v = [].concat(p);
       
       // extended key
@@ -184,7 +152,7 @@
       c[Nw - 2] = add_64(c[Nw - 2], t[(s + 1) % 3]);
       c[Nw - 1] = add_64(c[Nw - 1], [0, s]);
       
-      return split(c);
+      return split_LSB_64(c);
     }
     
     function ubi(G, M, type) {
@@ -245,7 +213,7 @@
     C = [];
     C.push(0x53, 0x48, 0x41, 0x33); // Schema: "SHA3"
     C.push(0x01, 0x00, 0x00, 0x00); // Version / Reserved
-    C = C.concat(split([[0, No]])); // Output length
+    C = C.concat(split_LSB_64([[0, No]])); // Output length
     C.length = 32;
     
     // process blocks

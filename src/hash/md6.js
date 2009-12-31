@@ -2,40 +2,6 @@
 (function () {
   'Copyright (c) 2009 Ronald L. Rivest, et al.';
   
-  function merge(input) {
-    var i, j, l, output = [];
-    for (i = 0, j = 0, l = input.length; j < l; i += 1, j = (i * 8)) {
-      output[i] = [
-        ((input[j + 0] & 0xff) << 24) |
-        ((input[j + 1] & 0xff) << 16) |
-        ((input[j + 2] & 0xff) <<  8) |
-        ((input[j + 3] & 0xff) <<  0),
-        ((input[j + 4] & 0xff) << 24) |
-        ((input[j + 5] & 0xff) << 16) |
-        ((input[j + 6] & 0xff) <<  8) |
-        ((input[j + 7] & 0xff) <<  0)
-      ];
-    }
-    return output;
-  }
-  
-  function split(input) {
-    var i, l, output = [];
-    for (i = 0, l = input.length; i < l; i += 1) {
-      output.push((input[i][0] >> 24) & 0xff);
-      output.push((input[i][0] >> 16) & 0xff);
-      output.push((input[i][0] >>  8) & 0xff);
-      output.push((input[i][0] >>  0) & 0xff);
-      output.push((input[i][1] >> 24) & 0xff);
-      output.push((input[i][1] >> 16) & 0xff);
-      output.push((input[i][1] >>  8) & 0xff);
-      output.push((input[i][1] >>  0) & 0xff);
-    }
-    return output;
-  }
-  
-  // define hash function
-  
   function main(size, data, key, levels) {
     var b, c, n, d, M, K, k, r, L, ell, S0, Sm, Q, t, rs, ls;
     
@@ -60,7 +26,7 @@
     }
     
     // finalize K
-    K = merge(K);
+    K = merge_MSB_64(K);
     
     // calculate default rounds, min 80 with key
     r = Math.max((k ? 80 : 0), (40 + (d / 4)));
@@ -147,7 +113,7 @@
         M.push(0x00);
         P += 8;
       }
-      M = merge(M);
+      M = merge_MSB_64(M);
       
       // split M into B(b) blocks
       while (M.length > 0) {
@@ -161,7 +127,7 @@
         C = C.concat(mid(B[i], [], i, p, z));
       }
       
-      return split(C);
+      return split_MSB_64(C);
     }
     
     // sequential compression
@@ -178,7 +144,7 @@
         M.push(0x00);
         P += 8;
       }
-      M = merge(M);
+      M = merge_MSB_64(M);
       
       // split M into B(b-c) blocks
       while (M.length > 0) {
@@ -193,7 +159,7 @@
         C = mid(B[i], C, i, p, z);
       }
       
-      return split(C);
+      return split_MSB_64(C);
     }
     
     // trim hash to length
