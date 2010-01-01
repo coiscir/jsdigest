@@ -3,36 +3,25 @@
   'Copyright (c) 2006 The Internet Society';
   
   function main(data) {
-    var a, b, c, d, e, i, l, t, tmp, w, x,
+    var a, b, c, d, e, i, l, r, t, tmp, w, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
-      hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
-    
-    function func(t, b, c, d) {
-      switch (Math.floor(t / 20)) {
-      case 0:
-        return (b & c) | ((~b) & d);
-      case 1:
-        return (b ^ c ^ d);
-      case 2:
-        return (b & c) | (b & d) | (c & d);
-      case 3:
-        return (b ^ c ^ d);
-      }
-    }
-    
-    function konst(t) {
-      switch (Math.floor(t / 20)) {
-      case 0:
-        return 0x5a827999;
-      case 1:
-        return 0x6ed9eba1;
-      case 2:
-        return 0x8f1bbcdc;
-      case 3:
-        return 0xca62c1d6;
-      }
-    }
+      hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0],
+      K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6],
+      F = [
+        function (b, c, d) {
+          return (b & c) | ((~b) & d);
+        },
+        function (b, c, d) {
+          return (b ^ c ^ d);
+        },
+        function (b, c, d) {
+          return (b & c) | (b & d) | (c & d);
+        },
+        function (b, c, d) {
+          return (b ^ c ^ d);
+        }
+      ];
     
     // use bit-length to pad data
     bytes = data.length;
@@ -61,7 +50,8 @@
           w[t] = rotl_32((w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16]), 1);
         }
         
-        tmp = (rotl_32(a, 5) + func(t, b, c, d) + e + w[t] + konst(t));
+        r = Math.floor(t / 20);
+        tmp = (rotl_32(a, 5) + F[r](b, c, d) + e + w[t] + K[r]);
         e = d;
         d = c;
         c = rotl_32(b, 30);

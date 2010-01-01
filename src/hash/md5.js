@@ -3,24 +3,10 @@
   'Copyright (c) 1992 Ronald L. Rivest';
   
   function main(data) {
-    var a, b, c, d, i, l, t, tmp, x,
+    var a, b, c, d, i, l, r, t, tmp, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
       hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
-      F = [
-        function (x, y, z) {
-          return (x & y) | ((~x) & z);
-        },
-        function (x, y, z) {
-          return (x & z) | (y & (~z));
-        },
-        function (x, y, z) {
-          return (x ^ y ^ z);
-        },
-        function (x, y, z) {
-          return (y ^ (x | (~z)));
-        }
-      ],
       S = [ [7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21] ],
       X = [
         0, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, // Round 1
@@ -45,6 +31,20 @@
         0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
         0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
         0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
+      ],
+      F = [
+        function (x, y, z) {
+          return (x & y) | ((~x) & z);
+        },
+        function (x, y, z) {
+          return (x & z) | (y & (~z));
+        },
+        function (x, y, z) {
+          return (x ^ y ^ z);
+        },
+        function (x, y, z) {
+          return (y ^ (x | (~z)));
+        }
       ];
     
     function calc(t, a, b, c, d, x, ac) {
@@ -72,7 +72,8 @@
       d = hash[3];
       
       for (t = 0; t < 64; t += 1) {
-        a = calc(t, a, b, c, d, x[i + X[t]], AC[t]);
+        r = Math.floor(t / 16);
+        a = rotl_32((a + F[r](b, c, d) + x[i + X[t]] + AC[t]), S[r][t % 4]) + b;
         
         tmp = d;
         d = c;
