@@ -7,6 +7,21 @@
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
       hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
+      F = [
+        function (x, y, z) {
+          return (x & y) | ((~x) & z);
+        },
+        function (x, y, z) {
+          return (x & z) | (y & (~z));
+        },
+        function (x, y, z) {
+          return (x ^ y ^ z);
+        },
+        function (x, y, z) {
+          return (y ^ (x | (~z)));
+        }
+      ],
+      S = [ [7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21] ],
       X = [
         0, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, // Round 1
         1, 6, 11,  0,  5, 10, 15,  4,  9, 14,  3,  8, 13,  2,  7, 12, // Round 2
@@ -32,34 +47,9 @@
         0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
       ];
     
-    function func(t, x, y, z) {
-      switch (Math.floor(t / 16)) {
-      case 0:
-        return (x & y) | ((~x) & z);
-      case 1:
-        return (x & z) | (y & (~z));
-      case 2:
-        return (x ^ y ^ z);
-      case 3:
-        return (y ^ (x | (~z)));
-      }
-    }
-    
-    function shift(t) {
-      switch (Math.floor(t / 16)) {
-      case 0:
-        return [7, 12, 17, 22][t % 4];
-      case 1:
-        return [5,  9, 14, 20][t % 4];
-      case 2:
-        return [4, 11, 16, 23][t % 4];
-      case 3:
-        return [6, 10, 15, 21][t % 4];
-      }
-    }
-    
     function calc(t, a, b, c, d, x, ac) {
-      return rotl_32((a + func(t, b, c, d) + x + ac), shift(t)) + b;
+      var r = Math.floor(t / 16);
+      return rotl_32((a + F[r](b, c, d) + x + ac), S[r][t % 4]) + b;
     }
     
     // use bit-length to pad data
