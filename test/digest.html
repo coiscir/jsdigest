@@ -239,6 +239,44 @@ timer = new Date().getTime();
 }());
 
 (function () {
+  var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff');
+  
+  section('== RIPEMD-128 ==');
+  
+  test(true, !!Digest.ripemd128, 'Digest.ripemd128 is defined');
+  
+  space();
+  
+  test('cdf26213a150dc3ecb610f18f6b38b46', Digest.ripemd128('').hex(), 'RIPEMD-128 - ""   ');
+  test('c14a12199c66e4ba84636b0f69144c77', Digest.ripemd128('abc').hex(), 'RIPEMD-128 - "abc"');
+  
+  space();
+  
+  test('ad9db2c1e22af9ab5ca9dbe5a86f67dc', Digest.ripemd128('', key).hex(), 'HMAC-RIPEMD-128   ');
+  
+  space();
+}());
+
+(function () {
+  var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff\x01\x23\x45\x67');
+  
+  section('== RIPEMD-160 ==');
+  
+  test(true, !!Digest.ripemd160, 'Digest.ripemd160 is defined');
+  
+  space();
+  
+  test('9c1185a5c5e9fc54612808977ee8f548b2258d31', Digest.ripemd160('').hex(), 'RIPEMD-160 - ""   ');
+  test('8eb208f7e05d987a9b044a8e98c6b087f15a0bfc', Digest.ripemd160('abc').hex(), 'RIPEMD-160 - "abc"');
+  
+  space();
+  
+  test('cf387677bfda8483e63b57e06c3b5ecd8b7fc055', Digest.ripemd160('', key).hex(), 'HMAC-RIPEMD-160   ');
+  
+  space();
+}());
+
+(function () {
   section('== SHA-1 ==');
   
   test(true, !!Digest.sha1, 'Digest.sha1 is defined');
