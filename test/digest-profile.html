@@ -33,66 +33,80 @@ skein_kat_00 = skein_kat_80 + '\x7F\x7E\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74\
 
 start = new Date().getTime();
 
-Digest.md4('').hex();
+Digest.md4('', 'passphrase').hex();
 Digest.md4('abc').base16();
-Digest.md4('message').base32();
+Digest.md4('message', 'passphrase').base32();
 Digest.md4('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.md4('1234567890123456789012345678901234567890123456789012345').base64();
+Digest.md4('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
 Digest.md4('12345678901234567890123456789012345678901234567890123456').base64url();
 
-Digest.md5('').hex();
+Digest.md5('', 'passphrase').hex();
 Digest.md5('abc').base16();
-Digest.md5('message').base32();
+Digest.md5('message', 'passphrase').base32();
 Digest.md5('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.md5('1234567890123456789012345678901234567890123456789012345').base64();
+Digest.md5('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
 Digest.md5('12345678901234567890123456789012345678901234567890123456').base64url();
-
-Digest.sha1('').hex();
-Digest.sha1('abc').base16();
-Digest.sha1('message').base32();
-Digest.sha1('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.sha1('1234567890123456789012345678901234567890123456789012345').base64();
-Digest.sha1('12345678901234567890123456789012345678901234567890123456').base64url();
-
-Digest.sha224('').hex();
-Digest.sha224('abc').base16();
-Digest.sha224('message').base32();
-Digest.sha224('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.sha224('1234567890123456789012345678901234567890123456789012345').base64();
-Digest.sha224('12345678901234567890123456789012345678901234567890123456').base64url();
-
-Digest.sha256('').hex();
-Digest.sha256('abc').base16();
-Digest.sha256('message').base32();
-Digest.sha256('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.sha256('1234567890123456789012345678901234567890123456789012345').base64();
-Digest.sha256('12345678901234567890123456789012345678901234567890123456').base64url();
-
-Digest.sha384('').hex();
-Digest.sha384('abc').base16();
-Digest.sha384('message').base32();
-Digest.sha384('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.sha384('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901').base64();
-Digest.sha384('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
-
-Digest.sha512('').hex();
-Digest.sha512('abc').base16();
-Digest.sha512('message').base32();
-Digest.sha512('abcdefghijklmnopqrstuvwxyz').base32hex();
-Digest.sha512('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901').base64();
-Digest.sha512('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
 
 Digest.md6par(224, Digest.stoa(md6_block_400)).hex();
 Digest.md6seq(256, Digest.stoa(md6_block_600)).hex();
-Digest.md6par(384, Digest.stoa(md6_block_400)).hex();
+Digest.md6par(384, Digest.stoa(md6_block_400), '111222333').hex();
 Digest.md6seq(512, Digest.stoa(md6_block_600)).hex();
 Digest.md6par(512, Digest.stoa(md6_block_800), '111222333').hex();
 
-Digest.skein256(256, Digest.stoa(skein_kat_FF)).base16();
+Digest.ripemd128('', 'passphrase').hex();
+Digest.ripemd128('abc').base16();
+Digest.ripemd128('message', 'passphrase').base32();
+Digest.ripemd128('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.ripemd128('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+Digest.ripemd128('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.ripemd160('', 'passphrase').hex();
+Digest.ripemd160('abc').base16();
+Digest.ripemd160('message', 'passphrase').base32();
+Digest.ripemd160('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.ripemd160('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+Digest.ripemd160('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha1('', 'passphrase').hex();
+Digest.sha1('abc').base16();
+Digest.sha1('message', 'passphrase').base32();
+Digest.sha1('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha1('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+Digest.sha1('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha224('', 'passphrase').hex();
+Digest.sha224('abc').base16();
+Digest.sha224('message', 'passphrase').base32();
+Digest.sha224('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha224('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+Digest.sha224('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha256('', 'passphrase').hex();
+Digest.sha256('abc').base16();
+Digest.sha256('message', 'passphrase').base32();
+Digest.sha256('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha256('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+Digest.sha256('12345678901234567890123456789012345678901234567890123456').base64url();
+
+Digest.sha384('', 'passphrase').hex();
+Digest.sha384('abc').base16();
+Digest.sha384('message', 'passphrase').base32();
+Digest.sha384('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha384('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901', 'passphrase').base64();
+Digest.sha384('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
+
+Digest.sha512('', 'passphrase').hex();
+Digest.sha512('abc').base16();
+Digest.sha512('message', 'passphrase').base32();
+Digest.sha512('abcdefghijklmnopqrstuvwxyz').base32hex();
+Digest.sha512('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901', 'passphrase').base64();
+Digest.sha512('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012').base64url();
+
+Digest.skein256(256, Digest.stoa(skein_kat_FF), '111222333').base16();
 Digest.skein256(256, Digest.stoa(skein_kat_C0)).base16();
-Digest.skein512(512, Digest.stoa(skein_kat_FF)).base16();
+Digest.skein512(512, Digest.stoa(skein_kat_FF), '111222333').base16();
 Digest.skein512(512, Digest.stoa(skein_kat_80)).base16();
-Digest.skein1024(1024, Digest.stoa(skein_kat_FF)).base16();
+Digest.skein1024(1024, Digest.stoa(skein_kat_FF), '111222333').base16();
 Digest.skein1024(1024, Digest.stoa(skein_kat_00)).base16();
 
 timed(new Date().getTime() - start);
