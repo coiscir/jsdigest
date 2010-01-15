@@ -61,6 +61,22 @@ $(document).ready(function() {
       Digest.md6seq(512, Digest.stoa(md6_block_600)).hex();
       Digest.md6par(512, Digest.stoa(md6_block_800), '111222333').hex();
     }],
+    ['RIPEMD-128', function() {
+      Digest.ripemd128('', 'passphrase').hex();
+      Digest.ripemd128('abc').base16();
+      Digest.ripemd128('message', 'passphrase').base32();
+      Digest.ripemd128('abcdefghijklmnopqrstuvwxyz').base32hex();
+      Digest.ripemd128('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+      Digest.ripemd128('12345678901234567890123456789012345678901234567890123456').base64url();
+    }],
+    ['RIPEMD-160', function() {
+      Digest.ripemd160('', 'passphrase').hex();
+      Digest.ripemd160('abc').base16();
+      Digest.ripemd160('message', 'passphrase').base32();
+      Digest.ripemd160('abcdefghijklmnopqrstuvwxyz').base32hex();
+      Digest.ripemd160('1234567890123456789012345678901234567890123456789012345', 'passphrase').base64();
+      Digest.ripemd160('12345678901234567890123456789012345678901234567890123456').base64url();
+    }],
     ['SHA-1', function() {
       Digest.sha1('', 'passphrase').hex();
       Digest.sha1('abc').base16();
