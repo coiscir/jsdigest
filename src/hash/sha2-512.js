@@ -122,13 +122,13 @@
         
         tmp1 = add_64(add_64(add_64(h, bSig1(e)), ch(e, f, g)), add_64(K[t], w[t]));
         tmp2 = add_64(bSig0(a), maj(a, b, c));
-        h = [].concat(g);
-        g = [].concat(f);
-        f = [].concat(e);
+        h = ulong(g);
+        g = ulong(f);
+        f = ulong(e);
         e = add_64(d, tmp1);
-        d = [].concat(c);
-        c = [].concat(b);
-        b = [].concat(a);
+        d = ulong(c);
+        c = ulong(b);
+        b = ulong(a);
         a = add_64(tmp1, tmp2);
       }
       
