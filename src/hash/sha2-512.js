@@ -104,31 +104,31 @@
     
     // update hash
     for (i = 0, l = x.length; i < l; i += 16) {
-      a = ulong(hash[0]);
-      b = ulong(hash[1]);
-      c = ulong(hash[2]);
-      d = ulong(hash[3]);
-      e = ulong(hash[4]);
-      f = ulong(hash[5]);
-      g = ulong(hash[6]);
-      h = ulong(hash[7]);
+      a = [].concat(hash[0]);
+      b = [].concat(hash[1]);
+      c = [].concat(hash[2]);
+      d = [].concat(hash[3]);
+      e = [].concat(hash[4]);
+      f = [].concat(hash[5]);
+      g = [].concat(hash[6]);
+      h = [].concat(hash[7]);
       
       for (w = [], t = 0; t < 80; t += 1) {
         if (t < 16) {
-          w[t] = ulong(x[i + t]);
+          w[t] = [].concat(x[i + t]);
         } else {
           w[t] = add_64(add_64(sSig1(w[t - 2]), w[t - 7]), add_64(sSig0(w[t - 15]), w[t - 16]));
         }
         
         tmp1 = add_64(add_64(add_64(h, bSig1(e)), ch(e, f, g)), add_64(K[t], w[t]));
         tmp2 = add_64(bSig0(a), maj(a, b, c));
-        h = ulong(g);
-        g = ulong(f);
-        f = ulong(e);
+        h = [].concat(g);
+        g = [].concat(f);
+        f = [].concat(e);
         e = add_64(d, tmp1);
-        d = ulong(c);
-        c = ulong(b);
-        b = ulong(a);
+        d = [].concat(c);
+        c = [].concat(b);
+        b = [].concat(a);
         a = add_64(tmp1, tmp2);
       }
       

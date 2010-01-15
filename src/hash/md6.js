@@ -55,11 +55,11 @@
     
     // main compression function
     function f(N) {
-      var i, j, s, x, S = ulong(S0), A = [].concat(N);
+      var i, j, s, x, S = [].concat(S0), A = [].concat(N);
       
       for (j = 0, i = n; j < r; j += 1, i += 16) {
         for (s = 0; s < 16; s += 1) {
-          x = ulong(S);
+          x = [].concat(S);
           x = xor_64(x, A[i + s - t[5]]);
           x = xor_64(x, A[i + s - t[0]]);
           x = xor_64(x, and_64(A[i + s - t[1]], A[i + s - t[2]]));
@@ -78,15 +78,15 @@
     function mid(B, C, i, p, z) {
       var U, V;
       
-      U = ulong([
+      U = [
         (
           ((ell & 0xff) << 24) |
           ((i / Math.pow(2, 32)) & 0xffffff)
         ),
         (i & 0xffffffff)
-      ]);
+      ];
       
-      V = ulong([
+      V = [
         (
           ((r & 0xfff)  << 16) |
           ((L & 0xff)   <<  8) |
@@ -98,7 +98,7 @@
           ((k & 0xff)  << 12) |
           ((d & 0xfff))
         )
-      ]);
+      ];
       
       return f([].concat(Q, K, [U, V], C, B));
     }
