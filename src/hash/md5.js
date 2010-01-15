@@ -47,11 +47,6 @@
         }
       ];
     
-    function calc(t, a, b, c, d, x, ac) {
-      var r = Math.floor(t / 16);
-      return rotl_32((a + F[r](b, c, d) + x + ac), S[r][t % 4]) + b;
-    }
-    
     // use bit-length to pad data
     bytes = data.length;
     bitLo = (bytes * 8) & 0xffffffff;
