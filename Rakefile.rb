@@ -34,11 +34,13 @@ end
 
 def getpath(dev)
   file = @create
+  ext = File.extname(file)
+  base = File.basename(file, ext)
   
   if dev
-    ext = File.extname(file)
-    base = File.basename(file, ext)
     file = base + '-dev' + ext
+  else
+    file = base + '-min' + ext
   end
   
   File.join(@dest, file)
