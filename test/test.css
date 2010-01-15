@@ -1,4 +1,11 @@
 #results { margin: 0; padding: 0; list-style: none; }
-#results li { font: normal 9pt/1.3 "Courier New"; white-space: pre; }
+#results li { font: normal 10pt/1.3 "Courier New"; white-space: pre; }
+
+#triggers { margin: 10pt; padding: 0; list-style: none; }
+#triggers li { display: inline; font: normal 10pt/1.3 sans-serif; white-space: pre; }
+#triggers li + li { margin-left: 10pt; }
+#triggers a { color: #8d0000; }
+#triggers li.current a { color: #4682b4; }
+
 span.pass { color: #0a0; }
 span.fail { color: #f00; }
