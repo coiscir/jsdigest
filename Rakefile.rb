@@ -6,7 +6,7 @@ require 'jsmin'
 @dest = 'lib'
 @src = 'src'
 
-@version = `git describe --tags --abbrev=0`.strip
+@version = File.read('VERSION').strip
 @release = `git log -n 1 --format="%ci"`.strip
 
 @create = 'digest.js'
