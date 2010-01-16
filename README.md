@@ -12,6 +12,7 @@ Supports
 * **MD4**
 * **MD5**
 * **MD6** (PAR, SEQ)
+* **RIPEMD-160** (128)
 * **SHA-1**
 * **SHA-224**
 * **SHA-256**
@@ -41,6 +42,8 @@ HMAC-Keyed Hash Functions:
     
     * Digest.md4
     * Digest.md5
+    * Digest.ripemd128
+    * Digest.ripemd160
     * Digest.sha1
     * Digest.sha224
     * Digest.sha256

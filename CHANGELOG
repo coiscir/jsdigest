@@ -1,3 +1,19 @@
+Jan 15, 2010    1.2.0
+  
+  Added RIPEMD-160 (128).
+  
+  Reduced build to a single global closure:
+    - Pre-define all merge/split functions (src/word).
+    - Pre-define all UInt/ULong functions (src/math).
+  
+  Improved performance by employing better caching:
+    - Change switch functions to cached arrays.
+      - Add 'r' round variables.
+    - Reduced uses of `ulong` in MD6 and SHA-512.
+  
+  Create a FireUnit test file.
+
+
 Dec 23, 2009    1.1.1
   
   Bug fix release:
