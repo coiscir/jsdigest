@@ -2,11 +2,11 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function main(size, data) {
+  function main(digest, size, data) {
     var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
-      part = Math.ceil(size / 64),
+      part = Math.ceil(digest / 64),
       hash = ({
         384: [
           [0xcbbb9d5d, 0xc1059ed8], [0x629a292a, 0x367cd507],
@@ -20,7 +20,7 @@
           [0x510e527f, 0xade682d1], [0x9b05688c, 0x2b3e6c1f],
           [0x1f83d9ab, 0xfb41bd6b], [0x5be0cd19, 0x137e2179]
         ]
-      })[size],
+      })[digest],
       K = [
         [0x428a2f98, 0xd728ae22], [0x71374491, 0x23ef65cd],
         [0xb5c0fbcf, 0xec4d3b2f], [0xe9b5dba5, 0x8189dbbc],
@@ -142,38 +142,56 @@
       hash[7] = add_64(hash[7], h);
     }
     
-    return self.Encoder(split_MSB_64(hash.slice(0, part)));
+    return self.Encoder(crop(size, split_MSB_64(hash.slice(0, part)), false));
   }
   
-  function main384(data) {
-    return main(384, data);
+  function main384(size, data) {
+    return main(384, size, data);
   }
   
-  function main512(data) {
-    return main(512, data);
+  function main512(size, data) {
+    return main(512, size, data);
   }
   
   // expose hash function
   
-  self.fn.sha384 = function sha384(data, hkey) {
+  self.fn.sha384 = function sha384(size, data, hkey) {
+    var digest = 384;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main384, data, hkey, 128);
+      return hmac(main384, size, digest, data, hkey, 128);
     } else {
-      return main384(data);
+      return main384(size, data);
     }
   };
   
-  self.fn.sha512 = function sha512(data, hkey) {
+  self.fn.sha512 = function sha512(size, data, hkey) {
+    var digest = 512;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main512, data, hkey, 128);
+      return hmac(main512, size, digest, data, hkey, 128);
     } else {
-      return main512(data);
+      return main512(size, data);
     }
   };
   

@@ -2,7 +2,7 @@
 (function () {
   'Copyright (c) 1992 Ronald L. Rivest';
   
-  function main(data) {
+  function main(size, data) {
     var a, b, c, d, i, l, r, t, tmp, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
@@ -83,19 +83,28 @@
       hash[3] += d;
     }
     
-    return self.Encoder(split_LSB_32(hash));
+    return self.Encoder(crop(size, split_LSB_32(hash), false));
   }
   
   // expose hash function
   
-  self.fn.md5 = function md5(data, hkey) {
+  self.fn.md5 = function md5(size, data, hkey) {
+    var digest = 128;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main, data, hkey, 64);
+      return hmac(main, size, digest, data, hkey, 64);
     } else {
-      return main(data);
+      return main(size, data);
     }
   };
   

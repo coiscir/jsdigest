@@ -2,11 +2,11 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function main(size, data) {
+  function main(digest, size, data) {
     var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
-      part = Math.ceil(size / 32),
+      part = Math.ceil(digest / 32),
       hash = ({
         224: [
           0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
@@ -16,7 +16,7 @@
           0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
           0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         ]
-      })[size],
+      })[digest],
       K = [
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -108,38 +108,56 @@
       hash[7] += h;
     }
     
-    return self.Encoder(split_MSB_32(hash.slice(0, part)));
+    return self.Encoder(crop(size, split_MSB_32(hash.slice(0, part)), false));
   }
   
-  function main224(data) {
-    return main(224, data);
+  function main224(size, data) {
+    return main(224, size, data);
   }
   
-  function main256(data) {
-    return main(256, data);
+  function main256(size, data) {
+    return main(256, size, data);
   }
   
   // expose hash function
   
-  self.fn.sha224 = function sha224(data, hkey) {
+  self.fn.sha224 = function sha224(size, data, hkey) {
+    var digest = 224;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main224, data, hkey, 64);
+      return hmac(main224, size, digest, data, hkey, 64);
     } else {
-      return main224(data);
+      return main224(size, data);
     }
   };
   
-  self.fn.sha256 = function sha256(data, hkey) {
+  self.fn.sha256 = function sha256(size, data, hkey) {
+    var digest = 256;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main256, data, hkey, 64);
+      return hmac(main256, size, digest, data, hkey, 64);
     } else {
-      return main256(data);
+      return main256(size, data);
     }
   };
   

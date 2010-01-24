@@ -2,7 +2,7 @@
 (function () {
   'Copyright (c) 2006 The Internet Society';
   
-  function main(data) {
+  function main(size, data) {
     var a, b, c, d, e, i, l, r, t, tmp, w, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
@@ -66,19 +66,28 @@
       hash[4] += e;
     }
     
-    return self.Encoder(split_MSB_32(hash));
+    return self.Encoder(crop(size, split_MSB_32(hash), false));
   }
   
   // expose hash function
   
-  self.fn.sha1 = function sha1(data, hkey) {
+  self.fn.sha1 = function sha1(size, data, hkey) {
+    var digest = 160;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main, data, hkey, 64);
+      return hmac(main, size, digest, data, hkey, 64);
     } else {
-      return main(data);
+      return main(size, data);
     }
   };
   

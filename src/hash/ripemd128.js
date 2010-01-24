@@ -2,7 +2,7 @@
 (function () {
   'Copyright (c) 1996 Hans Dobbertin, Antoon Bosselaers, and Bart Preneel';
   
-  function main(data) {
+  function main(size, data) {
     var aa, bb, cc, dd, aaa, bbb, ccc, ddd, i, l, r, rr, t, tmp, x,
       bytes, bitHi, bitLo,
       padlen, padding = [0x80],
@@ -101,19 +101,28 @@
       hash[0] = ddd;
     }
     
-    return self.Encoder(split_LSB_32(hash));
+    return self.Encoder(crop(size, split_LSB_32(hash), false));
   }
   
   // expose hash function
   
-  self.fn.ripemd128 = function ripemd128(data, hkey) {
+  self.fn.ripemd128 = function ripemd128(size, data, hkey) {
+    var digest = 128;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      hkey = data;
+      data = size;
+      size = digest;
+    }
+    
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
     if (self.isInput(hkey)) {
-      return self.hmac(main, data, hkey, 64);
+      return hmac(main, size, digest, data, hkey, 64);
     } else {
-      return main(data);
+      return main(size, data);
     }
   };
   

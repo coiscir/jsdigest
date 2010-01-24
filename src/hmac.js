@@ -1,12 +1,12 @@
 // HMAC - keyed-Hash Message Authentication Code
-self.fn.hmac = function hmac(hash, data, hkey, block) {
+function hmac(hash, size, digest, data, hkey, block) {
   var i, akey, ipad, opad;
   
   data = self.Encoder(data).trunc();
   hkey = self.Encoder(hkey).trunc();
   
   if (hkey.length > block) {
-    akey = hash(hkey).trunc();
+    akey = hash(digest, hkey).trunc();
   } else {
     akey = self.Encoder(hkey).trunc();
   }
@@ -16,5 +16,5 @@ self.fn.hmac = function hmac(hash, data, hkey, block) {
     opad[i] = (akey[i] || 0x00) ^ 0x5c;
   }
   
-  return hash(opad.concat(hash(ipad.concat(data)).trunc()));
-};
+  return hash(size, opad.concat(hash(digest, ipad.concat(data)).trunc()));
+}
