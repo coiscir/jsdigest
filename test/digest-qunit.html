@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>jsDigest</title>
+  
+  <link rel="stylesheet" type="text/css" href="qunit/qunit.css" />
+</head>
+<body>
+
+  <h1 id="qunit-header">jsDigest Test Suite</h1>
+  <h2 id="qunit-banner"></h2>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script src="qunit/qunit.js"></script>
+<script src="../lib/digest-dev.js"></script>
+<script>
+  function times(str, num) {
+    var a = [];
+    while (a.length < num) {
+      a.push(str);
+    }
+    return a.join('');
+  }
+  
+  $(document).ready(function() {
+    
+    function implant(i, item) {
+      return item.replace(/\bjsDigest\b/i, 'jsDigest ' + Digest.Version);
+    }
+    
+    if (window.Digest) {
+      $(this).attr('title', implant);
+      $('#qunit-header').text(implant);
+    }
+  });
+    
+  $(document).ready(function() {
+    
+    // Build shared inputs
+    var texts, hmac,
+        md6_block, md6_400, md6_600, md6_800,
+        skein_FF, skein_E0, skein_C0, skein_80, skein_00;
+    
+    texts = {
+      1: '',
+      2: 'a',
+      3: 'abc',
+      4: 'message digest',
+      5: 'abcdefghijklmnopqrstuvwxyz',
+      6: 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
+      7: 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
+      8: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+      9: times('1234567890', 8)
+    };      
+    
+    hmac = {
+      1: {
+        text1: Digest.stoa('Hi There'),
+        key1: Digest.stoa(times('\x0b', 16)),
+        key2: Digest.stoa(times('\x0b', 20))
+      },
+      2: {
+        text1: Digest.stoa('what do ya want for nothing?'),
+        key1: Digest.stoa('Jefe')
+      },
+      3: {
+        text1: Digest.stoa(times('\xdd', 50)),
+        key1: Digest.stoa(times('\xaa', 16)),
+        key2: Digest.stoa(times('\xaa', 20))
+      },
+      4: {
+        text1: Digest.stoa(times('\xcd', 50)),
+        key1: Digest.stoa('\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19')
+      },
+      5: {
+        text1: 'Test With Truncation',
+        key1: Digest.stoa(times('\x0c', 16)),
+        key2: Digest.stoa(times('\x0c', 20))
+      },
+      6: {
+        text1: 'Test Using Larger Than Block-Size Key - Hash Key First',
+        key1: Digest.stoa(times('\xaa', 80)),
+        key2: Digest.stoa(times('\xaa', 131))
+      },
+      7: {
+        text1: 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
+        text2: 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.',
+        key1: Digest.stoa(times('\xaa', 80)),
+        key2: Digest.stoa(times('\xaa', 131))
+      }
+    };
+    
+    md6_block = times('\x11\x22\x33\x44\x55\x66\x77', 115);
+    md6_400 = Digest.stoa(md6_block.substr(0, 400));
+    md6_600 = Digest.stoa(md6_block.substr(0, 600));
+    md6_800 = Digest.stoa(md6_block.substr(0, 800));
+    
+    skein_FF = '\xFF';
+    skein_E0 = skein_FF + '\xFE\xFD\xFC\xFB\xFA\xF9\xF8\xF7\xF6\xF5\xF4\xF3\xF2\xF1\xF0\xEF\xEE\xED\xEC\xEB\xEA\xE9\xE8\xE7\xE6\xE5\xE4\xE3\xE2\xE1\xE0',
+    skein_C0 = skein_E0 + '\xDF\xDE\xDD\xDC\xDB\xDA\xD9\xD8\xD7\xD6\xD5\xD4\xD3\xD2\xD1\xD0\xCF\xCE\xCD\xCC\xCB\xCA\xC9\xC8\xC7\xC6\xC5\xC4\xC3\xC2\xC1\xC0',
+    skein_80 = skein_C0 + '\xBF\xBE\xBD\xBC\xBB\xBA\xB9\xB8\xB7\xB6\xB5\xB4\xB3\xB2\xB1\xB0\xAF\xAE\xAD\xAC\xAB\xAA\xA9\xA8\xA7\xA6\xA5\xA4\xA3\xA2\xA1\xA0\x9F\x9E\x9D\x9C\x9B\x9A\x99\x98\x97\x96\x95\x94\x93\x92\x91\x90\x8F\x8E\x8D\x8C\x8B\x8A\x89\x88\x87\x86\x85\x84\x83\x82\x81\x80',
+    skein_00 = skein_80 + '\x7F\x7E\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74\x73\x72\x71\x70\x6F\x6E\x6D\x6C\x6B\x6A\x69\x68\x67\x66\x65\x64\x63\x62\x61\x60\x5F\x5E\x5D\x5C\x5B\x5A\x59\x58\x57\x56\x55\x54\x53\x52\x51\x50\x4F\x4E\x4D\x4C\x4B\x4A\x49\x48\x47\x46\x45\x44\x43\x42\x41\x40\x3F\x3E\x3D\x3C\x3B\x3A\x39\x38\x37\x36\x35\x34\x33\x32\x31\x30\x2F\x2E\x2D\x2C\x2B\x2A\x29\x28\x27\x26\x25\x24\x23\x22\x21\x20\x1F\x1E\x1D\x1C\x1B\x1A\x19\x18\x17\x16\x15\x14\x13\x12\x11\x10\x0F\x0E\x0D\x0C\x0B\x0A\x09\x08\x07\x06\x05\x04\x03\x02\x01\x00';
+    
+    // prevent UTF-8 encoding
+    skein_FF = Digest.stoa(skein_FF);
+    skein_E0 = Digest.stoa(skein_E0);
+    skein_C0 = Digest.stoa(skein_C0);
+    skein_80 = Digest.stoa(skein_80);
+    skein_00 = Digest.stoa(skein_00);
+    
+    
+    ////////////////
+    // Global
+    
+    module('Global');
+    
+    test('Digest Core', function() {
+      expect(16);
+      
+      ok(!!window.Digest, 'Digest is defined');
+      ok(parseFloat(Digest.Version) === 1.2, 'Digest.Version');
+      
+      ok(!!Digest.md4, 'Digest.md4 is defined');
+      ok(!!Digest.md5, 'Digest.md5 is defined');
+      ok(!!Digest.md6par, 'Digest.md6par is defined');
+      ok(!!Digest.md6seq, 'Digest.md6seq is defined');
+      ok(!!Digest.ripemd128, 'Digest.ripemd128 is defined');
+      ok(!!Digest.ripemd160, 'Digest.ripemd160 is defined');
+      ok(!!Digest.sha1, 'Digest.sha1 is defined');
+      ok(!!Digest.sha224, 'Digest.sha224 is defined');
+      ok(!!Digest.sha256, 'Digest.sha256 is defined');
+      ok(!!Digest.sha384, 'Digest.sha384 is defined');
+      ok(!!Digest.sha512, 'Digest.sha512 is defined');
+      ok(!!Digest.skein256, 'Digest.skein256 is defined');
+      ok(!!Digest.skein512, 'Digest.skein512 is defined');
+      ok(!!Digest.skein1024, 'Digest.skein1024 is defined');
+    });
+    
+    
+    ////////////////
+    // Convert
+    
+    module('Conversion');
+    
+    test('Convert', function() {
+      var arr = [102, 111, 111, 98, 97, 114];
+      var str = 'foobar';
+      
+      expect(5);
+      
+      same(Digest.atos(arr), str, 'atos(arr)');
+      same(Digest.stoa(str), arr, 'stoa(str)');
+      
+      same(Digest.atos(str), str, 'atos(str)');
+      same(Digest.stoa(arr), arr, 'stoa(arr)');
+      
+      same(Digest.atos(true), undefined, 'Invalid argument');
+    });
+    
+    
+    ////////////////
+    // Encoder
+    
+    module('Encoder');
+    
+    test('Constructors', function() {
+      expect(4);
+      
+      same(Digest.Encoder([0x41]).array(),  [0x41], 'Digest.Encoder(Array)');
+      same(Digest.Encoder('abcd').string(), 'abcd', 'Digest.Encoder(String)');
+      
+      same(Digest.Encoder(Digest.Encoder('abcd')).string(), 'abcd', 'Digest.Encoder(Digest.Encoder)');
+      
+      var isError = is('Error', (function() {
+        try {
+          return Digest.Encoder([40, null]);
+        } catch (e) {
+          return e;
+        }
+      }()));
+      
+      ok(isError, 'Error: Invalid Array Elements');
+    });
+    
+    test('Ready', function() {
+      var latin1 = [0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff],
+          unicode = [0x24, 0xc2, 0xa2, 0xe2, 0x82, 0xac];
+      
+      same(Digest.Encoder.ready('\u0024\u00A2\u20AC'), unicode, 'Ready - String');
+      same(Digest.Encoder.ready('\u0024\u00A2\u20AC'), unicode, 'Ready - String');
+    });
+    
+    test('UTF-8', function() {
+      var u0024 = [0x24],
+          u00A2 = [0xc2, 0xa2],
+          u20AC = [0xe2, 0x82, 0xac];
+      
+      expect(5);
+      
+      same(Digest.Encoder('\u0024').utf8(), u0024, 'UTF-8 encode U+0024');
+      same(Digest.Encoder('\u00A2').utf8(), u00A2, 'UTF-8 encode U+00A2');
+      same(Digest.Encoder('\u20AC').utf8(), u20AC, 'UTF-8 encode U+20AC');
+      
+      same(Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(),  u20AC, 'Prevent auto re-encoding UTF-8');
+      same(Digest.Encoder(Digest.Encoder('\u20AC').utf8()).trunc(), u20AC, 'Prevent auto un-encoding UTF-8');
+    });
+    
+    test('RFC 4648', function() {
+      expect(14);
+      
+      same(Digest.Encoder('AB').string(), 'AB',       'string "AB"');
+      same(Digest.Encoder('AB').base16(), '4142',     'base16 "AB"');
+      same(Digest.Encoder('AB').base32(), 'IFBA====', 'base32 "AB"');
+      same(Digest.Encoder('AB').base64(), 'QUI=',     'base64 "AB"');
+      
+      same(Digest.Encoder('fo').string(),     'fo',     'string "fo"');
+      same(Digest.Encoder('foobar').string(), 'foobar', 'string "foobar"');
+      
+      same(Digest.Encoder('fo').base64(),     'Zm8=',     'base64 "fo"');
+      same(Digest.Encoder('foobar').base64(), 'Zm9vYmFy', 'base64 "foobar"');
+      
+      same(Digest.Encoder('fo').base32(),     'MZXQ====',         'base32 "fo"');
+      same(Digest.Encoder('foobar').base32(), 'MZXW6YTBOI======', 'base32 "foobar"');
+      
+      same(Digest.Encoder('fo').base32hex().toUpperCase(),     'CPNG====',         'base32hex "fo"');
+      same(Digest.Encoder('foobar').base32hex().toUpperCase(), 'CPNMUOJ1E8======', 'base32hex "foobar"');
+      
+      same(Digest.Encoder('fo').base16(),     '666F',         'base16 "fo"');
+      same(Digest.Encoder('foobar').base16(), '666F6F626172', 'base16 "foobar"');
+    });
+    
+    
+    ////////////////
+    // ULong
+    
+    module('ULong');
+    
+    test('Aliasing', function() {
+      var before = [0x12345678, 0x0],
+          after = [0x0, 0x12345678],
+          rotr = Digest.rotr;
+      
+      expect(2);
+      
+      same(Digest.rotl(before, 32), after, 'Exposed functions can access privame members.');
+      same(rotr(before, 32),        after, 'Functions continue to work as local aliases.');
+    });
+    
+    
+    ////////////////
+    // Hashing
+    
+    module('Hashing');
+    
+    test('MD4', function() {
+      expect(7);
+      
+      equals(Digest.md4(texts[1]).hex(), '31d6cfe0d16ae931b73c59d7e0c089c0', 'MD4 - ""');
+      equals(Digest.md4(texts[2]).hex(), 'bde52cb31de33e46245e05fbdbd6fb24', 'MD4 - "a"');
+      equals(Digest.md4(texts[3]).hex(), 'a448017aaf21d8525fc10ae87aa6729d', 'MD4 - "abc"');
+      equals(Digest.md4(texts[4]).hex(), 'd9130a8164549fe818874806e1c7014b', 'MD4 - "message digest"');
+      equals(Digest.md4(texts[5]).hex(), 'd79e1c308aa5bbcdeea8ed63df412da9', 'MD4 - "a..z"');
+      equals(Digest.md4(texts[8]).hex(), '043f8582f241db351ce627e153e7f0e4', 'MD4 - "A..Za..z0..9"');
+      equals(Digest.md4(texts[9]).hex(), 'e33b4ddc9c38f2199c3e7b164fcc0536', 'MD4 - 8 times "1234567890"');
+    });
+    
+    
+    test('MD5 / HMAC-MD5', function() {
+      expect(14);
+      
+      equals(Digest.md5(texts[1]).hex(), 'd41d8cd98f00b204e9800998ecf8427e', 'MD5 - ""');
+      equals(Digest.md5(texts[2]).hex(), '0cc175b9c0f1b6a831c399e269772661', 'MD5 - "a"');
+      equals(Digest.md5(texts[3]).hex(), '900150983cd24fb0d6963f7d28e17f72', 'MD5 - "abc"');
+      equals(Digest.md5(texts[4]).hex(), 'f96b697d7cb7938d525a2f31aaf161d0', 'MD5 - "message digest"');
+      equals(Digest.md5(texts[5]).hex(), 'c3fcd3d76192e4007dfb496cca67e13b', 'MD5 - "a..z"');
+      equals(Digest.md5(texts[8]).hex(), 'd174ab98d277d9f5a5611c2c9f419d9f', 'MD5 - "A..Za..z0..9"');
+      equals(Digest.md5(texts[9]).hex(), '57edf4a22be3c955ac49da2e2107b67a', 'MD5 - 8 times "1234567890"');
+      
+      equals(Digest.md5(hmac[1].text1, hmac[1].key1).hex(), '9294727a3638bb1c13f48ef8158bfc9d', 'HMAC-MD5 - RFC 2202 Test 1');
+      equals(Digest.md5(hmac[2].text1, hmac[2].key1).hex(), '750c783e6ab0b503eaa86e310a5db738', 'HMAC-MD5 - RFC 2202 Test 2');
+      equals(Digest.md5(hmac[3].text1, hmac[3].key1).hex(), '56be34521d144c88dbb8c733f0e8b3f6', 'HMAC-MD5 - RFC 2202 Test 3');
+      equals(Digest.md5(hmac[4].text1, hmac[4].key1).hex(), '697eaf0aca3a3aea3a75164746ffaa79', 'HMAC-MD5 - RFC 2202 Test 4');
+      equals(Digest.md5(hmac[5].text1, hmac[5].key1).hex(), '56461ef2342edc00f9bab995690efd4c', 'HMAC-MD5 - RFC 2202 Test 5');
+      equals(Digest.md5(hmac[6].text1, hmac[6].key1).hex(), '6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd', 'HMAC-MD5 - RFC 2202 Test 6');
+      equals(Digest.md5(hmac[7].text1, hmac[7].key1).hex(), '6f630fad67cda0ee1fb1f562db3aa53e', 'HMAC-MD5 - RFC 2202 Test 7');
+    });
+    
+    
+    test('MD6-PAR', function() {
+      expect(5);
+      
+      equals('6b7f33821a2c060ecdd81aefddea2fd3c4720270e18654f4cb08ece49ccb469f8beeee7c831206bd577f9f2630d9177979203a9489e47e04df4e6deaa0f8e0c0', Digest.md6par(512, '').hex(), 'MD6-PAR-512 - ""');
+      
+      equals('7538e7552a2e9cc94be251f73ce9cf67d4739b4b3f114e483ea38ab0', Digest.md6par(224, md6_400).hex(), 'MD6-PAR-224 1 Block, Key 0');
+      equals('fb75daf08d970c19f49b34ec768fea1a74583a5b1d1df2149a61cb36e120d197', Digest.md6par(256, md6_400, '111222333').hex(), 'MD6-PAR-256 1 Block, Key 9');
+      equals('614cec06b9a0332f8c14d7d4f29934e4f39b91046c1c2cd1fa9f84fc3ed2e89efb583003b2fc9e996cb690a8be68dbf2', Digest.md6par(384, md6_800).hex(), 'MD6-PAR-384 2-Block, Key 0');
+      equals('48e8dbfee51e36b0c549925ed9740df0d4e0aa9d46c5ec5bd7749a8c023b91582bb3fa07b311a4d3e774ebf5b5beffe806eea425c37af320ef06ff241bcb32e4', Digest.md6par(512, md6_800, '111222333').hex(), 'MD6-PAR-512 2-Block, Key 9');
+    });
+    
+    test('MD6-SEQ', function() {
+      expect(5);
+      
+      equals('823771f69337c65fe23ead5e77856801db2a597efde7e8a12c5e45f3b72c1f304c68fb4222782d8b7563f47fb2c3c7da984942b1d8bf11d8336cd9b7d95b5ead', Digest.md6seq(512, '').hex(), 'MD6-SEQ-512 - ""');
+      
+      equals('b81b7d4d84c3df8104b447445e6d87693f62fe91380b01ecc4bb0af4', Digest.md6seq(224, md6_400).hex(), 'MD6-SEQ-224 1-Block');
+      equals('e9eaf4c30140a4e7649a34b6d4976a930bf5681ea8a7e1a2471a1035d8eebb95', Digest.md6seq(256, md6_600).hex(), 'MD6-SEQ-256 2-Block');
+      equals('de4f6f3715d87cefbb339eeae677a8594c7949a61ecf694dc12fd3243b42517a356b60837a2bffbd39a18401cb74db02', Digest.md6seq(384, md6_400).hex(), 'MD6-SEQ-384 1-Block');
+      equals('753c2fd701db4a9d4244ffd7e873858c10b9820193ac7e34202b3c94ca8b809e8fca74cd7eb46eebbd15a204bd236113c700a71cb582e06fab3fa321ad2cffcd', Digest.md6seq(512, md6_600).hex(), 'MD6-SEQ-512 2-Block');
+    });
+    
+    
+    test('RIPEMD-128 / HMAC-RIPEMD-128', function() {
+      var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff');
+      
+      expect(16);
+      
+      equals(Digest.ripemd128(texts[1]).hex(), 'cdf26213a150dc3ecb610f18f6b38b46', 'RIPEMD-128 - ""');
+      equals(Digest.ripemd128(texts[2]).hex(), '86be7afa339d0fc7cfc785e72f578d33', 'RIPEMD-128 - "a"');
+      equals(Digest.ripemd128(texts[3]).hex(), 'c14a12199c66e4ba84636b0f69144c77', 'RIPEMD-128 - "abc"');
+      equals(Digest.ripemd128(texts[4]).hex(), '9e327b3d6e523062afc1132d7df9d1b8', 'RIPEMD-128 - "message digest"');
+      equals(Digest.ripemd128(texts[5]).hex(), 'fd2aa607f71dc8f510714922b371834e', 'RIPEMD-128 - "a..z"');
+      equals(Digest.ripemd128(texts[6]).hex(), 'a1aa0689d0fafa2ddc22e88b49133a06', 'RIPEMD-128 - "abcdbcde...nopq"');
+      equals(Digest.ripemd128(texts[8]).hex(), 'd1e959eb179c911faea4624c60c5c702', 'RIPEMD-128 - "A..Za..z0..9"');
+      equals(Digest.ripemd128(texts[9]).hex(), '3f45ef194732c2dbb2c4a2c769795fa3', 'RIPEMD-128 - 8 times "1234567890"');
+      
+      equals(Digest.ripemd128(texts[1], key).hex(), 'ad9db2c1e22af9ab5ca9dbe5a86f67dc', 'HMAC-RIPEMD-128 - ""');
+      equals(Digest.ripemd128(texts[2], key).hex(), '3bf448c762de00bcfa0310b11c0bde4c', 'HMAC-RIPEMD-128 - "a"');
+      equals(Digest.ripemd128(texts[3], key).hex(), 'f34ec0945f02b70b8603f89e1ce4c78c', 'HMAC-RIPEMD-128 - "abc"');
+      equals(Digest.ripemd128(texts[4], key).hex(), 'e8503a8aec2289d82aa0d8d445a06bdd', 'HMAC-RIPEMD-128 - "message digest"');
+      equals(Digest.ripemd128(texts[5], key).hex(), 'ee880b735ce3126065de1699cc136199', 'HMAC-RIPEMD-128 - "a..z"');
+      equals(Digest.ripemd128(texts[6], key).hex(), '794daf2e3bdeea2538638a5ced154434', 'HMAC-RIPEMD-128 - "abcdbcde...nopq"');
+      equals(Digest.ripemd128(texts[8], key).hex(), '3a06eef165b23625247800be23e232b6', 'HMAC-RIPEMD-128 - "A..Za..z0..9"');
+      equals(Digest.ripemd128(texts[9], key).hex(), '9a4f0159c0952da43a8d466d46b0af58', 'HMAC-RIPEMD-128 - 8 times "1234567890"');
+    });
+    
+    test('RIPEMD-160 / HMAC-RIPEMD-160', function() {
+      var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff\x01\x23\x45\x67');
+      
+      expect(16);
+      
+      equals(Digest.ripemd160(texts[1]).hex(), '9c1185a5c5e9fc54612808977ee8f548b2258d31', 'RIPEMD-160 - ""');
+      equals(Digest.ripemd160(texts[2]).hex(), '0bdc9d2d256b3ee9daae347be6f4dc835a467ffe', 'RIPEMD-160 - "a"');
+      equals(Digest.ripemd160(texts[3]).hex(), '8eb208f7e05d987a9b044a8e98c6b087f15a0bfc', 'RIPEMD-160 - "abc"');
+      equals(Digest.ripemd160(texts[4]).hex(), '5d0689ef49d2fae572b881b123a85ffa21595f36', 'RIPEMD-160 - "message digest"');
+      equals(Digest.ripemd160(texts[5]).hex(), 'f71c27109c692c1b56bbdceb5b9d2865b3708dbc', 'RIPEMD-160 - "a..z"');
+      equals(Digest.ripemd160(texts[6]).hex(), '12a053384a9c0c88e405a06c27dcf49ada62eb2b', 'RIPEMD-160 - "abcdbcde...nopq"');
+      equals(Digest.ripemd160(texts[8]).hex(), 'b0e20b6e3116640286ed3a87a5713079b21f5189', 'RIPEMD-160 - "A..Za..z0..9"');
+      equals(Digest.ripemd160(texts[9]).hex(), '9b752e45573d4b39f4dbd3323cab82bf63326bfb', 'RIPEMD-160 - 8 times "1234567890"');
+      
+      equals(Digest.ripemd160(texts[1], key).hex(), 'cf387677bfda8483e63b57e06c3b5ecd8b7fc055', 'HMAC-RIPEMD-160 - ""');
+      equals(Digest.ripemd160(texts[2], key).hex(), '0d351d71b78e36dbb7391c810a0d2b6240ddbafc', 'HMAC-RIPEMD-160 - "a"');
+      equals(Digest.ripemd160(texts[3], key).hex(), 'f7ef288cb1bbcc6160d76507e0a3bbf712fb67d6', 'HMAC-RIPEMD-160 - "abc"');
+      equals(Digest.ripemd160(texts[4], key).hex(), 'f83662cc8d339c227e600fcd636c57d2571b1c34', 'HMAC-RIPEMD-160 - "message digest"');
+      equals(Digest.ripemd160(texts[5], key).hex(), '843d1c4eb880ac8ac0c9c95696507957d0155ddb', 'HMAC-RIPEMD-160 - "a..z"');
+      equals(Digest.ripemd160(texts[6], key).hex(), '60f5ef198a2dd5745545c1f0c47aa3fb5776f881', 'HMAC-RIPEMD-160 - "abcdbcde...nopq"');
+      equals(Digest.ripemd160(texts[8], key).hex(), 'e49c136a9e5627e0681b808a3b97e6a6e661ae79', 'HMAC-RIPEMD-160 - "A..Za..z0..9"');
+      equals(Digest.ripemd160(texts[9], key).hex(), '31be3cc98cee37b79b0619e3e1c2be4f1aa56e6c', 'HMAC-RIPEMD-160 - 8 times "1234567890"');
+    });
+    
+    
+    test('SHA-1 / HMAC-SHA-1', function() {
+      expect(10);
+      
+      equals(Digest.sha1(texts[1]).hex(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709', 'SHA-1 - ""');
+      equals(Digest.sha1(texts[3]).hex(), 'a9993e364706816aba3e25717850c26c9cd0d89d', 'SHA-1 - "abc"');
+      equals(Digest.sha1(texts[6]).hex(), '84983e441c3bd26ebaae4aa1f95129e5e54670f1', 'SHA-1 - "abcd..nopq"');
+      
+      equals(Digest.sha1(hmac[1].text1, hmac[1].key2).hex(), 'b617318655057264e28bc0b6fb378c8ef146be00', 'HMAC-SHA-1 - RFC 2202 Test 1');
+      equals(Digest.sha1(hmac[2].text1, hmac[2].key1).hex(), 'effcdf6ae5eb2fa2d27416d5f184df9c259a7c79', 'HMAC-SHA-1 - RFC 2202 Test 2');
+      equals(Digest.sha1(hmac[3].text1, hmac[3].key2).hex(), '125d7342b9ac11cd91a39af48aa17b4f63f175d3', 'HMAC-SHA-1 - RFC 2202 Test 3');
+      equals(Digest.sha1(hmac[4].text1, hmac[4].key1).hex(), '4c9007f4026250c6bc8414f9bf50c86c2d7235da', 'HMAC-SHA-1 - RFC 2202 Test 4');
+      equals(Digest.sha1(hmac[5].text1, hmac[5].key2).hex(), '4c1a03424b55e07fe7f27be1d58bb9324a9a5a04', 'HMAC-SHA-1 - RFC 2202 Test 5');
+      equals(Digest.sha1(hmac[6].text1, hmac[6].key1).hex(), 'aa4ae5e15272d00e95705637ce8a3b55ed402112', 'HMAC-SHA-1 - RFC 2202 Test 6');
+      equals(Digest.sha1(hmac[7].text1, hmac[7].key1).hex(), 'e8e99d0f45237d786d6bbaa7965c7808bbff1a91', 'HMAC-SHA-1 - RFC 2202 Test 7');
+    });
+    
+    
+    test('SHA-224 / HMAC-SHA-224 (32-bit)', function() {
+      expect(9);
+      
+      equals(Digest.sha224(texts[1]).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', 'SHA-224 - ""');
+      equals(Digest.sha224(texts[3]).hex(), '23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', 'SHA-224 - "abc"');
+      equals(Digest.sha224(texts[6]).hex(), '75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', 'SHA-224 - "abcdbcde..nopq"');
+      
+      equals(Digest.sha224(hmac[1].text1, hmac[1].key2).hex(), '896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22', 'HMAC-SHA-224 - RFC 4231 Test 1');
+      equals(Digest.sha224(hmac[2].text1, hmac[2].key1).hex(), 'a30e01098bc6dbbf45690f3a7e9e6d0f8bbea2a39e6148008fd05e44', 'HMAC-SHA-224 - RFC 4231 Test 2');
+      equals(Digest.sha224(hmac[3].text1, hmac[3].key2).hex(), '7fb3cb3588c6c1f6ffa9694d7d6ad2649365b0c1f65d69d1ec8333ea', 'HMAC-SHA-224 - RFC 4231 Test 3');
+      equals(Digest.sha224(hmac[4].text1, hmac[4].key1).hex(), '6c11506874013cac6a2abc1bb382627cec6a90d86efc012de7afec5a', 'HMAC-SHA-224 - RFC 4231 Test 4');
+      equals(Digest.sha224(hmac[6].text1, hmac[6].key2).hex(), '95e9a0db962095adaebe9b2d6f0dbce2d499f112f2d2b7273fa6870e', 'HMAC-SHA-224 - RFC 4231 Test 6');
+      equals(Digest.sha224(hmac[7].text2, hmac[7].key2).hex(), '3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1', 'HMAC-SHA-224 - RFC 4231 Test 7');
+    });
+    
+    test('SHA-256 / HMAC-SHA-256 (32-bit)', function() {
+      expect(9);
+      
+      equals(Digest.sha256(texts[1]).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'SHA-256 - ""');
+      equals(Digest.sha256(texts[3]).hex(), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 'SHA-256 - "abc"');
+      equals(Digest.sha256(texts[6]).hex(), '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', 'SHA-256 - "abcdbcde..nopq"');
+      
+      equals(Digest.sha256(hmac[1].text1, hmac[1].key2).hex(), 'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7', 'HMAC-SHA-256 - RFC 4231 Test 1');
+      equals(Digest.sha256(hmac[2].text1, hmac[2].key1).hex(), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843', 'HMAC-SHA-256 - RFC 4231 Test 2');
+      equals(Digest.sha256(hmac[3].text1, hmac[3].key2).hex(), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe', 'HMAC-SHA-256 - RFC 4231 Test 3');
+      equals(Digest.sha256(hmac[4].text1, hmac[4].key1).hex(), '82558a389a443c0ea4cc819899f2083a85f0faa3e578f8077a2e3ff46729665b', 'HMAC-SHA-256 - RFC 4231 Test 4');
+      equals(Digest.sha256(hmac[6].text1, hmac[6].key2).hex(), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', 'HMAC-SHA-256 - RFC 4231 Test 6');
+      equals(Digest.sha256(hmac[7].text2, hmac[7].key2).hex(), '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', 'HMAC-SHA-256 - RFC 4231 Test 7');
+    });
+    
+    
+    test('SHA-384 / HMAC-SHA-384 (64-bit)', function() {
+      expect(9);
+      
+      equals(Digest.sha384(texts[1]).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', 'SHA-384 - ""');
+      equals(Digest.sha384(texts[3]).hex(), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', 'SHA-384 - "abc"');
+      equals(Digest.sha384(texts[7]).hex(), '09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039', 'SHA-384 - "abcdefgh..nopqrstu"');
+      
+      equals(Digest.sha384(hmac[1].text1, hmac[1].key2).hex(), 'afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6', 'HMAC-SHA-384 - RFC 4231 Test 1');
+      equals(Digest.sha384(hmac[2].text1, hmac[2].key1).hex(), 'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649', 'HMAC-SHA-384 - RFC 4231 Test 2');
+      equals(Digest.sha384(hmac[3].text1, hmac[3].key2).hex(), '88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27', 'HMAC-SHA-384 - RFC 4231 Test 3');
+      equals(Digest.sha384(hmac[4].text1, hmac[4].key1).hex(), '3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb', 'HMAC-SHA-384 - RFC 4231 Test 4');
+      equals(Digest.sha384(hmac[6].text1, hmac[6].key2).hex(), '4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952', 'HMAC-SHA-384 - RFC 4231 Test 6');
+      equals(Digest.sha384(hmac[7].text2, hmac[7].key2).hex(), '6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e', 'HMAC-SHA-384 - RFC 4231 Test 7');
+    });
+    
+    test('SHA-512 / HMAC-SHA-512 (64-bit)', function() {
+      expect(9);
+      
+      equals(Digest.sha512(texts[1]).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', 'SHA-512 - ""');
+      equals(Digest.sha512(texts[3]).hex(), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', 'SHA-512 - "abc"');
+      equals(Digest.sha512(texts[7]).hex(), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', 'SHA-512 - "abcdefgh..nopqrstu"');
+      
+      equals(Digest.sha512(hmac[1].text1, hmac[1].key2).hex(), '87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854', 'HMAC-SHA-512 - RFC 4231 Test 1');
+      equals(Digest.sha512(hmac[2].text1, hmac[2].key1).hex(), '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737', 'HMAC-SHA-512 - RFC 4231 Test 2');
+      equals(Digest.sha512(hmac[3].text1, hmac[3].key2).hex(), 'fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb', 'HMAC-SHA-512 - RFC 4231 Test 3');
+      equals(Digest.sha512(hmac[4].text1, hmac[4].key1).hex(), 'b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd', 'HMAC-SHA-512 - RFC 4231 Test 4');
+      equals(Digest.sha512(hmac[6].text1, hmac[6].key2).hex(), '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598', 'HMAC-SHA-512 - RFC 4231 Test 6');
+      equals(Digest.sha512(hmac[7].text2, hmac[7].key2).hex(), 'e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', 'HMAC-SHA-512 - RFC 4231 Test 7');
+    });
+    
+    
+    test('Skein', function() {
+      expect(17);
+      
+      equals(Digest.skein256(256, skein_FF).hex(), '42C88237B63FC99C55098838A171D50BFBFFCAF340705C923BBB3745D14715E8'.toLowerCase(), 'Skein-256-256 Short');
+      equals(Digest.skein256(256, skein_E0).hex(), 'E33F483B1389BA9FAEFF25257E87CF76008C35285E3BD562BDC1F3EA2A960635'.toLowerCase(), 'Skein-256-256 Equal');
+      equals(Digest.skein256(256, skein_C0).hex(), '90E50C4DCFC7490A09F3A1A79BF3B3DF21EA85447B0FF029C847D659856EC7A5'.toLowerCase(), 'Skein-256-256 Long');
+      
+      equals(Digest.skein512(512, skein_FF).hex(), '42AA6BD9CA92E90EA28DF6F6F2D0D9B85A2D1907EE4DC1B171ACE7EB1159BE3BD1BC56586D92492B6EFF9BE03306994C65A332C4C24160F46655040E558E8329'.toLowerCase(), 'Skein-512-512 Short');
+      equals(Digest.skein512(512, skein_C0).hex(), '04F96C6F61B3E237A4FA7755EE4ACF34494222968954F495AD147A1A715F7A73EBECFA1EF275BED87DC60BD1A0BC602106FA98F8E7237BD1AC0958E76D306678'.toLowerCase(), 'Skein-512-512 Equal');
+      equals(Digest.skein512(512, skein_80).hex(), 'B484AE9FB73E6620B10D52E49260AD26620DB2883EBAFA210D701922ACA85368088144BDF4EF3D9898D47C34F130031B0A0992F09F62DD78B329525A777DAF7D'.toLowerCase(), 'Skein-512-512 Long');
+      
+      equals(Digest.skein1024(1024, skein_FF).hex(), 'A204C394923416B820686E1B449CA4277A477CA9DB084DD931715B102A43F045BC3483AEE0288608916710F875DF8D79424997465328B517BAC30996FBFA642BCC446E157A45D02F0878DAA3556139A76C2CFEC283072196B33A128354CBDB6DB9DBA879C71CB10C77E929786D2FBAFDE6A05529E26B20FF3BBB7B475CAA7115'.toLowerCase(), 'Skein-1024-1024 Short');
+      equals(Digest.skein1024(1024, skein_80).hex(), 'C2E6B6FC042F86F2E31738641DB60295F74204AB525895A5DEC5C806AC4786EC1C982920095B7129FE3D8BD451F67EA31320C78B11575EA6DDE394E75DC5F5C96A5104386DD55016D494DFFAC5AD119B22C960DC46B658CF2CEB7D73AF0FD0E19C7E21344AAD06AF39FCBEF6C6C5D00DE896B888D95456DEDBA6E5377B0CC572'.toLowerCase(), 'Skein-1024-1024 Equal');
+      equals(Digest.skein1024(1024, skein_00).hex(), '64661F7DC4ABBB50003EAEA69242018D27AEB415CA7B891FBDDBC1C69040D4C4A9822133E60E222AF7EE09349C3F1C4CC8F38111A505E86393E7284180602DB630AE763D9A620AE4932A823415B59515AEEC556418ED2EF0827189D54E6576D41D961EDDCBBD871E6F1B6BA625DC684CBBC204888B18687ED627506070006B82'.toLowerCase(), 'Skein-1024-1024 Long');
+      
+      equals(Digest.skein256(224, []    ).hex(), 'C3A155F5B069A7C5CC9E6D1C0D8246DD57C759783F732487AC147537'.toLowerCase(), 'Skein-256-224 KAT {0}');
+      equals(Digest.skein256(224, [0xCC]).hex(), '4F4BBD31FD0AD2B14D2CD8BD526DA49687E1F5A8A399797F8901D0FE'.toLowerCase(), 'Skein-256-224 KAT {8}');
+      equals(Digest.skein256(256, []    ).hex(), '0B04103B828CDDAEBCF592AC845ECAFD5887F61230A755406D38D85376E1AE08'.toLowerCase(), 'Skein-256-256 KAT {0}');
+      equals(Digest.skein256(256, [0xCC]).hex(), '37D304B6E5B230EC0288E7DACBAD145AEFD620268C5D6E06F5F717A4B17AB3EA'.toLowerCase(), 'Skein-256-256 KAT {8}');
+      equals(Digest.skein512(384, []    ).hex(), '2C3FE10673F4D6904F27585FC3DF455A678BC12D7D39D6BE4B37F47B80A43889181103BC727A7DB4B4E2D2DEC1DED86A'.toLowerCase(), 'Skein-512-384 KAT {0}');
+      equals(Digest.skein512(384, [0xCC]).hex(), '153100603EA72AC9379541D7D9E5D9D2A29B54CEDCD02BDB254C8A3A967CF18C9F01149D1829A75E57BFCD7061741636'.toLowerCase(), 'Skein-512-384 KAT {8}');
+      equals(Digest.skein512(512, []    ).hex(), '5AF68A4912E0A6187A004947A9D2A37D7A1F0873F0BDD9DC64838ECE60DA5535C2A55D039BD58E178948996B7A8336486ED969C894BE658E47D595A5A9B86A8B'.toLowerCase(), 'Skein-512-512 KAT {0}');
+      equals(Digest.skein512(512, [0xCC]).hex(), 'D44B1D69E638D37908EE7C9EB212F4FBE465F2B383476C19BB5516E2A365BE1FB33BD8E14B4E03539816B9E1430AEB6B16146E91D03BCE7968A35D7DAA4F9416'.toLowerCase(), 'Skein-512-512 KAT {8}');
+    });
+
+  });
+</script>
+</body>
+</html>
