@@ -162,28 +162,13 @@
       return split_MSB_64(C);
     }
     
-    // trim hash to length
-    function cut(size, hash) {
-      var
-        length = Math.floor((size + 7) / 8),
-        remain = size % 8;
-      
-      hash = hash.slice(hash.length - length);
-      
-      if (remain > 0) {
-        hash[length - 1] &= (0xff << (8 - remain));
-      }
-      
-      return hash;
-    }
-    
     // level iteration
     do {
       ell += 1;
       M = ell > L ? seq(M) : par(M);
     } while (M.length !== c);
     
-    return self.Encoder(cut(d, M));
+    return self.Encoder(crop(d, M, true));
   }
   
   // expose hash function

@@ -190,21 +190,6 @@
       return H;
     }
     
-    // cut hash to len, reducing last byte when ((len % 8) != 0)
-    function cut(size, hash) {
-      var
-        length = Math.floor((size + 7) / 8),
-        remain = size % 8;
-      
-      hash = hash.slice(0, length);
-      
-      if (remain > 0) {
-        hash[length - 1] &= (0xff << (8 - remain));
-      }
-      
-      return hash;
-    }
-    
     // build initial chain value (key)
     G = [];
     G.length = Nb;
@@ -224,7 +209,7 @@
     G = ubi(G, data, tweak.MESSAGE);
     G = ubi(G, [0, 0, 0, 0, 0, 0, 0, 0], tweak.OUT);
     
-    return self.Encoder(cut(No, G));
+    return self.Encoder(crop(No, G, false));
   }
   
   // expose hash function
