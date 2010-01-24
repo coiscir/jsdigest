@@ -269,7 +269,7 @@
     
     
     test('MD5 / HMAC-MD5', function() {
-      expect(14);
+      expect(15);
       
       equals(Digest.md5(texts[1]).hex(), 'd41d8cd98f00b204e9800998ecf8427e', 'MD5 - ""');
       equals(Digest.md5(texts[2]).hex(), '0cc175b9c0f1b6a831c399e269772661', 'MD5 - "a"');
@@ -284,6 +284,7 @@
       equals(Digest.md5(hmac[3].text1, hmac[3].key1).hex(), '56be34521d144c88dbb8c733f0e8b3f6', 'HMAC-MD5 - RFC 2202 Test 3');
       equals(Digest.md5(hmac[4].text1, hmac[4].key1).hex(), '697eaf0aca3a3aea3a75164746ffaa79', 'HMAC-MD5 - RFC 2202 Test 4');
       equals(Digest.md5(hmac[5].text1, hmac[5].key1).hex(), '56461ef2342edc00f9bab995690efd4c', 'HMAC-MD5 - RFC 2202 Test 5');
+      equals(Digest.md5(96, hmac[5].text1, hmac[5].key1).hex(), '56461ef2342edc00f9bab995', 'HMAC-MD5 - RFC 2202 Test 5 (Trunc)');
       equals(Digest.md5(hmac[6].text1, hmac[6].key1).hex(), '6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd', 'HMAC-MD5 - RFC 2202 Test 6');
       equals(Digest.md5(hmac[7].text1, hmac[7].key1).hex(), '6f630fad67cda0ee1fb1f562db3aa53e', 'HMAC-MD5 - RFC 2202 Test 7');
     });
@@ -362,7 +363,7 @@
     
     
     test('SHA-1 / HMAC-SHA-1', function() {
-      expect(10);
+      expect(11);
       
       equals(Digest.sha1(texts[1]).hex(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709', 'SHA-1 - ""');
       equals(Digest.sha1(texts[3]).hex(), 'a9993e364706816aba3e25717850c26c9cd0d89d', 'SHA-1 - "abc"');
@@ -373,13 +374,14 @@
       equals(Digest.sha1(hmac[3].text1, hmac[3].key2).hex(), '125d7342b9ac11cd91a39af48aa17b4f63f175d3', 'HMAC-SHA-1 - RFC 2202 Test 3');
       equals(Digest.sha1(hmac[4].text1, hmac[4].key1).hex(), '4c9007f4026250c6bc8414f9bf50c86c2d7235da', 'HMAC-SHA-1 - RFC 2202 Test 4');
       equals(Digest.sha1(hmac[5].text1, hmac[5].key2).hex(), '4c1a03424b55e07fe7f27be1d58bb9324a9a5a04', 'HMAC-SHA-1 - RFC 2202 Test 5');
+      equals(Digest.sha1(96, hmac[5].text1, hmac[5].key2).hex(), '4c1a03424b55e07fe7f27be1', 'HMAC-SHA-1 - RFC 2202 Test 5 (Trunc)');
       equals(Digest.sha1(hmac[6].text1, hmac[6].key1).hex(), 'aa4ae5e15272d00e95705637ce8a3b55ed402112', 'HMAC-SHA-1 - RFC 2202 Test 6');
       equals(Digest.sha1(hmac[7].text1, hmac[7].key1).hex(), 'e8e99d0f45237d786d6bbaa7965c7808bbff1a91', 'HMAC-SHA-1 - RFC 2202 Test 7');
     });
     
     
     test('SHA-224 / HMAC-SHA-224 (32-bit)', function() {
-      expect(9);
+      expect(10);
       
       equals(Digest.sha224(texts[1]).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', 'SHA-224 - ""');
       equals(Digest.sha224(texts[3]).hex(), '23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', 'SHA-224 - "abc"');
@@ -389,12 +391,13 @@
       equals(Digest.sha224(hmac[2].text1, hmac[2].key1).hex(), 'a30e01098bc6dbbf45690f3a7e9e6d0f8bbea2a39e6148008fd05e44', 'HMAC-SHA-224 - RFC 4231 Test 2');
       equals(Digest.sha224(hmac[3].text1, hmac[3].key2).hex(), '7fb3cb3588c6c1f6ffa9694d7d6ad2649365b0c1f65d69d1ec8333ea', 'HMAC-SHA-224 - RFC 4231 Test 3');
       equals(Digest.sha224(hmac[4].text1, hmac[4].key1).hex(), '6c11506874013cac6a2abc1bb382627cec6a90d86efc012de7afec5a', 'HMAC-SHA-224 - RFC 4231 Test 4');
+      equals(Digest.sha224(128, hmac[5].text1, hmac[5].key2).hex(), '0e2aea68a90c8d37c988bcdb9fca6fa8', 'HMAC-SHA-224 - RFC 4231 Test 5 (Trunc)');
       equals(Digest.sha224(hmac[6].text1, hmac[6].key2).hex(), '95e9a0db962095adaebe9b2d6f0dbce2d499f112f2d2b7273fa6870e', 'HMAC-SHA-224 - RFC 4231 Test 6');
       equals(Digest.sha224(hmac[7].text2, hmac[7].key2).hex(), '3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1', 'HMAC-SHA-224 - RFC 4231 Test 7');
     });
     
     test('SHA-256 / HMAC-SHA-256 (32-bit)', function() {
-      expect(9);
+      expect(10);
       
       equals(Digest.sha256(texts[1]).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'SHA-256 - ""');
       equals(Digest.sha256(texts[3]).hex(), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 'SHA-256 - "abc"');
@@ -404,13 +407,14 @@
       equals(Digest.sha256(hmac[2].text1, hmac[2].key1).hex(), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843', 'HMAC-SHA-256 - RFC 4231 Test 2');
       equals(Digest.sha256(hmac[3].text1, hmac[3].key2).hex(), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe', 'HMAC-SHA-256 - RFC 4231 Test 3');
       equals(Digest.sha256(hmac[4].text1, hmac[4].key1).hex(), '82558a389a443c0ea4cc819899f2083a85f0faa3e578f8077a2e3ff46729665b', 'HMAC-SHA-256 - RFC 4231 Test 4');
+      equals(Digest.sha256(128, hmac[5].text1, hmac[5].key2).hex(), 'a3b6167473100ee06e0c796c2955552b', 'HMAC-SHA-256 - RFC 4231 Test 5 (Trunc)');
       equals(Digest.sha256(hmac[6].text1, hmac[6].key2).hex(), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', 'HMAC-SHA-256 - RFC 4231 Test 6');
       equals(Digest.sha256(hmac[7].text2, hmac[7].key2).hex(), '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', 'HMAC-SHA-256 - RFC 4231 Test 7');
     });
     
     
     test('SHA-384 / HMAC-SHA-384 (64-bit)', function() {
-      expect(9);
+      expect(10);
       
       equals(Digest.sha384(texts[1]).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', 'SHA-384 - ""');
       equals(Digest.sha384(texts[3]).hex(), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', 'SHA-384 - "abc"');
@@ -420,13 +424,13 @@
       equals(Digest.sha384(hmac[2].text1, hmac[2].key1).hex(), 'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649', 'HMAC-SHA-384 - RFC 4231 Test 2');
       equals(Digest.sha384(hmac[3].text1, hmac[3].key2).hex(), '88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27', 'HMAC-SHA-384 - RFC 4231 Test 3');
       equals(Digest.sha384(hmac[4].text1, hmac[4].key1).hex(), '3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb', 'HMAC-SHA-384 - RFC 4231 Test 4');
+      equals(Digest.sha384(128, hmac[5].text1, hmac[5].key2).hex(), '3abf34c3503b2a23a46efc619baef897', 'HMAC-SHA-384 - RFC 4231 Test 5 (Trunc)');
       equals(Digest.sha384(hmac[6].text1, hmac[6].key2).hex(), '4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952', 'HMAC-SHA-384 - RFC 4231 Test 6');
       equals(Digest.sha384(hmac[7].text2, hmac[7].key2).hex(), '6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e', 'HMAC-SHA-384 - RFC 4231 Test 7');
     });
     
     test('SHA-512 / HMAC-SHA-512 (64-bit)', function() {
-      expect(9);
-      
+      expect(10);
       equals(Digest.sha512(texts[1]).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', 'SHA-512 - ""');
       equals(Digest.sha512(texts[3]).hex(), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', 'SHA-512 - "abc"');
       equals(Digest.sha512(texts[7]).hex(), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', 'SHA-512 - "abcdefgh..nopqrstu"');
@@ -435,6 +439,7 @@
       equals(Digest.sha512(hmac[2].text1, hmac[2].key1).hex(), '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737', 'HMAC-SHA-512 - RFC 4231 Test 2');
       equals(Digest.sha512(hmac[3].text1, hmac[3].key2).hex(), 'fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb', 'HMAC-SHA-512 - RFC 4231 Test 3');
       equals(Digest.sha512(hmac[4].text1, hmac[4].key1).hex(), 'b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd', 'HMAC-SHA-512 - RFC 4231 Test 4');
+      equals(Digest.sha512(128, hmac[5].text1, hmac[5].key2).hex(), '415fad6271580a531d4179bc891d87a6', 'HMAC-SHA-512 - RFC 4231 Test 5 (Trunc)');
       equals(Digest.sha512(hmac[6].text1, hmac[6].key2).hex(), '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598', 'HMAC-SHA-512 - RFC 4231 Test 6');
       equals(Digest.sha512(hmac[7].text2, hmac[7].key2).hex(), 'e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', 'HMAC-SHA-512 - RFC 4231 Test 7');
     });
