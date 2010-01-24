@@ -174,7 +174,16 @@
   // expose hash function
   
   self.fn.md6par = function md6par(size, data, key) {
-    size = (0 < size && size <= 512) ? size : 512;
+    var digest = 512;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      key = data;
+      data = size;
+      size = digest;
+    }
+    
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     key  = self.Encoder.ready(key) || []; // key is required for main()
     
@@ -182,7 +191,16 @@
   };
   
   self.fn.md6seq = function md6seq(size, data, key) {
-    size = (0 < size && size <= 512) ? size : 512;
+    var digest = 512;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      key = data;
+      data = size;
+      size = digest;
+    }
+    
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     key  = self.Encoder.ready(key) || []; // key is required for main()
     

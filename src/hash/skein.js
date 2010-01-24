@@ -215,27 +215,54 @@
   // expose hash function
   
   self.fn.skein256 = function skein256(size, data, key) {
-    size = (0 < size && size <= 256) ? size : 256;
+    var digest = 256;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      key = data;
+      data = size;
+      size = digest;
+    }
+    
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     key  = self.Encoder.ready(key);
     
-    return skein(256, size, data, key);
+    return skein(digest, size, data, key);
   };
   
   self.fn.skein512 = function skein512(size, data, key) {
-    size = (0 < size && size <= 512) ? size : 512;
+    var digest = 512;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      key = data;
+      data = size;
+      size = digest;
+    }
+    
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     key  = self.Encoder.ready(key);
     
-    return skein(512, size, data, key);
+    return skein(digest, size, data, key);
   };
   
   self.fn.skein1024 = function skein1024(size, data, key) {
-    size = (0 < size && size <= 1024) ? size : 1024;
+    var digest = 1024;
+    
+    // allow size to be optional
+    if ('number' !== typeof size.valueOf()) {
+      key = data;
+      data = size;
+      size = digest;
+    }
+    
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     key  = self.Encoder.ready(key);
     
-    return skein(1024, size, data, key);
+    return skein(digest, size, data, key);
   };
   
 }());
