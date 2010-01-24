@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rake'
-require 'jsmin'
+require 'packr'
+
 
 @root = File.dirname(__FILE__)
 @dest = 'lib'
@@ -12,6 +13,24 @@ require 'jsmin'
 @create = 'digest.js'
 @globs = ['intro', 'core', 'encoder', 'math', 'word', 'hmac', 'hash/*', 'outro']
 @asis = ['intro', 'outro']
+
+
+def getpath(suffix)
+  file = @create
+  ext = File.extname(file)
+  base = File.basename(file, ext)
+  
+  file = base + '-' + suffix + ext
+  
+  File.join(@dest, file)
+end
+
+def sub(source)
+  source.
+    gsub(/@VERSION/, @version).
+    gsub(/@RELEASE/, @release).
+    sub('/**!', '/**')
+end
 
 def import
   if @imported.nil?
@@ -32,53 +51,54 @@ def import
   return @imported
 end
 
-def getpath(dev)
-  file = @create
-  ext = File.extname(file)
-  base = File.basename(file, ext)
-  
-  if dev
-    file = base + '-dev' + ext
-  else
-    file = base + '-min' + ext
-  end
-  
-  File.join(@dest, file)
-end
-
-def sub(source)
-  source.
-    gsub(/@VERSION/, @version).
-    gsub(/@RELEASE/, @release).
-    sub('/**!', '/**')
-end
-
-task :default => [:min, :dev]
-
-task :dev do
-  path = getpath(true)
-  source = import
-  
-  Dir.chdir(@root) do
-    File.open(path, 'w+b') do |out|
-      out << sub(source)
-    end
-  end
-  
-  print ' + ' + path + $/
-end
-
-task :min do
-  path = getpath(false)
-  
-  comment = import.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
-  source = comment + JSMin.minify(import).gsub(/ ?\n ?/, ' ').strip
-  
+def export(path, source)
   Dir.chdir(@root) do
     File.open(path, 'w+b') do |out|
       out << sub(source).rstrip + $/
     end
   end
   
-  print ' + ' + path + $/
+  return path if File.exists?(File.join(@root, path))
+end
+
+def packing
+  options = {
+    :shrink_vars => true,
+    :protect => %w[host self]
+  }
+  
+  source = import
+  comment = source.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
+  return comment + Packr.pack(source, options).strip
+end
+
+
+task :default => [:build]
+task :build => [:dev, :min]
+task :all => [:clean, :build, :release]
+
+task :clean do
+  print $/ + '-- Clean' + $/
+  Dir.chdir(@root) do
+    Dir.glob('lib/digest*.js') do |file|
+      print ' - ' + file + $/ if File.exists?(file) and File.delete(file)
+    end
+  end
+end
+
+task :leadin do
+  print $/ + '-- Build' + $/
+end
+
+task :dev => [:leadin] do
+  print ' + ' + export(getpath('dev'), import) + $/
+end
+
+task :min => [:leadin] do
+  print ' + ' + export(getpath('min'), packing) + $/
+end
+
+task :release do
+  print $/ + '-- Release ' + @version + $/
+  print ' + ' + export(getpath(@version), packing) + $/
 end

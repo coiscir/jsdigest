@@ -144,7 +144,7 @@ Building jsDigest requires:
  * A copy of the [**jsDigest** source tree](http://github.com/coiscir/jsdigest)
  * [**Ruby 1.8** or later](http://ruby-lang.org/)
  * [**Rake 0.8.7** or later](http://rake.rubyforge.org/)
- * [**jsmin 1.0.1** or later](http://rubyforge.org/projects/riposte/)
+ * [**Packr 3.1.0** or later](http://rubyforge.org/projects/packr/)
 
 From within the source tree:
 
