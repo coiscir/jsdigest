@@ -34,12 +34,8 @@ Supports
 Usage
 ---
 
-### Syntax ###
-
 HMAC-Keyed Hash Functions:
 
-    Digest.hash(data, [key]).output();
-    
     * Digest.md4
     * Digest.md5
     * Digest.ripemd128
@@ -50,10 +46,8 @@ HMAC-Keyed Hash Functions:
     * Digest.sha384
     * Digest.sha512
 
-Keyed Hash Functions w/ Sizeable Outputs:
+Keyed Hash Functions:
 
-    Digest.hash(size, data, [key]).output();
-    
     * Digest.md6par
     * Digest.md6seq
     * Digest.skein256
@@ -69,9 +63,13 @@ Outputs:
     * base64      # { A-Z a-z 0-9 + / }
     * base64url   # { A-Z a-z 0-9 - _ }
 
+### Syntax ###
+
+    Digest.hash([size], data, [key]).output();
+
 ### Arguments ###
 
-`size` (`Number`)
+`size` (`Number`) (_optional_)
 
 The length of the output digest in bits.
 
