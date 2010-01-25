@@ -62,14 +62,18 @@ def export(path, source)
 end
 
 def packing
-  options = {
-    :shrink_vars => true,
-    :protect => %w[host self]
-  }
+  if @packed.nil?
+    options = {
+      :shrink_vars => true,
+      :protect => %w[host self]
+    }
+    
+    source = import
+    comment = source.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
+    @packed = comment + Packr.pack(source, options).strip
+  end
   
-  source = import
-  comment = source.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
-  return comment + Packr.pack(source, options).strip
+  return @packed
 end
 
 
