@@ -131,6 +131,7 @@
       size = digest;
     }
     
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
@@ -151,6 +152,7 @@
       size = digest;
     }
     
+    size = (0 < size && size <= digest) ? size : digest;
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
