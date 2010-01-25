@@ -2,9 +2,6 @@
 function hmac(hash, size, digest, data, hkey, block) {
   var i, akey, ipad, opad;
   
-  data = self.Encoder(data).trunc();
-  hkey = self.Encoder(hkey).trunc();
-  
   if (hkey.length > block) {
     akey = hash(digest, hkey).trunc();
   } else {
