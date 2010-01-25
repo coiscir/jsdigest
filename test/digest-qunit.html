@@ -289,26 +289,43 @@
     });
     
     
-    test('MD6-PAR', function() {
-      expect(5);
+    test('MD6-PAR / MD6-SEQ', function() {
+      expect(26);
       
       equals('6b7f33821a2c060ecdd81aefddea2fd3c4720270e18654f4cb08ece49ccb469f8beeee7c831206bd577f9f2630d9177979203a9489e47e04df4e6deaa0f8e0c0', Digest.md6par(512, '').hex(), 'MD6-PAR-512 - ""');
-      
-      equals('7538e7552a2e9cc94be251f73ce9cf67d4739b4b3f114e483ea38ab0', Digest.md6par(224, md6_400).hex(), 'MD6-PAR-224 1 Block, Key 0');
-      equals('fb75daf08d970c19f49b34ec768fea1a74583a5b1d1df2149a61cb36e120d197', Digest.md6par(256, md6_400, '111222333').hex(), 'MD6-PAR-256 1 Block, Key 9');
-      equals('614cec06b9a0332f8c14d7d4f29934e4f39b91046c1c2cd1fa9f84fc3ed2e89efb583003b2fc9e996cb690a8be68dbf2', Digest.md6par(384, md6_800).hex(), 'MD6-PAR-384 2-Block, Key 0');
-      equals('48e8dbfee51e36b0c549925ed9740df0d4e0aa9d46c5ec5bd7749a8c023b91582bb3fa07b311a4d3e774ebf5b5beffe806eea425c37af320ef06ff241bcb32e4', Digest.md6par(512, md6_800, '111222333').hex(), 'MD6-PAR-512 2-Block, Key 9');
-    });
-    
-    test('MD6-SEQ', function() {
-      expect(5);
-      
       equals('823771f69337c65fe23ead5e77856801db2a597efde7e8a12c5e45f3b72c1f304c68fb4222782d8b7563f47fb2c3c7da984942b1d8bf11d8336cd9b7d95b5ead', Digest.md6seq(512, '').hex(), 'MD6-SEQ-512 - ""');
       
-      equals('b81b7d4d84c3df8104b447445e6d87693f62fe91380b01ecc4bb0af4', Digest.md6seq(224, md6_400).hex(), 'MD6-SEQ-224 1-Block');
-      equals('e9eaf4c30140a4e7649a34b6d4976a930bf5681ea8a7e1a2471a1035d8eebb95', Digest.md6seq(256, md6_600).hex(), 'MD6-SEQ-256 2-Block');
-      equals('de4f6f3715d87cefbb339eeae677a8594c7949a61ecf694dc12fd3243b42517a356b60837a2bffbd39a18401cb74db02', Digest.md6seq(384, md6_400).hex(), 'MD6-SEQ-384 1-Block');
-      equals('753c2fd701db4a9d4244ffd7e873858c10b9820193ac7e34202b3c94ca8b809e8fca74cd7eb46eebbd15a204bd236113c700a71cb582e06fab3fa321ad2cffcd', Digest.md6seq(512, md6_600).hex(), 'MD6-SEQ-512 2-Block');
+      equals('7538e7552a2e9cc94be251f73ce9cf67d4739b4b3f114e483ea38ab0', Digest.md6par(224, md6_400).hex(), 'MD6-PAR-224 - One Block');
+      equals('b81b7d4d84c3df8104b447445e6d87693f62fe91380b01ecc4bb0af4', Digest.md6seq(224, md6_400).hex(), 'MD6-SEQ-224 - One Block (L0)');
+      equals('9ca6f72f355e9f1cc818eb9fe40f801bd43be072c17aac290a58b96c', Digest.md6par(224, md6_400, '111222333').hex(), 'MD6-PAR-224 - One Block - Key 9');
+      
+      equals('43113e9a22a6f7a264b500366a7dc18c28cec099a85a269db758754aedd315df', Digest.md6par(256, md6_400).hex(), 'MD6-PAR-256 - One Block');
+      equals('ae577786310dd352636350ea439220f32e73ec538a49598e3966b1943282ba90', Digest.md6seq(256, md6_400).hex(), 'MD6-SEQ-256 - One Block (L0)');
+      equals('fb75daf08d970c19f49b34ec768fea1a74583a5b1d1df2149a61cb36e120d197', Digest.md6par(256, md6_400, '111222333').hex(), 'MD6-PAR-256 - One Block - Key 9');
+      
+      equals('abbdeaaa782c5897ee5a364def19b33037bfe34673b469c4cce6d92b4912d5763b24eda6c9cd74f979a3620c13dea9f7', Digest.md6par(384, md6_400).hex(), 'MD6-PAR-384 - One Block');
+      equals('de4f6f3715d87cefbb339eeae677a8594c7949a61ecf694dc12fd3243b42517a356b60837a2bffbd39a18401cb74db02', Digest.md6seq(384, md6_400).hex(), 'MD6-SEQ-384 - One Block (L0)');
+      equals('a87af8bde95e51d5a0c90a155a5ac742aae0e41215597c5395b7afe49e6d7fcbffe0baadcaeb28baa01b3e4c48086bd5', Digest.md6par(384, md6_400, '111222333').hex(), 'MD6-PAR-384 - One Block - Key 9');
+      
+      equals('2a7c10dba7609e6f8afbba335d267290ba7d1cab9e220b98cd3e41a6b24950371d5bd44966b6ae8b0fd84e7aad0f685f254690605fae5674384baef96aa4e556', Digest.md6par(512, md6_400).hex(), 'MD6-PAR-512 - One Block');
+      equals('ffba9a8acf4a94d0ec510d9c860797b64f9bc4e5356ee9dae0480021ce145a4c928c7d0675b42af700168e8829d14aacc01d26e92352e37d4da3c90ec0e2aabf', Digest.md6seq(512, md6_400).hex(), 'MD6-SEQ-512 - One Block (L0)');
+      equals('ae845cb6bc28d5fbfacad17fa491ab1b7d4f0db38bb7b79deabf44c7cf6501e69d4dd04125b0e59514a46fbb45d2b8976c8ac09bd42424410cbc701ee3cee075', Digest.md6par(512, md6_400, '111222333').hex(), 'MD6-PAR-512 - One Block - Key 9');
+      
+      equals('c5d2bcaa29dab0d486f96506a0bc5b9f22ff21a4b67a7f82f9a53095', Digest.md6par(224, md6_800).hex(), 'MD6-PAR-224 - Two Block');
+      equals('be1fe052a08d751bce583d363d09ced8446f3786a6759d6d1e3e5610', Digest.md6seq(224, md6_600).hex(), 'MD6-SEQ-224 - Two Block (L0)');
+      equals('dee962bf71ad8fdf3af0ae4163665ba928ffa9ccaf89a22bf84d22ca', Digest.md6par(224, md6_800, '111222333').hex(), 'MD6-PAR-224 - Two Block - Key 9');
+      
+      equals('1a6d0518f6356ad35ac36c5a0b6639eb371c03998d29abe1e7f75097e8ebe1bd', Digest.md6par(256, md6_800).hex(), 'MD6-PAR-256 - Two Block');
+      equals('e9eaf4c30140a4e7649a34b6d4976a930bf5681ea8a7e1a2471a1035d8eebb95', Digest.md6seq(256, md6_600).hex(), 'MD6-SEQ-256 - Two Block (L0)');
+      equals('d381491d02791a73672c7f60030cde7f872a72ba07e4da9bb75006bce5ca6beb', Digest.md6par(256, md6_800, '111222333').hex(), 'MD6-PAR-256 - Two Block - Key 9');
+      
+      equals('614cec06b9a0332f8c14d7d4f29934e4f39b91046c1c2cd1fa9f84fc3ed2e89efb583003b2fc9e996cb690a8be68dbf2', Digest.md6par(384, md6_800).hex(), 'MD6-PAR-384 - Two Block');
+      equals('8afa1bdeef1e99f3b9eaa6cb33bc1287446e1ecd0e5e06baef6efdd3e24c485dc8b09784b1255d3ff9a846f28dd9dfe8', Digest.md6seq(384, md6_600).hex(), 'MD6-SEQ-384 - Two Block (L0)');
+      equals('53a14a5463bc57e9782e4d8b67ca3bcb996f4bd066a9115aa3317226a36564d63ed0db4b9fcef1af85f14423ae7bf056', Digest.md6par(384, md6_800, '111222333').hex(), 'MD6-PAR-384 - Two Block - Key 9');
+      
+      equals('240b4ce4ed7252f62e58ec1a2f0c9a07851f6251f55f4e510e200d8a716753e2a75e34c409566cedc0907ab9680bdeed627e542184d5dc419adfa3b8f2358657', Digest.md6par(512, md6_800).hex(), 'MD6-PAR-512 - Two Block');
+      equals('753c2fd701db4a9d4244ffd7e873858c10b9820193ac7e34202b3c94ca8b809e8fca74cd7eb46eebbd15a204bd236113c700a71cb582e06fab3fa321ad2cffcd', Digest.md6seq(512, md6_600).hex(), 'MD6-SEQ-512 - Two Block (L0)');
+      equals('48e8dbfee51e36b0c549925ed9740df0d4e0aa9d46c5ec5bd7749a8c023b91582bb3fa07b311a4d3e774ebf5b5beffe806eea425c37af320ef06ff241bcb32e4', Digest.md6par(512, md6_800, '111222333').hex(), 'MD6-PAR-512 - Two Block - Key 9');
     });
     
     
