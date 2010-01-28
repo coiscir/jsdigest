@@ -1,7 +1,5 @@
 // MD5 (c) 1992 Ronald L. Rivest
 (function () {
-  'Copyright (c) 1992 Ronald L. Rivest';
-  
   function main(size, data) {
     var a, b, c, d, i, l, r, t, tmp, x,
       bytes, bitHi, bitLo,

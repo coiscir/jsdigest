@@ -1,7 +1,5 @@
 // MD6 r2009-04-15 (c) 2009 Ronald L. Rivest, et al.
 (function () {
-  'Copyright (c) 2009 Ronald L. Rivest, et al.';
-  
   function main(size, data, key, levels) {
     var b, c, n, d, M, K, k, r, L, ell, S0, Sm, Q, t, rs, ls;
     

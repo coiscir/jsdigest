@@ -1,7 +1,5 @@
 // RIPEMD-160 (c) 1996 Hans Dobbertin, Antoon Bosselaers, and Bart Preneel
 (function () {
-  'Copyright (c) 1996 Hans Dobbertin, Antoon Bosselaers, and Bart Preneel';
-  
   function main(size, data) {
     var aa, bb, cc, dd, ee, aaa, bbb, ccc, ddd, eee, i, l, r, rr, t, tmp, x,
       bytes, bitHi, bitLo,

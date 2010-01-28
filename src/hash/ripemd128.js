@@ -1,7 +1,5 @@
 // RIPEMD-128 (c) 1996 Hans Dobbertin, Antoon Bosselaers, and Bart Preneel
 (function () {
-  'Copyright (c) 1996 Hans Dobbertin, Antoon Bosselaers, and Bart Preneel';
-  
   function main(size, data) {
     var aa, bb, cc, dd, aaa, bbb, ccc, ddd, i, l, r, rr, t, tmp, x,
       bytes, bitHi, bitLo,

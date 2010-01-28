@@ -1,7 +1,5 @@
 // SHA-1 (c) 2006 The Internet Society
 (function () {
-  'Copyright (c) 2006 The Internet Society';
-  
   function main(size, data) {
     var a, b, c, d, e, i, l, r, t, tmp, w, x,
       bytes, bitHi, bitLo,

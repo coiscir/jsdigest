@@ -1,7 +1,5 @@
 // MD4 (c) 1990 Ronald L. Rivest
 (function () {
-  'Copyright (c) 1990 Ronald L. Rivest';
-  
   function main(size, data) {
     var a, b, c, d, i, l, r, t, tmp, x,
       bytes, bitHi, bitLo,

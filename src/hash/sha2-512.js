@@ -1,7 +1,5 @@
 // SHA-2 512 (c) 2006 The Internet Society
 (function () {
-  'Copyright (c) 2006 The Internet Society';
-  
   function main(digest, size, data) {
     var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
       bytes, bitHi, bitLo,

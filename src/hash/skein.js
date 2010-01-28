@@ -1,7 +1,5 @@
 // Skein 1.2 (c) 2009 Bruce Schneier, et al.
 (function SKEIN() {
-  'Copyright (c) 2009 Bruce Schneier, et al.';
-  
   var CONST = {
     256 : {
       Nb: 32,
