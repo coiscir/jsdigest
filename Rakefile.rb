@@ -78,9 +78,14 @@ end
 
 
 task :default => [:build]
+
+desc "Build library files."
 task :build => [:dev, :min]
+
+desc "Run all tasks."
 task :all => [:clean, :build, :release]
 
+desc "Clean library directory"
 task :clean do
   print $/ + '-- Clean' + $/
   Dir.chdir(@root) do
@@ -102,6 +107,7 @@ task :min => [:leadin] do
   print ' + ' + export(getpath('min'), packing) + $/
 end
 
+desc "Build library files for release."
 task :release do
   print $/ + '-- Release ' + @version + $/
   print ' + ' + export(getpath(@version), packing) + $/
