@@ -92,10 +92,10 @@
       }
     };
     
-    md6_block = times('\x11\x22\x33\x44\x55\x66\x77', 115);
-    md6_400 = Digest.stoa(md6_block.substr(0, 400));
-    md6_600 = Digest.stoa(md6_block.substr(0, 600));
-    md6_800 = Digest.stoa(md6_block.substr(0, 800));
+    md6_block = Digest.stoa(times('\x11\x22\x33\x44\x55\x66\x77', 115));
+    md6_400 = md6_block.slice(0, 400);
+    md6_600 = md6_block.slice(0, 600);
+    md6_800 = md6_block.slice(0, 800);
     
     skein_FF = '\xFF';
     skein_E0 = skein_FF + '\xFE\xFD\xFC\xFB\xFA\xF9\xF8\xF7\xF6\xF5\xF4\xF3\xF2\xF1\xF0\xEF\xEE\xED\xEC\xEB\xEA\xE9\xE8\xE7\xE6\xE5\xE4\xE3\xE2\xE1\xE0',
@@ -210,25 +210,25 @@
     test('RFC 4648', function() {
       expect(14);
       
-      same(Digest.Encoder('AB').string(), 'AB',       'string "AB"');
-      same(Digest.Encoder('AB').base16(), '4142',     'base16 "AB"');
-      same(Digest.Encoder('AB').base32(), 'IFBA====', 'base32 "AB"');
-      same(Digest.Encoder('AB').base64(), 'QUI=',     'base64 "AB"');
+      equals(Digest.Encoder('AB').string(), 'AB',       'string "AB"');
+      equals(Digest.Encoder('AB').base16(), '4142',     'base16 "AB"');
+      equals(Digest.Encoder('AB').base32(), 'IFBA====', 'base32 "AB"');
+      equals(Digest.Encoder('AB').base64(), 'QUI=',     'base64 "AB"');
       
-      same(Digest.Encoder('fo').string(),     'fo',     'string "fo"');
-      same(Digest.Encoder('foobar').string(), 'foobar', 'string "foobar"');
+      equals(Digest.Encoder('fo').string(),     'fo',     'string "fo"');
+      equals(Digest.Encoder('foobar').string(), 'foobar', 'string "foobar"');
       
-      same(Digest.Encoder('fo').base64(),     'Zm8=',     'base64 "fo"');
-      same(Digest.Encoder('foobar').base64(), 'Zm9vYmFy', 'base64 "foobar"');
+      equals(Digest.Encoder('fo').base64(),     'Zm8=',     'base64 "fo"');
+      equals(Digest.Encoder('foobar').base64(), 'Zm9vYmFy', 'base64 "foobar"');
       
-      same(Digest.Encoder('fo').base32(),     'MZXQ====',         'base32 "fo"');
-      same(Digest.Encoder('foobar').base32(), 'MZXW6YTBOI======', 'base32 "foobar"');
+      equals(Digest.Encoder('fo').base32(),     'MZXQ====',         'base32 "fo"');
+      equals(Digest.Encoder('foobar').base32(), 'MZXW6YTBOI======', 'base32 "foobar"');
       
-      same(Digest.Encoder('fo').base32hex().toUpperCase(),     'CPNG====',         'base32hex "fo"');
-      same(Digest.Encoder('foobar').base32hex().toUpperCase(), 'CPNMUOJ1E8======', 'base32hex "foobar"');
+      equals(Digest.Encoder('fo').base32hex().toUpperCase(),     'CPNG====',         'base32hex "fo"');
+      equals(Digest.Encoder('foobar').base32hex().toUpperCase(), 'CPNMUOJ1E8======', 'base32hex "foobar"');
       
-      same(Digest.Encoder('fo').base16(),     '666F',         'base16 "fo"');
-      same(Digest.Encoder('foobar').base16(), '666F6F626172', 'base16 "foobar"');
+      equals(Digest.Encoder('fo').base16(),     '666F',         'base16 "fo"');
+      equals(Digest.Encoder('foobar').base16(), '666F6F626172', 'base16 "foobar"');
     });
     
     
