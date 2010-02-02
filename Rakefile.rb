@@ -15,14 +15,14 @@ require 'packr'
 @asis = ['intro', 'outro']
 
 
-def getpath(suffix)
+def getpath(suffix, subdir = nil)
   file = @create
   ext = File.extname(file)
   base = File.basename(file, ext)
   
-  file = base + '-' + suffix + ext
+  file = [base, suffix].reject{|x| x.nil?}.join('-') + ext
   
-  File.join(@dest, file)
+  File.join(*[@dest, subdir, file].reject{|f| f.nil?})
 end
 
 def sub(source)
@@ -111,4 +111,5 @@ desc "Build library files for release."
 task :release do
   print $/ + '-- Release ' + @version + $/
   print ' + ' + export(getpath(@version), packing) + $/
+  print ' + ' + export(getpath(nil, 'latest'), import) + $/
 end
