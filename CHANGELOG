@@ -1,3 +1,17 @@
+Feb 02, 2010    1.2.1
+  
+  Add optional `size` argument too all hash functions.
+    - Unifying hash result cropping.
+  
+  Removed string copyrights from hash files/closures.
+  
+  Made HMAC a private function.
+  
+  Switch from JSMin to Packr for minifying.
+  
+  Switch to QUnit for test suite.
+
+
 Jan 15, 2010    1.2.0
   
   Added RIPEMD-160 (128).
