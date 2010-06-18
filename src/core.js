@@ -9,9 +9,9 @@
 "use strict";
 
 (function (self) {
-  self = null == this.exports ?
+  self = 'undefined' === typeof exports ?
     this.Digest = {} :
-    this.exports;
+    exports;
   
   self.Version = '@VERSION';
   
