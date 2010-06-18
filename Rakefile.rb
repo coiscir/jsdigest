@@ -11,7 +11,7 @@ require 'packr'
 @release = `git log -n 1 --format="%ci"`.strip
 
 @create = 'digest.js'
-@globs = ['intro', 'core', 'encoder', 'math', 'word', 'hmac', 'hash/*', 'outro']
+@globs = ['intro', 'core', 'convert', 'finish', 'encoder', 'math', 'word', 'hmac', 'hash/*', 'outro']
 @asis = ['intro', 'outro']
 
 

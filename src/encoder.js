@@ -15,7 +15,7 @@ self.Encoder = function Encoder(input) {
   }
   
   // new Encoder(Array) || new Encoder(String)
-  buffer = self.stoa(input);
+  buffer = stoa(input);
   
   if ('undefined' === typeof buffer) {
     throw new Error('Encoder input must be a string or an array.');
@@ -36,7 +36,7 @@ self.Encoder = function Encoder(input) {
   };
   
   this.string = function string() {
-    return self.atos(buffer);
+    return atos(buffer);
   };
   
   this.valueOf = this.array;
@@ -212,8 +212,8 @@ self.Encoder = function Encoder(input) {
 
 // Ready an input for hashing
 self.Encoder.ready = function ready(input) {
-  if (self.isInput(input)) {
-    if (self.isString(input)) {
+  if (isInput(input)) {
+    if (isString(input)) {
       return self.Encoder(input).utf8();
     } else {
       return self.Encoder(input).trunc();

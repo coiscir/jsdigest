@@ -133,7 +133,7 @@
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
-    if (self.isInput(hkey)) {
+    if (isInput(hkey)) {
       return hmac(main224, size, digest, data, hkey, 64);
     } else {
       return main224(size, data);
@@ -154,7 +154,7 @@
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
-    if (self.isInput(hkey)) {
+    if (isInput(hkey)) {
       return hmac(main256, size, digest, data, hkey, 64);
     } else {
       return main256(size, data);

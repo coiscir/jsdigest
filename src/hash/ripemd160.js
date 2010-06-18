@@ -131,7 +131,7 @@
     data = self.Encoder.ready(data);
     hkey = self.Encoder.ready(hkey);
     
-    if (self.isInput(hkey)) {
+    if (isInput(hkey)) {
       return hmac(main, size, digest, data, hkey, 64);
     } else {
       return main(size, data);
