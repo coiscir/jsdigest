@@ -2,114 +2,113 @@ require 'rubygems'
 require 'rake'
 require 'packr'
 
-
 @root = File.dirname(__FILE__)
-@dest = 'lib'
-@src = 'src'
+
+@start = File.join(@root, 'src', 'core.js')
+@globs = ['convert', 'finish', 'encoder', 'math', 'word', 'hmac', 'hash/*']
+@ext = '.js'
+
+@devel = File.join('lib', 'digest-dev.js')
+@minify = File.join('lib', 'digest.js')
+@latest = File.join('lib', 'latest', 'digest.js')
 
 @version = File.read('VERSION').strip
-@release = `git log -n 1 --format="%ci"`.strip
+@release = `git --no-pager log -n 1 --format="%ct"`.strip.to_i
+@release = Time.at(@release).utc.strftime('%Y-%m-%d %H:%M:%S UTC')
+@revision = `git --no-pager log -n 1 --format="%h"`.strip
 
-@create = 'digest.js'
-@globs = ['intro', 'core', 'convert', 'finish', 'encoder', 'math', 'word', 'hmac', 'hash/*', 'outro']
-@asis = ['intro', 'outro']
-
-
-def getpath(suffix, subdir = nil)
-  file = @create
-  ext = File.extname(file)
-  base = File.basename(file, ext)
-  
-  file = [base, suffix].reject{|x| x.nil?}.join('-') + ext
-  
-  File.join(*[@dest, subdir, file].reject{|f| f.nil?})
-end
-
-def sub(source)
+def statsub(source)
   source.
     gsub(/@VERSION/, @version).
     gsub(/@RELEASE/, @release).
+    gsub(/@REVISION/, @revision).
     sub('/**!', '/**')
+end
+
+def finish(file, source)
+  File.open(file, 'w+b') do |file|
+    file << statsub(source).rstrip + $/
+  end
+end
+
+def grab(file)
+  File.read(file).rstrip if File.file?(file) and File.readable?(file)
 end
 
 def import
   if @imported.nil?
-    ext = File.extname(@create)
-    
-    Dir.chdir(File.join(@root, @src)) do
-      files = @globs.map {|glob| Dir.glob(glob + ext).sort }.flatten
+    Dir.chdir(File.dirname(@start)) do
+      files = @globs.
+        map {|glob| Dir.glob(glob + @ext).sort }.flatten.
+        select {|file| File.file?(file) and File.readable?(file)}
       
-      @imported = files.map {|file|
-        indent = @asis.include?(File.basename(file, ext)) ? 0 : 2
-        
-        IO.readlines(file).join.rstrip.
-          gsub(/^/, (' ' * indent)) + $/
-      }.join($/)
+      @imported = files.map {|file| grab(file)}.join($/)
     end
   end
   
   return @imported
 end
 
-def export(path, source)
-  Dir.chdir(@root) do
-    File.open(path, 'w+b') do |out|
-      out << sub(source).rstrip + $/
-    end
-  end
-  
-  return path if File.exists?(File.join(@root, path))
+def combine(start, import)
+  start.sub(/^.*?@IMPORT\s*/, import.gsub(/^/, (' ' * 2)).rstrip + $/)
 end
 
-def packing
+def build
+  if @built.nil?
+    @built = combine(grab(@start), import)
+  end
+  
+  return @built
+end
+
+def compress
   if @packed.nil?
+    search = /\/\*\*!.*?\*\*\/#{$/}?/m
     options = {
       :shrink_vars => true,
-      :protect => %w[host self]
+      :protect => %w[self]
     }
     
-    source = import
-    comment = source.match(/\/\*\*!.*?\*\*\/#{$/}?/m)[0] or ''
+    source = build
+    comment = source =~ search ? source.match(search)[0] : ''
+    
     @packed = comment + Packr.pack(source, options).strip
   end
   
   return @packed
 end
 
-
 task :default => [:build]
 
-desc "Build library files."
-task :build => [:dev, :min]
-
-desc "Run all tasks."
+desc "Execute all steps"
 task :all => [:clean, :build, :release]
 
-desc "Clean library directory"
+desc "Clean library files."
 task :clean do
   print $/ + '-- Clean' + $/
+  
   Dir.chdir(@root) do
-    Dir.glob('lib/digest*.js') do |file|
+    Dir.glob('lib/*.js') do |file|
       print ' - ' + file + $/ if File.exists?(file) and File.delete(file)
     end
   end
 end
 
-task :leadin do
+desc "Build library files."
+task :build do
   print $/ + '-- Build' + $/
+  
+  finish(File.join(@root, @devel), build)
+  print ' + ' + @devel + $/
+  
+  finish(File.join(@root, @minify), compress)
+  print ' + ' + @minify + $/
 end
 
-task :dev => [:leadin] do
-  print ' + ' + export(getpath('dev'), import) + $/
-end
-
-task :min => [:leadin] do
-  print ' + ' + export(getpath('min'), packing) + $/
-end
-
-desc "Build library files for release."
+desc "Build latest library file."
 task :release do
-  print $/ + '-- Release ' + @version + $/
-  print ' + ' + export(getpath(@version), packing) + $/
-  print ' + ' + export(getpath(nil, 'latest'), import) + $/
+  print $/ + '-- Release' + $/
+  
+  finish(File.join(@root, @latest), compress)
+  print ' + ' + @latest + $/
 end
