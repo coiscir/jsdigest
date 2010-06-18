@@ -12,16 +12,14 @@ require 'packr'
 @minify = File.join('lib', 'digest.js')
 @latest = File.join('lib', 'latest', 'digest.js')
 
-@version = File.read('VERSION').strip
+@version = `git describe --tags`.strip.split('-')[0,2].join('-')
 @release = `git --no-pager log -n 1 --format="%ct"`.strip.to_i
 @release = Time.at(@release).utc.strftime('%Y-%m-%d %H:%M:%S UTC')
-@revision = `git --no-pager log -n 1 --format="%h"`.strip
 
 def statsub(source)
   source.
     gsub(/@VERSION/, @version).
     gsub(/@RELEASE/, @release).
-    gsub(/@REVISION/, @revision).
     sub('/**!', '/**')
 end
 
@@ -109,6 +107,11 @@ desc "Build latest library file."
 task :release do
   print $/ + '-- Release' + $/
   
+  version = @version
+  @version = @version.split('-')[0]
+  
   finish(File.join(@root, @latest), compress)
   print ' + ' + @latest + $/
+  
+  @version = version
 end

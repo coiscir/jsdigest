@@ -1,5 +1,5 @@
 /**!
- *  jsDigest v@VERSION-@REVISION (@RELEASE)
+ *  jsDigest v@VERSION (@RELEASE)
  *  http://github.com/coiscir/jsdigest/
  *
  *  Copyright (c) 2010 Jonathan Lonowski
