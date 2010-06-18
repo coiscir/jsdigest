@@ -212,7 +212,7 @@
   
   // expose hash function
   
-  self.fn.skein256 = function skein256(size, data, key) {
+  self.skein256 = function skein256(size, data, key) {
     var digest = 256;
     
     // allow size to be optional
@@ -229,7 +229,7 @@
     return skein(digest, size, data, key);
   };
   
-  self.fn.skein512 = function skein512(size, data, key) {
+  self.skein512 = function skein512(size, data, key) {
     var digest = 512;
     
     // allow size to be optional
@@ -246,7 +246,7 @@
     return skein(digest, size, data, key);
   };
   
-  self.fn.skein1024 = function skein1024(size, data, key) {
+  self.skein1024 = function skein1024(size, data, key) {
     var digest = 1024;
     
     // allow size to be optional

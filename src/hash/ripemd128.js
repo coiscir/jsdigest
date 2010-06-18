@@ -104,7 +104,7 @@
   
   // expose hash function
   
-  self.fn.ripemd128 = function ripemd128(size, data, hkey) {
+  self.ripemd128 = function ripemd128(size, data, hkey) {
     var digest = 128;
     
     // allow size to be optional

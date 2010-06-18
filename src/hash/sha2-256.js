@@ -119,7 +119,7 @@
   
   // expose hash function
   
-  self.fn.sha224 = function sha224(size, data, hkey) {
+  self.sha224 = function sha224(size, data, hkey) {
     var digest = 224;
     
     // allow size to be optional
@@ -140,7 +140,7 @@
     }
   };
   
-  self.fn.sha256 = function sha256(size, data, hkey) {
+  self.sha256 = function sha256(size, data, hkey) {
     var digest = 256;
     
     // allow size to be optional

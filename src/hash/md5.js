@@ -86,7 +86,7 @@
   
   // expose hash function
   
-  self.fn.md5 = function md5(size, data, hkey) {
+  self.md5 = function md5(size, data, hkey) {
     var digest = 128;
     
     // allow size to be optional

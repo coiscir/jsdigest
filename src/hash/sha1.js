@@ -69,7 +69,7 @@
   
   // expose hash function
   
-  self.fn.sha1 = function sha1(size, data, hkey) {
+  self.sha1 = function sha1(size, data, hkey) {
     var digest = 160;
     
     // allow size to be optional

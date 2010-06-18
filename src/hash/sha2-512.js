@@ -153,7 +153,7 @@
   
   // expose hash function
   
-  self.fn.sha384 = function sha384(size, data, hkey) {
+  self.sha384 = function sha384(size, data, hkey) {
     var digest = 384;
     
     // allow size to be optional
@@ -174,7 +174,7 @@
     }
   };
   
-  self.fn.sha512 = function sha512(size, data, hkey) {
+  self.sha512 = function sha512(size, data, hkey) {
     var digest = 512;
     
     // allow size to be optional

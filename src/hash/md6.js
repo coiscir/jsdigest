@@ -171,7 +171,7 @@
   
   // expose hash function
   
-  self.fn.md6par = function md6par(size, data, key) {
+  self.md6par = function md6par(size, data, key) {
     var digest = 512;
     
     // allow size to be optional
@@ -188,7 +188,7 @@
     return main(size, data, key, 64);
   };
   
-  self.fn.md6seq = function md6seq(size, data, key) {
+  self.md6seq = function md6seq(size, data, key) {
     var digest = 512;
     
     // allow size to be optional

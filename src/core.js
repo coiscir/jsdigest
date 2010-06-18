@@ -9,10 +9,11 @@
 "use strict";
 
 (function (self) {
-  self = this.Digest = {};
+  self = null == this.exports ?
+    this.Digest = {} :
+    this.exports;
   
   self.Version = '@VERSION';
-  self.fn = self.constructor.prototype;
   
 //@IMPORT
 })(null);
