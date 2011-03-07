@@ -143,6 +143,7 @@
     ////////////////
     // Convert
     
+    /*
     module('Convert');
     
     test('Conversion', function() {
@@ -159,11 +160,13 @@
       
       //same(Digest.atos(true), undefined, 'Invalid argument');
     });
+    */
     
     
     ////////////////
     // Encoder
     
+    /*
     module('Encoder');
     
     test('Constructors', function() {
@@ -231,11 +234,13 @@
       equals(Digest.Encoder('fo').base16(),     '666F',         'base16 "fo"');
       equals(Digest.Encoder('foobar').base16(), '666F6F626172', 'base16 "foobar"');
     });
+    */
     
     
     ////////////////
     // ULong
     
+    /*
     module('ULong');
     
     test('Aliasing', function() {
@@ -248,6 +253,7 @@
       same(Digest.rotl(before, 32), after, 'Exposed functions can access privame members.');
       same(rotr(before, 32),        after, 'Functions continue to work as local aliases.');
     });
+    */
     
     
     ////////////////
