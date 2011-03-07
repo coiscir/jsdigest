@@ -11,7 +11,7 @@
 var self = { Version: '<%= @version %>' };
 
 
-<%= import 'core', 'encoder', 'math', 'word', 'hash/md{4,5}', 'hash/ripemd*', 'hash/sha1' %>
+<%= import 'core', 'encoder', 'math', 'word', 'hash/md{4,5}', 'hash/ripemd*', 'hash/sha{1,2-256}' %>
 
 
 /* Export */
