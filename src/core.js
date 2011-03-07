@@ -66,3 +66,15 @@ function crop( size, hash, righty ) {
 }
 
 self.toBuffer = toBuffer;
+
+self.toArray = function ( input ) {
+  var i,
+      length = input.length,
+      output = [];
+
+  for ( i = 0; i < length; i++ ) {
+    output.push( input.charCodeAt(i) & 0xff );
+  }
+  
+  return output;
+};
