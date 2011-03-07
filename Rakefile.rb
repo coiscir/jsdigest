@@ -5,7 +5,7 @@ require 'packr'
 
 @root = File.dirname( __FILE__ )
 
-@go = File.join( @root, 'src', 'core.js' )
+@go = File.join( @root, 'src', 'digest.js' )
 
 @dev = File.join( 'lib', 'digest.js' )
 @min = File.join( 'lib', 'digest.min.js' )
