@@ -32,6 +32,22 @@ function utf8( input ) {
   return result;
 }
 
+function hmac( fn, block, data, key ) {
+  var i,
+      ipad = [],
+      opad = [];
+  
+  if ( key.length > block )
+    key = fn( key );
+  
+  for ( i = 0; i < block; i++ ) {
+    ipad[i] = ( key[i] || 0x00 ) ^ 0x36;
+    opad[i] = ( key[i] || 0x00 ) ^ 0x5c;
+  }
+  
+  return fn( opad.concat( fn( ipad.concat( data ) ) ) );
+}
+
 function crop( size, hash, righty ) {
   var length = Math.floor( ( size + 7 ) / 8 ),
       remain = size % 8;
