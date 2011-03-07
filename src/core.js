@@ -1,3 +1,25 @@
+function factorMAC( MAC, FN, DIGEST, BLOCK ) {
+  return function ( size, data, key ) {
+    if ( 'number' !== typeof size ) {
+      key = data;
+      data = size;
+      size = DIGEST;
+    }
+    
+    size = Math.max( 0, Math.min( DIGEST, size ) );
+    
+    var digest;
+
+    if ( null == key ) {
+      digest = FN( toBuffer(data) );
+    } else {
+      digest = MAC( FN, BLOCK, toBuffer(data), toBuffer(key) );
+    }
+    
+    return Encoder( crop( size, digest, false ) );
+  };
+}
+
 function isBuffer( obj ) {
   return '[object Array]' === Object.prototype.toString.call( obj );
 }

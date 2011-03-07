@@ -110,26 +110,5 @@
     return split( hash );
   }
   
-  // expose hash function
-  
-  self.ripemd128 = function ( size, data, hkey ) {
-    if ( 'number' !== typeof size ) {
-      key = data;
-      data = size;
-      size = DIGEST;
-    }
-    
-    size = Math.max( 0, Math.min( DIGEST, size ) );
-    
-    var digest;
-
-    if ( null == key ) {
-      digest = ripemd128( toBuffer(data) );
-    } else {
-      digest = hmac( ripemd128, BLOCK, toBuffer(data), toBuffer(key) );
-    }
-    
-    return Encoder( crop( size, digest, false ) );
-  };
-  
+  self.ripemd128 = factorMAC( hmac, ripemd128, DIGEST, BLOCK );
 }());

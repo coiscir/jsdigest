@@ -91,25 +91,7 @@
     }
     
     return split( hash );
-  };
+  }
   
-  self.md5 = function ( size, data, key ) {
-    if ( 'number' !== typeof size ) {
-      key = data;
-      data = size;
-      size = DIGEST;
-    }
-    
-    size = Math.max( 0, Math.min( DIGEST, size ) );
-    
-    var digest;
-
-    if ( null == key ) {
-      digest = md5( toBuffer(data) );
-    } else {
-      digest = hmac( md5, BLOCK, toBuffer(data), toBuffer(key) );
-    }
-    
-    return Encoder( crop( size, digest, false ) );
-  };
+  self.md5 = factorMAC( hmac, md5, DIGEST, BLOCK );
 })();

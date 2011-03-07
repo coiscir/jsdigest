@@ -69,26 +69,7 @@
     }
     
     return split( hash );
-  };
+  }
   
-  self.md4 = function ( size, data, key ) {
-    if ( 'number' !== typeof size ) {
-      key = data;
-      data = size;
-      size = DIGEST;
-    }
-    
-    size = Math.max( 0, Math.min( DIGEST, size ) );
-    
-    var digest;
-
-    if ( null == key ) {
-      digest = md4( toBuffer(data) );
-    } else {
-      digest = hmac( md4, BLOCK, toBuffer(data), toBuffer(key) );
-    }
-    
-    return Encoder( crop( size, digest, false ) );
-  };
-  
+  self.md4 = factorMAC( hmac, md4, DIGEST, BLOCK );
 }());
