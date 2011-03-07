@@ -1,117 +1,107 @@
 require 'rubygems'
 require 'rake'
+require 'erb'
 require 'packr'
 
-@root = File.dirname(__FILE__)
+@root = File.dirname( __FILE__ )
 
-@start = File.join(@root, 'src', 'core.js')
-@globs = ['convert', 'finish', 'encoder', 'math', 'word', 'hmac', 'hash/*']
-@ext = '.js'
+@go = File.join( @root, 'src', 'core.js' )
 
-@devel = File.join('lib', 'digest-dev.js')
-@minify = File.join('lib', 'digest.js')
-@latest = File.join('lib', 'latest', 'digest.js')
+@dev = File.join( 'lib', 'digest.js' )
+@min = File.join( 'lib', 'digest.min.js' )
+@rel = File.join( 'lib', 'latest', 'digest.js' )
 
-@version = `git describe --tags`.strip.split('-')[0,2].join('-')
-@release = `git --no-pager log -n 1 --format="%ct"`.strip.to_i
-@release = Time.at(@release).utc.strftime('%Y-%m-%d %H:%M:%S UTC')
+@version = `git describe --tags`.strip.split('-')[0, 2].join('-')
+@release = Time.now.utc.strftime( '%Y-%m-%d %H:%M:%S UTC' )
 
-def statsub(source)
-  source.
-    gsub(/@VERSION/, @version).
-    gsub(/@RELEASE/, @release).
-    sub('/**!', '/**')
-end
 
-def finish(file, source)
-  File.open(file, 'w+b') do |file|
-    file << statsub(source).rstrip + $/
+class Builder
+
+  def initialize( version, release, start )
+    @version = version
+    @release = release
+    
+    @uncompressed = import( start )
+    @minified = compress( @uncompressed )
   end
-end
 
-def grab(file)
-  File.read(file).rstrip if File.file?(file) and File.readable?(file)
-end
+  def publish( file, minified )
+    source = minified ? @minified : @uncompressed
+  
+    File.open( file, 'w+b' ) do |file|
+      file << source
+    end
+    
+    self
+  end
 
-def import
-  if @imported.nil?
-    Dir.chdir(File.dirname(@start)) do
-      files = @globs.
-        map {|glob| Dir.glob(glob + @ext).sort }.flatten.
-        select {|file| File.file?(file) and File.readable?(file)}
-      
-      @imported = files.map {|file| grab(file)}.join($/)
+  private
+  
+  def parse( path )
+    src = File.read( path )
+
+    Dir.chdir( File.dirname( path ) ) do
+      ERB.new( src, nil, '<>' ).result( binding ).strip + $/
     end
   end
-  
-  return @imported
-end
 
-def combine(start, import)
-  start.sub(/^.*?@IMPORT\s*/, import.gsub(/^/, (' ' * 2)).rstrip + $/)
-end
-
-def build
-  if @built.nil?
-    @built = combine(grab(@start), import)
+  def import( *files )
+    found = files.
+      map {|file| File.join( File.dirname( file ), File.basename( file, '.js' ) )}.
+      map {|file| Dir.glob( file + '.js' )}.flatten.
+      select {|file| File.file?( file ) and File.readable?( file )}
+    
+    found.map {|path| parse( path )}.join( $/ * 2 )
   end
-  
-  return @built
-end
 
-def compress
-  if @packed.nil?
+  def compress( source )
     search = /\/\*\*!.*?\*\*\/#{$/}?/m
     options = {
       :shrink_vars => true,
       :protect => %w[self]
     }
     
-    source = build
-    comment = source =~ search ? source.match(search)[0] : ''
-    
-    @packed = comment + Packr.pack(source, options).strip
+    comment = source =~ search ? source.match( search )[0] : ''
+    comment + Packr.pack( source, options ).strip + $/
   end
-  
-  return @packed
+
 end
 
-task :default => [:build]
 
-desc "Execute all steps"
-task :all => [:clean, :build, :release]
+task :default => [:clean, :build]
 
-desc "Clean library files."
 task :clean do
-  print $/ + '-- Clean' + $/
+  print $/ + '== Clean' + $/
   
-  Dir.chdir(@root) do
-    Dir.glob('lib/*.js') do |file|
-      print ' - ' + file + $/ if File.exists?(file) and File.delete(file)
+  Dir.chdir( @root ) do
+    Dir.glob( 'lib/*.js' ) do |file|
+      print ' - ' + file + $/ if File.exists?( file ) and File.delete( file )
     end
   end
 end
 
-desc "Build library files."
-task :build do
-  print $/ + '-- Build' + $/
+task :build, :version do | t, args |
+  args.with_defaults( :version => @version )
+  version = args[:version]
   
-  finish(File.join(@root, @devel), build)
-  print ' + ' + @devel + $/
+  print $/ + '== Build ' + version + $/
   
-  finish(File.join(@root, @minify), compress)
-  print ' + ' + @minify + $/
+  Builder.new( version, @release, @go ).
+    publish( File.join( @root, @dev ), false ).
+    publish( File.join( @root, @min ), true )
+  
+  print ' + ' + @dev + $/
+  print ' + ' + @min + $/
 end
 
-desc "Build latest library file."
-task :release do
-  print $/ + '-- Release' + $/
+task :release, :version do | t, args |
+  args.with_defaults( :version => @version )
+  version = args[:version]
   
-  version = @version
-  @version = @version.split('-')[0]
+  print $/ + '== Release ' + version + $/
   
-  finish(File.join(@root, @latest), compress)
-  print ' + ' + @latest + $/
+  Builder.new( version, @release, @go ).
+    publish( File.join( @root, @rel ), false )
   
-  @version = version
+  print ' + ' + @rel + $/
 end
