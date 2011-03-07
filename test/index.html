@@ -16,7 +16,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script src="qunit/qunit.js"></script>
 <script src="../lib/latest/digest.js"></script>
-<script src="../lib/digest-dev.js"></script>
+<script src="../lib/digest.js"></script>
 <script>
   function times(str, num) {
     var a = [];
@@ -58,42 +58,42 @@
     
     hmac = {
       1: {
-        text1: Digest.stoa('Hi There'),
-        key1: Digest.stoa(times('\x0b', 16)),
-        key2: Digest.stoa(times('\x0b', 20))
+        text1: Digest.toBuffer('Hi There'),
+        key1: Digest.toBuffer(times('\x0b', 16)),
+        key2: Digest.toBuffer(times('\x0b', 20))
       },
       2: {
-        text1: Digest.stoa('what do ya want for nothing?'),
-        key1: Digest.stoa('Jefe')
+        text1: Digest.toBuffer('what do ya want for nothing?'),
+        key1: Digest.toBuffer('Jefe')
       },
       3: {
-        text1: Digest.stoa(times('\xdd', 50)),
-        key1: Digest.stoa(times('\xaa', 16)),
-        key2: Digest.stoa(times('\xaa', 20))
+        text1: Digest.toBuffer(times('\xdd', 50)),
+        key1: Digest.toBuffer(times('\xaa', 16)),
+        key2: Digest.toBuffer(times('\xaa', 20))
       },
       4: {
-        text1: Digest.stoa(times('\xcd', 50)),
-        key1: Digest.stoa('\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19')
+        text1: Digest.toBuffer(times('\xcd', 50)),
+        key1: Digest.toBuffer('\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19')
       },
       5: {
         text1: 'Test With Truncation',
-        key1: Digest.stoa(times('\x0c', 16)),
-        key2: Digest.stoa(times('\x0c', 20))
+        key1: Digest.toBuffer(times('\x0c', 16)),
+        key2: Digest.toBuffer(times('\x0c', 20))
       },
       6: {
         text1: 'Test Using Larger Than Block-Size Key - Hash Key First',
-        key1: Digest.stoa(times('\xaa', 80)),
-        key2: Digest.stoa(times('\xaa', 131))
+        key1: Digest.toBuffer(times('\xaa', 80)),
+        key2: Digest.toBuffer(times('\xaa', 131))
       },
       7: {
         text1: 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
         text2: 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.',
-        key1: Digest.stoa(times('\xaa', 80)),
-        key2: Digest.stoa(times('\xaa', 131))
+        key1: Digest.toBuffer(times('\xaa', 80)),
+        key2: Digest.toBuffer(times('\xaa', 131))
       }
     };
     
-    md6_block = Digest.stoa(times('\x11\x22\x33\x44\x55\x66\x77', Math.ceil(800 / 7)));
+    md6_block = Digest.toBuffer(times('\x11\x22\x33\x44\x55\x66\x77', Math.ceil(800 / 7)));
     md6_400 = md6_block.slice(0, 400);
     md6_600 = md6_block.slice(0, 600);
     md6_800 = md6_block.slice(0, 800);
@@ -105,11 +105,11 @@
     skein_00 = skein_80 + '\x7F\x7E\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74\x73\x72\x71\x70\x6F\x6E\x6D\x6C\x6B\x6A\x69\x68\x67\x66\x65\x64\x63\x62\x61\x60\x5F\x5E\x5D\x5C\x5B\x5A\x59\x58\x57\x56\x55\x54\x53\x52\x51\x50\x4F\x4E\x4D\x4C\x4B\x4A\x49\x48\x47\x46\x45\x44\x43\x42\x41\x40\x3F\x3E\x3D\x3C\x3B\x3A\x39\x38\x37\x36\x35\x34\x33\x32\x31\x30\x2F\x2E\x2D\x2C\x2B\x2A\x29\x28\x27\x26\x25\x24\x23\x22\x21\x20\x1F\x1E\x1D\x1C\x1B\x1A\x19\x18\x17\x16\x15\x14\x13\x12\x11\x10\x0F\x0E\x0D\x0C\x0B\x0A\x09\x08\x07\x06\x05\x04\x03\x02\x01\x00';
     
     // prevent UTF-8 encoding
-    skein_FF = Digest.stoa(skein_FF);
-    skein_E0 = Digest.stoa(skein_E0);
-    skein_C0 = Digest.stoa(skein_C0);
-    skein_80 = Digest.stoa(skein_80);
-    skein_00 = Digest.stoa(skein_00);
+    skein_FF = Digest.toBuffer(skein_FF);
+    skein_E0 = Digest.toBuffer(skein_E0);
+    skein_C0 = Digest.toBuffer(skein_C0);
+    skein_80 = Digest.toBuffer(skein_80);
+    skein_00 = Digest.toBuffer(skein_00);
     
     
     ////////////////
@@ -149,15 +149,15 @@
       var arr = [102, 111, 111, 98, 97, 114];
       var str = 'foobar';
       
-      expect(5);
+      expect(2);
       
-      same(Digest.atos(arr), str, 'atos(arr)');
-      same(Digest.stoa(str), arr, 'stoa(str)');
+      //same(Digest.atos(arr), str, 'atos(arr)');
+      same(Digest.toBuffer(str), arr, 'toBuffer(str)');
       
-      same(Digest.atos(str), str, 'atos(str)');
-      same(Digest.stoa(arr), arr, 'stoa(arr)');
+      //same(Digest.atos(str), str, 'atos(str)');
+      same(Digest.toBuffer(arr), arr, 'toBuffer(arr)');
       
-      same(Digest.atos(true), undefined, 'Invalid argument');
+      //same(Digest.atos(true), undefined, 'Invalid argument');
     });
     
     
@@ -343,7 +343,7 @@
     
     
     asyncTest('RIPEMD-128 / HMAC-RIPEMD-128', function() {
-      var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff');
+      var key = Digest.toBuffer('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff');
       
       setTimeout(function() {
         expect(16);
@@ -371,7 +371,7 @@
     });
     
     asyncTest('RIPEMD-160 / HMAC-RIPEMD-160', function() {
-      var key = Digest.stoa('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff\x01\x23\x45\x67');
+      var key = Digest.toBuffer('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff\x01\x23\x45\x67');
       
       setTimeout(function() {
         expect(16);
