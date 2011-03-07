@@ -11,7 +11,7 @@
 var self = { Version: '<%= @version %>' };
 
 
-<%= import %>
+<%= import 'math' %>
 
 
 /* Export */
