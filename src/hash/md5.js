@@ -1,11 +1,17 @@
 // MD5 (c) 1992 Ronald L. Rivest
 (function () {
-  function main(size, data) {
-    var a, b, c, d, i, l, r, t, tmp, x,
-      bytes, bitHi, bitLo,
-      padlen, padding = [0x80],
-      hash = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476],
-      S = [ [7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21] ],
+  var merge = mergeLeast_32,
+      split = splitLeast_32,
+      rotl = rotl_32,
+      
+      DIGEST = 128,
+      BLOCK = 64,
+      S = [
+        [ 7, 12, 17, 22 ],
+        [ 5,  9, 14, 20 ],
+        [ 4, 11, 16, 23 ],
+        [ 6, 10, 15, 21 ]
+      ],
       X = [
         0, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, // Round 1
         1, 6, 11,  0,  5, 10, 15,  4,  9, 14,  3,  8, 13,  2,  7, 12, // Round 2
@@ -31,42 +37,45 @@
         0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
       ],
       F = [
-        function (x, y, z) {
-          return (x & y) | ((~x) & z);
+        function ( x, y, z ) {
+          return ( x & y ) | ( ( ~x ) & z );
         },
-        function (x, y, z) {
-          return (x & z) | (y & (~z));
+        function ( x, y, z) {
+          return ( x & z ) | ( y & ( ~z ));
         },
-        function (x, y, z) {
-          return (x ^ y ^ z);
+        function ( x, y, z) {
+          return ( x ^ y ^ z );
         },
-        function (x, y, z) {
-          return (y ^ (x | (~z)));
+        function ( x, y, z) {
+          return ( y ^ ( x | ( ~z ) ) );
         }
       ];
+
+  function md5( data ) {
+    var a, b, c, d, i, l, r, t, x, tmp,
+        bytes = data.length,
+        padding = [ 0x80 ],
+        hash = [ 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 ];
     
-    // use bit-length to pad data
-    bytes = data.length;
-    bitLo = (bytes * 8) & 0xffffffff;
-    bitHi = (bytes * 8 / Math.pow(2, 32)) & 0xffffffff;
+    padding.length = ( ( bytes % 64 ) < 56 ? 56 : 120 ) - ( bytes % 64 );
     
-    padlen = ((bytes % 64) < 56 ? 56 : 120) - (bytes % 64);
-    while (padding.length < padlen) {
-      padding.push(0x0);
-    }
+    x = merge( data.concat( padding ) ).concat([
+      ( bytes * 8 ) | 0x0,
+      ( bytes * 8 / Math.pow( 2, 32 ) ) | 0x0
+    ]);
     
-    x = merge_LSB_32(data.concat(padding)).concat([bitLo, bitHi]);
-    
-    // update hash
-    for (i = 0, l = x.length; i < l; i += 16) {
+    for ( i = 0, l = x.length; i < l; i += 16 ) {
       a = hash[0];
       b = hash[1];
       c = hash[2];
       d = hash[3];
       
-      for (t = 0; t < 64; t += 1) {
-        r = Math.floor(t / 16);
-        a = rotl_32((a + F[r](b, c, d) + x[i + X[t]] + AC[t]), S[r][t % 4]) + b;
+      for ( t = 0; t < 64; t++ ) {
+        r = Math.floor( t / 16 );
+        a = rotl(
+          a + F[r]( b, c, d ) + x[ i + X[t] ] + AC[t],
+          S[r][ t % 4 ]
+        ) + b;
         
         tmp = d;
         d = c;
@@ -81,30 +90,26 @@
       hash[3] += d;
     }
     
-    return self.Encoder(crop(size, split_LSB_32(hash), false));
-  }
-  
-  // expose hash function
-  
-  self.md5 = function md5(size, data, hkey) {
-    var digest = 128;
-    
-    // allow size to be optional
-    if ('number' !== typeof size.valueOf()) {
-      hkey = data;
-      data = size;
-      size = digest;
-    }
-    
-    size = (0 < size && size <= digest) ? size : digest;
-    data = self.Encoder.ready(data);
-    hkey = self.Encoder.ready(hkey);
-    
-    if (isInput(hkey)) {
-      return hmac(main, size, digest, data, hkey, 64);
-    } else {
-      return main(size, data);
-    }
+    return split( hash );
   };
   
-}());
+  self.md5 = function ( size, data, key ) {
+    if ( 'number' !== typeof size ) {
+      key = data;
+      data = size;
+      size = DIGEST;
+    }
+    
+    size = Math.max( 0, Math.min( DIGEST, size ) );
+    
+    var digest;
+
+    if ( null == key ) {
+      digest = md5( toBuffer(data) );
+    } else {
+      digest = hmac( md5, BLOCK, toBuffer(data), toBuffer(key) );
+    }
+    
+    return Encoder( crop( size, digest, false ) );
+  };
+})();
