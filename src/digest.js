@@ -11,7 +11,7 @@
 var self = { Version: '<%= @version %>' };
 
 
-<%= import 'math', 'word' %>
+<%= import 'core', 'math', 'word' %>
 
 
 /* Export */
