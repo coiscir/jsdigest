@@ -61,6 +61,8 @@ function crop( size, hash, righty ) {
   if ( remain > 0 ) {
     hash[ length - 1 ] &= ( 0xff << ( 8 - remain ) ) & 0xff;
   }
+  
+  return hash;
 }
 
 self.toBuffer = toBuffer;
