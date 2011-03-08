@@ -73,15 +73,15 @@ function rotr( x, n ) {
 }
 
 function add( x, y ) {
-  var b = x[1] + y[1],
-      a = x[0] + y[0] + ( lt_32( b, x[1] ) ? 0x1 : 0x0 );
+  var b = ( x[1] | 0x0 ) + ( y[1] | 0x0 ),
+      a = ( x[0] | 0x0 ) + ( y[0] | 0x0 ) + ( lt_32( b, x[1] ) ? 0x1 : 0x0 );
   
   return [ a, b ];
 }
 
 function subt( x, y ) {
-  var b = x[1] - y[1],
-      a = x[0] - y[0] - ( gt_32( b, x[1] ) ? 0x1 : 0x0 );
+  var b = ( x[1] | 0x0 ) - ( y[1] | 0x0 ),
+      a = ( x[0] | 0x0 ) - ( y[0] | 0x0 ) - ( gt_32( b, x[1] ) ? 0x1 : 0x0 );
   
   return [ a, b ];
 }
