@@ -112,6 +112,7 @@ function mergeMost_64( input ) {
       output = [];
 
   for ( i = 0; i < length; i += 8 ) {
+    output.push([
       ( ( input[ i + 0 ] & 0xff ) << 24 ) |
       ( ( input[ i + 1 ] & 0xff ) << 16 ) |
       ( ( input[ i + 2 ] & 0xff ) <<  8 ) |
@@ -120,6 +121,7 @@ function mergeMost_64( input ) {
       ( ( input[ i + 5 ] & 0xff ) << 16 ) |
       ( ( input[ i + 6 ] & 0xff ) <<  8 ) |
       ( ( input[ i + 7 ] & 0xff ) <<  0 )
+    ]);
   }
   
   return output;
