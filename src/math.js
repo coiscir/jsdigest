@@ -26,23 +26,23 @@ function ulong( x ) {
   return [ ( x[0] | 0x0 ), ( x[1] | 0x0 ) ];
 }
 
-function and_64( x, y ) {
+function and( x, y ) {
   return [ x[0] & y[0], x[1] & y[1] ];
 }
 
-function or_64( x, y ) {
+function or( x, y ) {
   return [ x[0] | y[0], x[1] | y[1] ];
 }
 
-function xor_64( x, y ) {
+function xor( x, y ) {
   return [ x[0] ^ y[0], x[1] ^ y[1] ];
 }
 
-function not_64( x ) {
+function not( x ) {
   return [ ~x[0], ~x[1] ];
 }
 
-function shl_64( x, n ) {
+function shl( x, n ) {
   var a = x[0] | 0x0,
       b = x[1] | 0x0;
   
@@ -53,7 +53,7 @@ function shl_64( x, n ) {
   }
 }
 
-function shr_64( x, n ) {
+function shr( x, n ) {
   var a = x[0] | 0x0,
       b = x[1] | 0x0;
     
@@ -64,34 +64,34 @@ function shr_64( x, n ) {
   }
 }
 
-function rotl_64( x, n ) {
-  return or_64( shr_64( x, ( 64 - n ) ), shl_64( x, n ) );
+function rotl( x, n ) {
+  return or( shr( x, ( 64 - n ) ), shl( x, n ) );
 }
 
-function rotr_64( x, n ) {
-  return or_64( shr_64( x, n ), shl_64( x, ( 64 - n ) ) );
+function rotr( x, n ) {
+  return or( shr( x, n ), shl( x, ( 64 - n ) ) );
 }
 
-function add_64( x, y ) {
+function add( x, y ) {
   var b = x[1] + y[1],
       a = x[0] + y[0] + ( lt_32( b, x[1] ) ? 0x1 : 0x0 );
   
   return [ a, b ];
 }
 
-function subt_64( x, y ) {
+function subt( x, y ) {
   var b = x[1] - y[1],
       a = x[0] - y[0] - ( gt_32( b, x[1] ) ? 0x1 : 0x0 );
   
   return [ a, b ];
 }
 
-function mult_64( x, y ) {
+function mult( x, y ) {
   var i, a = [ 0x0, 0x0 ];
   
   for ( i = 0; i < 64; i += 1 ) {
-    if ( shr_64( y, i )[1] & 0x1 ) {
-      a = add_64( a, shl_64( x, i ) );
+    if ( shr( y, i )[1] & 0x1 ) {
+      a = add( a, shl( x, i ) );
     }
   }
   
