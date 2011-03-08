@@ -1,24 +1,8 @@
 // SHA-2 512 (c) 2006 The Internet Society
 (function () {
-  function main(digest, size, data) {
-    var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
-      bytes, bitHi, bitLo,
-      padlen, padding = [0x80],
-      part = Math.ceil(digest / 64),
-      hash = ({
-        384: [
-          [0xcbbb9d5d, 0xc1059ed8], [0x629a292a, 0x367cd507],
-          [0x9159015a, 0x3070dd17], [0x152fecd8, 0xf70e5939],
-          [0x67332667, 0xffc00b31], [0x8eb44a87, 0x68581511],
-          [0xdb0c2e0d, 0x64f98fa7], [0x47b5481d, 0xbefa4fa4]
-        ],
-        512: [
-          [0x6a09e667, 0xf3bcc908], [0xbb67ae85, 0x84caa73b],
-          [0x3c6ef372, 0xfe94f82b], [0xa54ff53a, 0x5f1d36f1],
-          [0x510e527f, 0xade682d1], [0x9b05688c, 0x2b3e6c1f],
-          [0x1f83d9ab, 0xfb41bd6b], [0x5be0cd19, 0x137e2179]
-        ]
-      })[digest],
+  var merge = mergeMost_64,
+      split = splitMost_64,
+      
       K = [
         [0x428a2f98, 0xd728ae22], [0x71374491, 0x23ef65cd],
         [0xb5c0fbcf, 0xec4d3b2f], [0xe9b5dba5, 0x8189dbbc],
@@ -62,137 +46,121 @@
         [0x5fcb6fab, 0x3ad6faec], [0x6c44198c, 0x4a475817]
       ];
     
-    function bSig0(x) {
-      return xor_64(xor_64(rotr_64(x, 28), rotr_64(x, 34)), rotr_64(x, 39));
-    }
-    function bSig1(x) {
-      return xor_64(xor_64(rotr_64(x, 14), rotr_64(x, 18)), rotr_64(x, 41));
-    }
-    function sSig0(x) {
-      return xor_64(xor_64(rotr_64(x,  1), rotr_64(x,  8)), shr_64(x, 7));
-    }
-    function sSig1(x) {
-      return xor_64(xor_64(rotr_64(x, 19), rotr_64(x, 61)), shr_64(x, 6));
-    }
+  function bSig0( x ) {
+    return xor( xor( rotr( x, 28 ), rotr( x, 34 ) ), rotr( x, 39 ) );
+  }
+  function bSig1( x ) {
+    return xor( xor( rotr( x, 14 ), rotr( x, 18 ) ), rotr( x, 41) );
+  }
+  function sSig0( x ) {
+    return xor( xor( rotr( x,  1 ), rotr( x,  8 ) ), shr( x, 7 ) );
+  }
+  function sSig1( x ) {
+    return xor( xor( rotr( x, 19 ), rotr( x, 61 ) ), shr( x, 6 ) );
+  }
+  
+  function ch( x, y, z ) {
+    return xor( and( x, y ), and( not( x ), z ) );
+  }
+  function maj( x, y, z ) {
+    return xor( xor( and( x, y ), and( x, z ) ), and( y, z ) );
+  }
+
+  function sha2_64( digest, data ) {
+    var a, b, c, d, e, f, g, h, i, l, t, tmp1, tmp2, w, x,
+        bytes = data.length,
+        padding = [ 0x80 ],
+        part = Math.ceil( digest / 64 ),
+        hash = {
+          384: [
+            [0xcbbb9d5d, 0xc1059ed8], [0x629a292a, 0x367cd507],
+            [0x9159015a, 0x3070dd17], [0x152fecd8, 0xf70e5939],
+            [0x67332667, 0xffc00b31], [0x8eb44a87, 0x68581511],
+            [0xdb0c2e0d, 0x64f98fa7], [0x47b5481d, 0xbefa4fa4]
+          ],
+          512: [
+            [0x6a09e667, 0xf3bcc908], [0xbb67ae85, 0x84caa73b],
+            [0x3c6ef372, 0xfe94f82b], [0xa54ff53a, 0x5f1d36f1],
+            [0x510e527f, 0xade682d1], [0x9b05688c, 0x2b3e6c1f],
+            [0x1f83d9ab, 0xfb41bd6b], [0x5be0cd19, 0x137e2179]
+          ]
+        }[digest];
     
-    function ch(x, y, z) {
-      return xor_64(and_64(x, y), and_64(not_64(x), z));
-    }
-    function maj(x, y, z) {
-      return xor_64(xor_64(and_64(x, y), and_64(x, z)), and_64(y, z));
-    }
+    padding.length = ( ( bytes % 128 ) < 112 ? 112 : 240 ) - ( bytes % 128 );
     
-    // use bit-length to pad data
-    bytes = data.length;
-    bitHi = ulong([
-      bytes * 8 / Math.pow(2, 96),
-      bytes * 8 / Math.pow(2, 64)
+    x = merge( data.concat( padding ) ).concat([
+      [
+        ( bytes * 8 / Math.pow( 2, 96 ) ) | 0x0,
+        ( bytes * 8 / Math.pow( 2, 64 ) ) | 0x0
+      ],
+      [
+        ( bytes * 8 / Math.pow( 2, 32 ) ) | 0x0,
+        ( bytes * 8 ) | 0x0
+      ]
     ]);
-    bitLo = ulong([
-      bytes * 8 / Math.pow(2, 32),
-      bytes * 8
-    ]);
     
-    padlen = ((bytes % 128) < 112 ? 112 : 240) - (bytes % 128);
-    while (padding.length < padlen) {
-      padding.push(0x0);
-    }
-    
-    x = merge_MSB_64(data.concat(padding)).concat([bitHi, bitLo]);
+    console.log( 'bits:', Encoder( split(x) ).hex().replace( /(\w{16})/g, '$1 ' ) );
     
     // update hash
-    for (i = 0, l = x.length; i < l; i += 16) {
-      a = [].concat(hash[0]);
-      b = [].concat(hash[1]);
-      c = [].concat(hash[2]);
-      d = [].concat(hash[3]);
-      e = [].concat(hash[4]);
-      f = [].concat(hash[5]);
-      g = [].concat(hash[6]);
-      h = [].concat(hash[7]);
+    for ( i = 0, l = x.length; i < l; i += 16 ) {
+      a = hash[0].slice();
+      b = hash[1].slice();
+      c = hash[2].slice();
+      d = hash[3].slice();
+      e = hash[4].slice();
+      f = hash[5].slice();
+      g = hash[6].slice();
+      h = hash[7].slice();
       
-      for (w = [], t = 0; t < 80; t += 1) {
-        if (t < 16) {
-          w[t] = [].concat(x[i + t]);
+      for ( w = [], t = 0; t < 80; t += 1 ) {
+        if ( t < 16 ) {
+          w[t] = [].concat( x[ i + t ] );
         } else {
-          w[t] = add_64(add_64(sSig1(w[t - 2]), w[t - 7]), add_64(sSig0(w[t - 15]), w[t - 16]));
+          w[t] = add(
+            add( sSig1( w[ t -  2 ] ), w[ t -  7 ] ),
+            add( sSig0( w[ t - 15 ] ), w[ t - 16 ] )
+          ).slice();
         }
         
-        tmp1 = add_64(add_64(add_64(h, bSig1(e)), ch(e, f, g)), add_64(K[t], w[t]));
-        tmp2 = add_64(bSig0(a), maj(a, b, c));
-        h = ulong(g);
-        g = ulong(f);
-        f = ulong(e);
-        e = add_64(d, tmp1);
-        d = ulong(c);
-        c = ulong(b);
-        b = ulong(a);
-        a = add_64(tmp1, tmp2);
+        tmp1 = add(
+          add( add( h, bSig1(e) ), ch( e, f, g ) ),
+          add( K[t], w[t] )
+        );
+        tmp2 = add( bSig0(a), maj( a, b, c ) );
+        
+        h = g.slice();
+        g = f.slice();
+        f = e.slice();
+        e = add( d, tmp1 );
+        d = c.slice();
+        c = b.slice();
+        b = a.slice();
+        a = add( tmp1, tmp2 );
       }
       
-      hash[0] = add_64(hash[0], a);
-      hash[1] = add_64(hash[1], b);
-      hash[2] = add_64(hash[2], c);
-      hash[3] = add_64(hash[3], d);
-      hash[4] = add_64(hash[4], e);
-      hash[5] = add_64(hash[5], f);
-      hash[6] = add_64(hash[6], g);
-      hash[7] = add_64(hash[7], h);
+      hash[0] = add( hash[0], a );
+      hash[1] = add( hash[1], b );
+      hash[2] = add( hash[2], c );
+      hash[3] = add( hash[3], d );
+      hash[4] = add( hash[4], e );
+      hash[5] = add( hash[5], f );
+      hash[6] = add( hash[6], g );
+      hash[7] = add( hash[7], h );
     }
     
-    return self.Encoder(crop(size, split_MSB_64(hash.slice(0, part)), false));
+    return split( hash.slice( 0, part ) );
   }
   
-  function main384(size, data) {
-    return main(384, size, data);
+  function sha384( data ) {
+    return sha2_64( 384, data );
   }
   
-  function main512(size, data) {
-    return main(512, size, data);
+  function sha512( data ) {
+    return sha2_64( 512, data );
   }
   
-  // expose hash function
+  self.sha384 = factorMAC( hmac, sha384, 384, 128 );
   
-  self.sha384 = function sha384(size, data, hkey) {
-    var digest = 384;
-    
-    // allow size to be optional
-    if ('number' !== typeof size.valueOf()) {
-      hkey = data;
-      data = size;
-      size = digest;
-    }
-    
-    size = (0 < size && size <= digest) ? size : digest;
-    data = self.Encoder.ready(data);
-    hkey = self.Encoder.ready(hkey);
-    
-    if (isInput(hkey)) {
-      return hmac(main384, size, digest, data, hkey, 128);
-    } else {
-      return main384(size, data);
-    }
-  };
-  
-  self.sha512 = function sha512(size, data, hkey) {
-    var digest = 512;
-    
-    // allow size to be optional
-    if ('number' !== typeof size.valueOf()) {
-      hkey = data;
-      data = size;
-      size = digest;
-    }
-    
-    size = (0 < size && size <= digest) ? size : digest;
-    data = self.Encoder.ready(data);
-    hkey = self.Encoder.ready(hkey);
-    
-    if (isInput(hkey)) {
-      return hmac(main512, size, digest, data, hkey, 128);
-    } else {
-      return main512(size, data);
-    }
-  };
+  self.sha512 = factorMAC( hmac, sha512, 512, 128 );
   
 }());
