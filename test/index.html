@@ -355,6 +355,17 @@
     
     module( 'Autos' );
     
+    asyncTest( 'RIPEMD', function () {
+      setTimeout( function () {
+        expect( 2 );
+        
+        equals( Digest.ripemd( 128, '' ).hex(), 'cdf26213a150dc3ecb610f18f6b38b46', '128 => RIPEMD-128' );
+        equals( Digest.ripemd( 160, '' ).hex(), '9c1185a5c5e9fc54612808977ee8f548b2258d31', '160 => RIPEMD-160' );
+        
+        start();
+      }, 10 );
+    });
+    
     asyncTest( 'SHA', function () {
       setTimeout( function () {
         expect( 5 );
