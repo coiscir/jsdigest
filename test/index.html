@@ -18,12 +18,19 @@
 <script src="../lib/latest/digest.js"></script>
 <script src="../lib/digest.js"></script>
 <script>
-  function times(str, num) {
-    var a = [];
-    while (a.length < num) {
-      a.push(str);
+  function times( str, num ) {
+    return new Array( num + 1 ).join( str );
+  }
+  
+  function range( m, n, s ) {
+    var a = [], i,
+        neg = ( +s || 1 ) < 0;
+    
+    for ( i = +m; ( neg ? i >= +n : i <= +n ); i += (+s || 1) ) {
+      a.push( i );
     }
-    return a.join('');
+    
+    return a;
   }
   
   $(document).ready(function() {
@@ -36,510 +43,315 @@
       $('#qunit-header').text(implant);
     }
   });
-    
-  $(document).ready(function() {
-    
-    // Build shared inputs
-    var texts, hmac,
-        md6_block, md6_400, md6_600, md6_800,
-        skein_FF, skein_E0, skein_C0, skein_80, skein_00;
-    
-    texts = {
-      1: '',
-      2: 'a',
-      3: 'abc',
-      4: 'message digest',
-      5: 'abcdefghijklmnopqrstuvwxyz',
-      6: 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
-      7: 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
-      8: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-      9: times('1234567890', 8)
-    };      
-    
-    hmac = {
-      1: {
-        text1: Digest.toArray('Hi There'),
-        key1: Digest.toArray(times('\x0b', 16)),
-        key2: Digest.toArray(times('\x0b', 20))
-      },
-      2: {
-        text1: Digest.toArray('what do ya want for nothing?'),
-        key1: Digest.toArray('Jefe')
-      },
-      3: {
-        text1: Digest.toArray(times('\xdd', 50)),
-        key1: Digest.toArray(times('\xaa', 16)),
-        key2: Digest.toArray(times('\xaa', 20))
-      },
-      4: {
-        text1: Digest.toArray(times('\xcd', 50)),
-        key1: Digest.toArray('\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19')
-      },
-      5: {
-        text1: 'Test With Truncation',
-        key1: Digest.toArray(times('\x0c', 16)),
-        key2: Digest.toArray(times('\x0c', 20))
-      },
-      6: {
-        text1: 'Test Using Larger Than Block-Size Key - Hash Key First',
-        key1: Digest.toArray(times('\xaa', 80)),
-        key2: Digest.toArray(times('\xaa', 131))
-      },
-      7: {
-        text1: 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
-        text2: 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.',
-        key1: Digest.toArray(times('\xaa', 80)),
-        key2: Digest.toArray(times('\xaa', 131))
-      }
-    };
-    
-    md6_block = Digest.toArray(times('\x11\x22\x33\x44\x55\x66\x77', Math.ceil(800 / 7)));
-    md6_400 = md6_block.slice(0, 400);
-    md6_600 = md6_block.slice(0, 600);
-    md6_800 = md6_block.slice(0, 800);
-    
-    skein_FF = '\xFF';
-    skein_E0 = skein_FF + '\xFE\xFD\xFC\xFB\xFA\xF9\xF8\xF7\xF6\xF5\xF4\xF3\xF2\xF1\xF0\xEF\xEE\xED\xEC\xEB\xEA\xE9\xE8\xE7\xE6\xE5\xE4\xE3\xE2\xE1\xE0';
-    skein_C0 = skein_E0 + '\xDF\xDE\xDD\xDC\xDB\xDA\xD9\xD8\xD7\xD6\xD5\xD4\xD3\xD2\xD1\xD0\xCF\xCE\xCD\xCC\xCB\xCA\xC9\xC8\xC7\xC6\xC5\xC4\xC3\xC2\xC1\xC0';
-    skein_80 = skein_C0 + '\xBF\xBE\xBD\xBC\xBB\xBA\xB9\xB8\xB7\xB6\xB5\xB4\xB3\xB2\xB1\xB0\xAF\xAE\xAD\xAC\xAB\xAA\xA9\xA8\xA7\xA6\xA5\xA4\xA3\xA2\xA1\xA0\x9F\x9E\x9D\x9C\x9B\x9A\x99\x98\x97\x96\x95\x94\x93\x92\x91\x90\x8F\x8E\x8D\x8C\x8B\x8A\x89\x88\x87\x86\x85\x84\x83\x82\x81\x80';
-    skein_00 = skein_80 + '\x7F\x7E\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74\x73\x72\x71\x70\x6F\x6E\x6D\x6C\x6B\x6A\x69\x68\x67\x66\x65\x64\x63\x62\x61\x60\x5F\x5E\x5D\x5C\x5B\x5A\x59\x58\x57\x56\x55\x54\x53\x52\x51\x50\x4F\x4E\x4D\x4C\x4B\x4A\x49\x48\x47\x46\x45\x44\x43\x42\x41\x40\x3F\x3E\x3D\x3C\x3B\x3A\x39\x38\x37\x36\x35\x34\x33\x32\x31\x30\x2F\x2E\x2D\x2C\x2B\x2A\x29\x28\x27\x26\x25\x24\x23\x22\x21\x20\x1F\x1E\x1D\x1C\x1B\x1A\x19\x18\x17\x16\x15\x14\x13\x12\x11\x10\x0F\x0E\x0D\x0C\x0B\x0A\x09\x08\x07\x06\x05\x04\x03\x02\x01\x00';
-    
-    // prevent UTF-8 encoding
-    skein_FF = Digest.toArray(skein_FF);
-    skein_E0 = Digest.toArray(skein_E0);
-    skein_C0 = Digest.toArray(skein_C0);
-    skein_80 = Digest.toArray(skein_80);
-    skein_00 = Digest.toArray(skein_00);
+  
+  $(function () {
+  
+    var text_none = '',
+        text_a    = 'a',
+        text_abc  = 'abc',
+        text_md   = 'message digest',
+        text_a2z  = 'abcdefghijklmnopqrstuvwxyz',
+        text_a4s  = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
+        text_a8s  = 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
+        text_Aa0  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+        text_8x10 = times( '1234567890', 8 ),
+        
+        text_hi   = 'Hi There',
+        text_what = 'what do ya want for nothing?',
+        text_dd50 = Digest.toArray( times( '\xdd', 50 ) ),
+        text_cd50 = Digest.toArray( times( '\xcd', 50 ) ),
+        text_trun = 'Test With Truncation',
+        text_lngK = 'Test Using Larger Than Block-Size Key - Hash Key First',
+        text_lng1 = 'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
+        text_lng2 = 'This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.',
+        
+        key_0b16  = Digest.toArray( times( '\x0b', 16 ) ),
+        key_0b20  = Digest.toArray( times( '\x0b', 20 ) ),
+        key_jefe  = Digest.toArray( 'Jefe' ),
+        key_aa16  = Digest.toArray( times( '\xaa', 16 ) ),
+        key_aa20  = Digest.toArray( times( '\xaa', 20 ) ),
+        key_0119  = range( 0x01, 0x19 ),
+        key_0c16  = Digest.toArray( times( '\x0c', 16 ) ),
+        key_0c20  = Digest.toArray( times( '\x0c', 20 ) ),
+        key_aa80  = Digest.toArray( times( '\xaa', 80 ) ),
+        key_aa131 = Digest.toArray( times( '\xaa', 131 ) ),
+        
+        skein_FF = [ 0xff ],
+        skein_E0 = skein_FF.concat( range( 0xFE, 0xE0, -1 ) ),
+        skein_C0 = skein_E0.concat( range( 0xDF, 0xC0, -1 ) ),
+        skein_80 = skein_C0.concat( range( 0xBF, 0x80, -1 ) ),
+        skein_00 = skein_80.concat( range( 0x7F, 0x00, -1 ) );
     
     
-    ////////////////
-    // Global
+    module( 'Global' );
     
-    module('Global');
-    
-    test('Digest Core', function() {
-      expect(16);
+    test( 'Digest', function () {
+      expect( 14 );
       
-      ok(!!window.Digest, 'Digest is defined');
-      ok(parseFloat(Digest.Version) === 1.3, 'Digest.Version');
+      equal( typeof Digest, 'object', 'Digest is defined' );
+      equal( parseFloat( Digest.Version ), 1.3, 'Digest.Version' );
       
-      ok(!!Digest.md4, 'Digest.md4 is defined');
-      ok(!!Digest.md5, 'Digest.md5 is defined');
-      //ok(!!Digest.md6par, 'Digest.md6par is defined');
-      //ok(!!Digest.md6seq, 'Digest.md6seq is defined');
-      ok(!!Digest.ripemd128, 'Digest.ripemd128 is defined');
-      ok(!!Digest.ripemd160, 'Digest.ripemd160 is defined');
-      ok(!!Digest.sha1, 'Digest.sha1 is defined');
-      ok(!!Digest.sha224, 'Digest.sha224 is defined');
-      ok(!!Digest.sha256, 'Digest.sha256 is defined');
-      ok(!!Digest.sha384, 'Digest.sha384 is defined');
-      ok(!!Digest.sha512, 'Digest.sha512 is defined');
-      ok(!!Digest.skein256, 'Digest.skein256 is defined');
-      ok(!!Digest.skein512, 'Digest.skein512 is defined');
-      ok(!!Digest.skein1024, 'Digest.skein1024 is defined');
+      equal( typeof Digest.md4,       'function', 'MD4 is defined' );
+      equal( typeof Digest.md5,       'function', 'MD5 is defined' );
+      equal( typeof Digest.ripemd128, 'function', 'RIPEMD-128 is defined' );
+      equal( typeof Digest.ripemd160, 'function', 'RIPEMD-160 is defined' );
+      equal( typeof Digest.sha1,      'function', 'SHA-1 is defined' );
+      equal( typeof Digest.sha224,    'function', 'SHA-224 is defined' );
+      equal( typeof Digest.sha256,    'function', 'SHA-256 is defined' );
+      equal( typeof Digest.sha384,    'function', 'SHA-384 is defined' );
+      equal( typeof Digest.sha512,    'function', 'SHA-512 is defined' );
+      equal( typeof Digest.skein256,  'function', 'Skein-256 is defined' );
+      equal( typeof Digest.skein512,  'function', 'Skein-512 is defined' );
+      equal( typeof Digest.skein1024, 'function', 'Skein-1024 is defined' );
     });
     
     
-    ////////////////
-    // Convert
+    module( 'Buffer' );
     
-    /*
-    module('Convert');
-    
-    test('Conversion', function() {
-      var arr = [102, 111, 111, 98, 97, 114];
-      var str = 'foobar';
-      
-      expect(2);
-      
-      //same(Digest.atos(arr), str, 'atos(arr)');
-      same(Digest.toArray(str), arr, 'toArray(str)');
-      
-      //same(Digest.atos(str), str, 'atos(str)');
-      same(Digest.toArray(arr), arr, 'toArray(arr)');
-      
-      //same(Digest.atos(true), undefined, 'Invalid argument');
-    });
-    */
-    
-    
-    ////////////////
-    // Encoder
-    
-    /*
-    module('Encoder');
-    
-    test('Constructors', function() {
+    test( 'toBuffer', function () {
       expect(4);
       
-      same(Digest.Encoder([0x41]).array(),  [0x41], 'Digest.Encoder(Array)');
-      same(Digest.Encoder('abcd').string(), 'abcd', 'Digest.Encoder(String)');
+      var u0024 = [ 0x24 ],
+          u00A2 = [ 0xC2, 0xA2 ],
+          u20AC = [ 0xE2, 0x82, 0xAC ];
       
-      same(Digest.Encoder(Digest.Encoder('abcd')).string(), 'abcd', 'Digest.Encoder(Digest.Encoder)');
+      same( Digest.toBuffer( '\u0024' ), u0024, 'UTF-8 encode U+0024' );
+      same( Digest.toBuffer( '\u00A2' ), u00A2, 'UTF-8 encode U+00A2' );
+      same( Digest.toBuffer( '\u20AC' ), u20AC, 'UTF-8 encode U+20AC' );
       
-      var isError = is('Error', (function() {
-        try {
-          return Digest.Encoder([40, null]);
-        } catch (e) {
-          return e;
-        }
-      }()));
-      
-      ok(isError, 'Error: Invalid Array Elements');
+      same( Digest.toBuffer( u0024 ), u0024, 'Prevent re-encoding' );
     });
     
-    test('Ready', function() {
-      var latin1 = [0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff],
-          unicode = [0x24, 0xc2, 0xa2, 0xe2, 0x82, 0xac];
-      
-      same(Digest.Encoder.ready('\u0024\u00A2\u20AC'), unicode, 'Ready - String');
-      same(Digest.Encoder.ready('\u0024\u00A2\u20AC'), unicode, 'Ready - String');
-    });
     
-    test('UTF-8', function() {
-      var u0024 = [0x24],
-          u00A2 = [0xc2, 0xa2],
-          u20AC = [0xe2, 0x82, 0xac];
-      
-      expect(5);
-      
-      same(Digest.Encoder('\u0024').utf8(), u0024, 'UTF-8 encode U+0024');
-      same(Digest.Encoder('\u00A2').utf8(), u00A2, 'UTF-8 encode U+00A2');
-      same(Digest.Encoder('\u20AC').utf8(), u20AC, 'UTF-8 encode U+20AC');
-      
-      same(Digest.Encoder(Digest.Encoder('\u20AC').utf8()).utf8(),  u20AC, 'Prevent auto re-encoding UTF-8');
-      same(Digest.Encoder(Digest.Encoder('\u20AC').utf8()).trunc(), u20AC, 'Prevent auto un-encoding UTF-8');
-    });
+    module( 'Hashing' );
     
-    test('RFC 4648', function() {
-      expect(14);
-      
-      equals(Digest.Encoder('AB').string(), 'AB',       'string "AB"');
-      equals(Digest.Encoder('AB').base16(), '4142',     'base16 "AB"');
-      equals(Digest.Encoder('AB').base32(), 'IFBA====', 'base32 "AB"');
-      equals(Digest.Encoder('AB').base64(), 'QUI=',     'base64 "AB"');
-      
-      equals(Digest.Encoder('fo').string(),     'fo',     'string "fo"');
-      equals(Digest.Encoder('foobar').string(), 'foobar', 'string "foobar"');
-      
-      equals(Digest.Encoder('fo').base64(),     'Zm8=',     'base64 "fo"');
-      equals(Digest.Encoder('foobar').base64(), 'Zm9vYmFy', 'base64 "foobar"');
-      
-      equals(Digest.Encoder('fo').base32(),     'MZXQ====',         'base32 "fo"');
-      equals(Digest.Encoder('foobar').base32(), 'MZXW6YTBOI======', 'base32 "foobar"');
-      
-      equals(Digest.Encoder('fo').base32hex().toUpperCase(),     'CPNG====',         'base32hex "fo"');
-      equals(Digest.Encoder('foobar').base32hex().toUpperCase(), 'CPNMUOJ1E8======', 'base32hex "foobar"');
-      
-      equals(Digest.Encoder('fo').base16(),     '666F',         'base16 "fo"');
-      equals(Digest.Encoder('foobar').base16(), '666F6F626172', 'base16 "foobar"');
-    });
-    */
-    
-    
-    ////////////////
-    // ULong
-    
-    /*
-    module('ULong');
-    
-    test('Aliasing', function() {
-      var before = [0x12345678, 0x0],
-          after = [0x0, 0x12345678],
-          rotr = Digest.rotr;
-      
-      expect(2);
-      
-      same(Digest.rotl(before, 32), after, 'Exposed functions can access privame members.');
-      same(rotr(before, 32),        after, 'Functions continue to work as local aliases.');
-    });
-    */
-    
-    
-    ////////////////
-    // Hashing
-    
-    module('Hashing');
-    
-    asyncTest('MD4', function() {
-      setTimeout(function() {
-        expect(7);
+    asyncTest( 'MD4', function () {
+      setTimeout( function () {
+        expect( 7 );
         
-        equals(Digest.md4(texts[1]).hex(), '31d6cfe0d16ae931b73c59d7e0c089c0', 'MD4 - ""');
-        equals(Digest.md4(texts[2]).hex(), 'bde52cb31de33e46245e05fbdbd6fb24', 'MD4 - "a"');
-        equals(Digest.md4(texts[3]).hex(), 'a448017aaf21d8525fc10ae87aa6729d', 'MD4 - "abc"');
-        equals(Digest.md4(texts[4]).hex(), 'd9130a8164549fe818874806e1c7014b', 'MD4 - "message digest"');
-        equals(Digest.md4(texts[5]).hex(), 'd79e1c308aa5bbcdeea8ed63df412da9', 'MD4 - "a..z"');
-        equals(Digest.md4(texts[8]).hex(), '043f8582f241db351ce627e153e7f0e4', 'MD4 - "A..Za..z0..9"');
-        equals(Digest.md4(texts[9]).hex(), 'e33b4ddc9c38f2199c3e7b164fcc0536', 'MD4 - 8 times "1234567890"');
+        equals( Digest.md4( text_none ).hex(), '31d6cfe0d16ae931b73c59d7e0c089c0', '""' );
+        equals( Digest.md4( text_a    ).hex(), 'bde52cb31de33e46245e05fbdbd6fb24', '"a"' );
+        equals( Digest.md4( text_abc  ).hex(), 'a448017aaf21d8525fc10ae87aa6729d', '"abc"' );
+        equals( Digest.md4( text_md   ).hex(), 'd9130a8164549fe818874806e1c7014b', '"message digest"' );
+        equals( Digest.md4( text_a2z  ).hex(), 'd79e1c308aa5bbcdeea8ed63df412da9', '"a..z"' );
+        equals( Digest.md4( text_Aa0  ).hex(), '043f8582f241db351ce627e153e7f0e4', '"A..Za..z0..9"' );
+        equals( Digest.md4( text_8x10 ).hex(), 'e33b4ddc9c38f2199c3e7b164fcc0536', '8x "1234567890"' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    
-    asyncTest('MD5 / HMAC-MD5', function() {
-      setTimeout(function() {
-        expect(15);
+    asyncTest( 'MD5 / HMAC-MD5', function () {
+      setTimeout( function () {
+        expect( 15 );
         
-        equals(Digest.md5(texts[1]).hex(), 'd41d8cd98f00b204e9800998ecf8427e', 'MD5 - ""');
-        equals(Digest.md5(texts[2]).hex(), '0cc175b9c0f1b6a831c399e269772661', 'MD5 - "a"');
-        equals(Digest.md5(texts[3]).hex(), '900150983cd24fb0d6963f7d28e17f72', 'MD5 - "abc"');
-        equals(Digest.md5(texts[4]).hex(), 'f96b697d7cb7938d525a2f31aaf161d0', 'MD5 - "message digest"');
-        equals(Digest.md5(texts[5]).hex(), 'c3fcd3d76192e4007dfb496cca67e13b', 'MD5 - "a..z"');
-        equals(Digest.md5(texts[8]).hex(), 'd174ab98d277d9f5a5611c2c9f419d9f', 'MD5 - "A..Za..z0..9"');
-        equals(Digest.md5(texts[9]).hex(), '57edf4a22be3c955ac49da2e2107b67a', 'MD5 - 8 times "1234567890"');
+        equals( Digest.md5( text_none ).hex(), 'd41d8cd98f00b204e9800998ecf8427e', '""' );
+        equals( Digest.md5( text_a    ).hex(), '0cc175b9c0f1b6a831c399e269772661', '"a"' );
+        equals( Digest.md5( text_abc  ).hex(), '900150983cd24fb0d6963f7d28e17f72', '"abc"' );
+        equals( Digest.md5( text_md   ).hex(), 'f96b697d7cb7938d525a2f31aaf161d0', '"message digest"' );
+        equals( Digest.md5( text_a2z  ).hex(), 'c3fcd3d76192e4007dfb496cca67e13b', '"a..z"' );
+        equals( Digest.md5( text_Aa0  ).hex(), 'd174ab98d277d9f5a5611c2c9f419d9f', '"A..Za..z0..9"' );
+        equals( Digest.md5( text_8x10 ).hex(), '57edf4a22be3c955ac49da2e2107b67a', '8x "1234567890"' );
         
-        equals(Digest.md5(hmac[1].text1, hmac[1].key1).hex(), '9294727a3638bb1c13f48ef8158bfc9d', 'HMAC-MD5 - RFC 2202 Test 1');
-        equals(Digest.md5(hmac[2].text1, hmac[2].key1).hex(), '750c783e6ab0b503eaa86e310a5db738', 'HMAC-MD5 - RFC 2202 Test 2');
-        equals(Digest.md5(hmac[3].text1, hmac[3].key1).hex(), '56be34521d144c88dbb8c733f0e8b3f6', 'HMAC-MD5 - RFC 2202 Test 3');
-        equals(Digest.md5(hmac[4].text1, hmac[4].key1).hex(), '697eaf0aca3a3aea3a75164746ffaa79', 'HMAC-MD5 - RFC 2202 Test 4');
-        equals(Digest.md5(hmac[5].text1, hmac[5].key1).hex(), '56461ef2342edc00f9bab995690efd4c', 'HMAC-MD5 - RFC 2202 Test 5');
-        equals(Digest.md5(96, hmac[5].text1, hmac[5].key1).hex(), '56461ef2342edc00f9bab995', 'HMAC-MD5 - RFC 2202 Test 5 (Trunc)');
-        equals(Digest.md5(hmac[6].text1, hmac[6].key1).hex(), '6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd', 'HMAC-MD5 - RFC 2202 Test 6');
-        equals(Digest.md5(hmac[7].text1, hmac[7].key1).hex(), '6f630fad67cda0ee1fb1f562db3aa53e', 'HMAC-MD5 - RFC 2202 Test 7');
+        equals( Digest.md5( text_hi,   key_0b16 ).hex(), '9294727a3638bb1c13f48ef8158bfc9d', 'HMAC - RFC 2202 - Test 1' );
+        equals( Digest.md5( text_what, key_jefe ).hex(), '750c783e6ab0b503eaa86e310a5db738', 'HMAC - RFC 2202 - Test 2' );
+        equals( Digest.md5( text_dd50, key_aa16 ).hex(), '56be34521d144c88dbb8c733f0e8b3f6', 'HMAC - RFC 2202 - Test 3' );
+        equals( Digest.md5( text_cd50, key_0119 ).hex(), '697eaf0aca3a3aea3a75164746ffaa79', 'HMAC - RFC 2202 - Test 4' );
+        equals( Digest.md5( text_trun, key_0c16 ).hex(), '56461ef2342edc00f9bab995690efd4c', 'HMAC - RFC 2202 - Test 5' );
+        equals( Digest.md5( 96, text_trun, key_0c16 ).hex(), '56461ef2342edc00f9bab995',     'HMAC - RFC 2202 - Test 5 (Trunc)' );
+        equals( Digest.md5( text_lngK, key_aa80 ).hex(), '6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd', 'HMAC - RFC 2202 - Test 6' );
+        equals( Digest.md5( text_lng1, key_aa80 ).hex(), '6f630fad67cda0ee1fb1f562db3aa53e', 'HMAC - RFC 2202 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    
-    /*
-    asyncTest('MD6-PAR / MD6-SEQ', function() {
-      setTimeout(function() {
-        expect(26);
+    asyncTest( 'RIPEMD-128 / HMAC-RIPEMD-128', function () {
+      setTimeout( function () {
+        expect( 16 );
         
-        equals('6b7f33821a2c060ecdd81aefddea2fd3c4720270e18654f4cb08ece49ccb469f8beeee7c831206bd577f9f2630d9177979203a9489e47e04df4e6deaa0f8e0c0', Digest.md6par(512, '').hex(), 'MD6-PAR-512 - ""');
-        equals('823771f69337c65fe23ead5e77856801db2a597efde7e8a12c5e45f3b72c1f304c68fb4222782d8b7563f47fb2c3c7da984942b1d8bf11d8336cd9b7d95b5ead', Digest.md6seq(512, '').hex(), 'MD6-SEQ-512 - ""');
+        var key = range( 0x00, 0xff, 0x11 );
         
-        equals('7538e7552a2e9cc94be251f73ce9cf67d4739b4b3f114e483ea38ab0', Digest.md6par(224, md6_400).hex(), 'MD6-PAR-224 - One Block');
-        equals('b81b7d4d84c3df8104b447445e6d87693f62fe91380b01ecc4bb0af4', Digest.md6seq(224, md6_400).hex(), 'MD6-SEQ-224 - One Block (L0)');
-        equals('9ca6f72f355e9f1cc818eb9fe40f801bd43be072c17aac290a58b96c', Digest.md6par(224, md6_400, '111222333').hex(), 'MD6-PAR-224 - One Block - Key 9');
+        equals( Digest.ripemd128( text_none ).hex(), 'cdf26213a150dc3ecb610f18f6b38b46', '""' );
+        equals( Digest.ripemd128( text_a    ).hex(), '86be7afa339d0fc7cfc785e72f578d33', '"a"' );
+        equals( Digest.ripemd128( text_abc  ).hex(), 'c14a12199c66e4ba84636b0f69144c77', '"abc"' );
+        equals( Digest.ripemd128( text_md   ).hex(), '9e327b3d6e523062afc1132d7df9d1b8', '"message digest"' );
+        equals( Digest.ripemd128( text_a2z  ).hex(), 'fd2aa607f71dc8f510714922b371834e', '"a..z"' );
+        equals( Digest.ripemd128( text_a4s  ).hex(), 'a1aa0689d0fafa2ddc22e88b49133a06', '"abcd..nopq"' );
+        equals( Digest.ripemd128( text_Aa0  ).hex(), 'd1e959eb179c911faea4624c60c5c702', '"A..Za..z0..9"' );
+        equals( Digest.ripemd128( text_8x10 ).hex(), '3f45ef194732c2dbb2c4a2c769795fa3', '8x "1234567890"' );
         
-        equals('43113e9a22a6f7a264b500366a7dc18c28cec099a85a269db758754aedd315df', Digest.md6par(256, md6_400).hex(), 'MD6-PAR-256 - One Block');
-        equals('ae577786310dd352636350ea439220f32e73ec538a49598e3966b1943282ba90', Digest.md6seq(256, md6_400).hex(), 'MD6-SEQ-256 - One Block (L0)');
-        equals('fb75daf08d970c19f49b34ec768fea1a74583a5b1d1df2149a61cb36e120d197', Digest.md6par(256, md6_400, '111222333').hex(), 'MD6-PAR-256 - One Block - Key 9');
-        
-        equals('abbdeaaa782c5897ee5a364def19b33037bfe34673b469c4cce6d92b4912d5763b24eda6c9cd74f979a3620c13dea9f7', Digest.md6par(384, md6_400).hex(), 'MD6-PAR-384 - One Block');
-        equals('de4f6f3715d87cefbb339eeae677a8594c7949a61ecf694dc12fd3243b42517a356b60837a2bffbd39a18401cb74db02', Digest.md6seq(384, md6_400).hex(), 'MD6-SEQ-384 - One Block (L0)');
-        equals('a87af8bde95e51d5a0c90a155a5ac742aae0e41215597c5395b7afe49e6d7fcbffe0baadcaeb28baa01b3e4c48086bd5', Digest.md6par(384, md6_400, '111222333').hex(), 'MD6-PAR-384 - One Block - Key 9');
-        
-        equals('2a7c10dba7609e6f8afbba335d267290ba7d1cab9e220b98cd3e41a6b24950371d5bd44966b6ae8b0fd84e7aad0f685f254690605fae5674384baef96aa4e556', Digest.md6par(512, md6_400).hex(), 'MD6-PAR-512 - One Block');
-        equals('ffba9a8acf4a94d0ec510d9c860797b64f9bc4e5356ee9dae0480021ce145a4c928c7d0675b42af700168e8829d14aacc01d26e92352e37d4da3c90ec0e2aabf', Digest.md6seq(512, md6_400).hex(), 'MD6-SEQ-512 - One Block (L0)');
-        equals('ae845cb6bc28d5fbfacad17fa491ab1b7d4f0db38bb7b79deabf44c7cf6501e69d4dd04125b0e59514a46fbb45d2b8976c8ac09bd42424410cbc701ee3cee075', Digest.md6par(512, md6_400, '111222333').hex(), 'MD6-PAR-512 - One Block - Key 9');
-        
-        equals('c5d2bcaa29dab0d486f96506a0bc5b9f22ff21a4b67a7f82f9a53095', Digest.md6par(224, md6_800).hex(), 'MD6-PAR-224 - Two Block');
-        equals('be1fe052a08d751bce583d363d09ced8446f3786a6759d6d1e3e5610', Digest.md6seq(224, md6_600).hex(), 'MD6-SEQ-224 - Two Block (L0)');
-        equals('dee962bf71ad8fdf3af0ae4163665ba928ffa9ccaf89a22bf84d22ca', Digest.md6par(224, md6_800, '111222333').hex(), 'MD6-PAR-224 - Two Block - Key 9');
-        
-        equals('1a6d0518f6356ad35ac36c5a0b6639eb371c03998d29abe1e7f75097e8ebe1bd', Digest.md6par(256, md6_800).hex(), 'MD6-PAR-256 - Two Block');
-        equals('e9eaf4c30140a4e7649a34b6d4976a930bf5681ea8a7e1a2471a1035d8eebb95', Digest.md6seq(256, md6_600).hex(), 'MD6-SEQ-256 - Two Block (L0)');
-        equals('d381491d02791a73672c7f60030cde7f872a72ba07e4da9bb75006bce5ca6beb', Digest.md6par(256, md6_800, '111222333').hex(), 'MD6-PAR-256 - Two Block - Key 9');
-        
-        equals('614cec06b9a0332f8c14d7d4f29934e4f39b91046c1c2cd1fa9f84fc3ed2e89efb583003b2fc9e996cb690a8be68dbf2', Digest.md6par(384, md6_800).hex(), 'MD6-PAR-384 - Two Block');
-        equals('8afa1bdeef1e99f3b9eaa6cb33bc1287446e1ecd0e5e06baef6efdd3e24c485dc8b09784b1255d3ff9a846f28dd9dfe8', Digest.md6seq(384, md6_600).hex(), 'MD6-SEQ-384 - Two Block (L0)');
-        equals('53a14a5463bc57e9782e4d8b67ca3bcb996f4bd066a9115aa3317226a36564d63ed0db4b9fcef1af85f14423ae7bf056', Digest.md6par(384, md6_800, '111222333').hex(), 'MD6-PAR-384 - Two Block - Key 9');
-        
-        equals('240b4ce4ed7252f62e58ec1a2f0c9a07851f6251f55f4e510e200d8a716753e2a75e34c409566cedc0907ab9680bdeed627e542184d5dc419adfa3b8f2358657', Digest.md6par(512, md6_800).hex(), 'MD6-PAR-512 - Two Block');
-        equals('753c2fd701db4a9d4244ffd7e873858c10b9820193ac7e34202b3c94ca8b809e8fca74cd7eb46eebbd15a204bd236113c700a71cb582e06fab3fa321ad2cffcd', Digest.md6seq(512, md6_600).hex(), 'MD6-SEQ-512 - Two Block (L0)');
-        equals('48e8dbfee51e36b0c549925ed9740df0d4e0aa9d46c5ec5bd7749a8c023b91582bb3fa07b311a4d3e774ebf5b5beffe806eea425c37af320ef06ff241bcb32e4', Digest.md6par(512, md6_800, '111222333').hex(), 'MD6-PAR-512 - Two Block - Key 9');
+        equals( Digest.ripemd128( text_none, key ).hex(), 'ad9db2c1e22af9ab5ca9dbe5a86f67dc', 'HMAC ""' );
+        equals( Digest.ripemd128( text_a,    key ).hex(), '3bf448c762de00bcfa0310b11c0bde4c', 'HMAC "a"' );
+        equals( Digest.ripemd128( text_abc,  key ).hex(), 'f34ec0945f02b70b8603f89e1ce4c78c', 'HMAC "abc"' );
+        equals( Digest.ripemd128( text_md,   key ).hex(), 'e8503a8aec2289d82aa0d8d445a06bdd', 'HMAC "message digest"' );
+        equals( Digest.ripemd128( text_a2z,  key ).hex(), 'ee880b735ce3126065de1699cc136199', 'HMAC "a..z"' );
+        equals( Digest.ripemd128( text_a4s,  key ).hex(), '794daf2e3bdeea2538638a5ced154434', 'HMAC "abcd..nopq"' );
+        equals( Digest.ripemd128( text_Aa0,  key ).hex(), '3a06eef165b23625247800be23e232b6', 'HMAC "A..Za..z0..9"' );
+        equals( Digest.ripemd128( text_8x10, key ).hex(), '9a4f0159c0952da43a8d466d46b0af58', 'HMAC 8x "1234567890"' );
         
         start();
-      }, 10);
+      }, 10 );
     });
-    */
     
-    
-    asyncTest('RIPEMD-128 / HMAC-RIPEMD-128', function() {
-      var key = Digest.toArray('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff');
-      
-      setTimeout(function() {
-        expect(16);
+    asyncTest( 'RIPEMD-160 / HMAC-RIPEMD-160', function () {
+      setTimeout( function () {
+        expect( 16 );
         
-        equals(Digest.ripemd128(texts[1]).hex(), 'cdf26213a150dc3ecb610f18f6b38b46', 'RIPEMD-128 - ""');
-        equals(Digest.ripemd128(texts[2]).hex(), '86be7afa339d0fc7cfc785e72f578d33', 'RIPEMD-128 - "a"');
-        equals(Digest.ripemd128(texts[3]).hex(), 'c14a12199c66e4ba84636b0f69144c77', 'RIPEMD-128 - "abc"');
-        equals(Digest.ripemd128(texts[4]).hex(), '9e327b3d6e523062afc1132d7df9d1b8', 'RIPEMD-128 - "message digest"');
-        equals(Digest.ripemd128(texts[5]).hex(), 'fd2aa607f71dc8f510714922b371834e', 'RIPEMD-128 - "a..z"');
-        equals(Digest.ripemd128(texts[6]).hex(), 'a1aa0689d0fafa2ddc22e88b49133a06', 'RIPEMD-128 - "abcdbcde...nopq"');
-        equals(Digest.ripemd128(texts[8]).hex(), 'd1e959eb179c911faea4624c60c5c702', 'RIPEMD-128 - "A..Za..z0..9"');
-        equals(Digest.ripemd128(texts[9]).hex(), '3f45ef194732c2dbb2c4a2c769795fa3', 'RIPEMD-128 - 8 times "1234567890"');
+        var key = range( 0x00, 0xff, 0x11 ).concat( [ 0x01, 0x23, 0x45, 0x67 ] );
         
-        equals(Digest.ripemd128(texts[1], key).hex(), 'ad9db2c1e22af9ab5ca9dbe5a86f67dc', 'HMAC-RIPEMD-128 - ""');
-        equals(Digest.ripemd128(texts[2], key).hex(), '3bf448c762de00bcfa0310b11c0bde4c', 'HMAC-RIPEMD-128 - "a"');
-        equals(Digest.ripemd128(texts[3], key).hex(), 'f34ec0945f02b70b8603f89e1ce4c78c', 'HMAC-RIPEMD-128 - "abc"');
-        equals(Digest.ripemd128(texts[4], key).hex(), 'e8503a8aec2289d82aa0d8d445a06bdd', 'HMAC-RIPEMD-128 - "message digest"');
-        equals(Digest.ripemd128(texts[5], key).hex(), 'ee880b735ce3126065de1699cc136199', 'HMAC-RIPEMD-128 - "a..z"');
-        equals(Digest.ripemd128(texts[6], key).hex(), '794daf2e3bdeea2538638a5ced154434', 'HMAC-RIPEMD-128 - "abcdbcde...nopq"');
-        equals(Digest.ripemd128(texts[8], key).hex(), '3a06eef165b23625247800be23e232b6', 'HMAC-RIPEMD-128 - "A..Za..z0..9"');
-        equals(Digest.ripemd128(texts[9], key).hex(), '9a4f0159c0952da43a8d466d46b0af58', 'HMAC-RIPEMD-128 - 8 times "1234567890"');
+        equals( Digest.ripemd160( text_none ).hex(), '9c1185a5c5e9fc54612808977ee8f548b2258d31', '""' );
+        equals( Digest.ripemd160( text_a    ).hex(), '0bdc9d2d256b3ee9daae347be6f4dc835a467ffe', '"a"' );
+        equals( Digest.ripemd160( text_abc  ).hex(), '8eb208f7e05d987a9b044a8e98c6b087f15a0bfc', '"abc"' );
+        equals( Digest.ripemd160( text_md   ).hex(), '5d0689ef49d2fae572b881b123a85ffa21595f36', '"message digest"' );
+        equals( Digest.ripemd160( text_a2z  ).hex(), 'f71c27109c692c1b56bbdceb5b9d2865b3708dbc', '"a..z"' );
+        equals( Digest.ripemd160( text_a4s  ).hex(), '12a053384a9c0c88e405a06c27dcf49ada62eb2b', '"abcd..nopq"' );
+        equals( Digest.ripemd160( text_Aa0  ).hex(), 'b0e20b6e3116640286ed3a87a5713079b21f5189', '"A..Za..z0..9"' );
+        equals( Digest.ripemd160( text_8x10 ).hex(), '9b752e45573d4b39f4dbd3323cab82bf63326bfb', '8x "1234567890"' );
+        
+        equals( Digest.ripemd160( text_none, key ).hex(), 'cf387677bfda8483e63b57e06c3b5ecd8b7fc055', 'HMAC ""' );
+        equals( Digest.ripemd160( text_a,    key ).hex(), '0d351d71b78e36dbb7391c810a0d2b6240ddbafc', 'HMAC "a"' );
+        equals( Digest.ripemd160( text_abc,  key ).hex(), 'f7ef288cb1bbcc6160d76507e0a3bbf712fb67d6', 'HMAC "abc"' );
+        equals( Digest.ripemd160( text_md,   key ).hex(), 'f83662cc8d339c227e600fcd636c57d2571b1c34', 'HMAC "message digest"' );
+        equals( Digest.ripemd160( text_a2z,  key ).hex(), '843d1c4eb880ac8ac0c9c95696507957d0155ddb', 'HMAC "a..z"' );
+        equals( Digest.ripemd160( text_a4s,  key ).hex(), '60f5ef198a2dd5745545c1f0c47aa3fb5776f881', 'HMAC "abcd..nopq"' );
+        equals( Digest.ripemd160( text_Aa0,  key ).hex(), 'e49c136a9e5627e0681b808a3b97e6a6e661ae79', 'HMAC "A..Za..z0..9"' );
+        equals( Digest.ripemd160( text_8x10, key ).hex(), '31be3cc98cee37b79b0619e3e1c2be4f1aa56e6c', 'HMAC 8x "1234567890"' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    asyncTest('RIPEMD-160 / HMAC-RIPEMD-160', function() {
-      var key = Digest.toArray('\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff\x01\x23\x45\x67');
-      
-      setTimeout(function() {
-        expect(16);
+    asyncTest( 'SHA-1 / HMAC-SHA-1', function () {
+      setTimeout( function () {
+        expect( 11 );
         
-        equals(Digest.ripemd160(texts[1]).hex(), '9c1185a5c5e9fc54612808977ee8f548b2258d31', 'RIPEMD-160 - ""');
-        equals(Digest.ripemd160(texts[2]).hex(), '0bdc9d2d256b3ee9daae347be6f4dc835a467ffe', 'RIPEMD-160 - "a"');
-        equals(Digest.ripemd160(texts[3]).hex(), '8eb208f7e05d987a9b044a8e98c6b087f15a0bfc', 'RIPEMD-160 - "abc"');
-        equals(Digest.ripemd160(texts[4]).hex(), '5d0689ef49d2fae572b881b123a85ffa21595f36', 'RIPEMD-160 - "message digest"');
-        equals(Digest.ripemd160(texts[5]).hex(), 'f71c27109c692c1b56bbdceb5b9d2865b3708dbc', 'RIPEMD-160 - "a..z"');
-        equals(Digest.ripemd160(texts[6]).hex(), '12a053384a9c0c88e405a06c27dcf49ada62eb2b', 'RIPEMD-160 - "abcdbcde...nopq"');
-        equals(Digest.ripemd160(texts[8]).hex(), 'b0e20b6e3116640286ed3a87a5713079b21f5189', 'RIPEMD-160 - "A..Za..z0..9"');
-        equals(Digest.ripemd160(texts[9]).hex(), '9b752e45573d4b39f4dbd3323cab82bf63326bfb', 'RIPEMD-160 - 8 times "1234567890"');
+        equals( Digest.sha1( text_none ).hex(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709', '""' );
+        equals( Digest.sha1( text_abc  ).hex(), 'a9993e364706816aba3e25717850c26c9cd0d89d', '"abc"' );
+        equals( Digest.sha1( text_a4s  ).hex(), '84983e441c3bd26ebaae4aa1f95129e5e54670f1', '"abcd..nopq"' );
         
-        equals(Digest.ripemd160(texts[1], key).hex(), 'cf387677bfda8483e63b57e06c3b5ecd8b7fc055', 'HMAC-RIPEMD-160 - ""');
-        equals(Digest.ripemd160(texts[2], key).hex(), '0d351d71b78e36dbb7391c810a0d2b6240ddbafc', 'HMAC-RIPEMD-160 - "a"');
-        equals(Digest.ripemd160(texts[3], key).hex(), 'f7ef288cb1bbcc6160d76507e0a3bbf712fb67d6', 'HMAC-RIPEMD-160 - "abc"');
-        equals(Digest.ripemd160(texts[4], key).hex(), 'f83662cc8d339c227e600fcd636c57d2571b1c34', 'HMAC-RIPEMD-160 - "message digest"');
-        equals(Digest.ripemd160(texts[5], key).hex(), '843d1c4eb880ac8ac0c9c95696507957d0155ddb', 'HMAC-RIPEMD-160 - "a..z"');
-        equals(Digest.ripemd160(texts[6], key).hex(), '60f5ef198a2dd5745545c1f0c47aa3fb5776f881', 'HMAC-RIPEMD-160 - "abcdbcde...nopq"');
-        equals(Digest.ripemd160(texts[8], key).hex(), 'e49c136a9e5627e0681b808a3b97e6a6e661ae79', 'HMAC-RIPEMD-160 - "A..Za..z0..9"');
-        equals(Digest.ripemd160(texts[9], key).hex(), '31be3cc98cee37b79b0619e3e1c2be4f1aa56e6c', 'HMAC-RIPEMD-160 - 8 times "1234567890"');
+        equals( Digest.sha1( text_hi,   key_0b20 ).hex(), 'b617318655057264e28bc0b6fb378c8ef146be00', 'HMAC - RFC 2202 - Test 1' );
+        equals( Digest.sha1( text_what, key_jefe ).hex(), 'effcdf6ae5eb2fa2d27416d5f184df9c259a7c79', 'HMAC - RFC 2202 - Test 2' );
+        equals( Digest.sha1( text_dd50, key_aa20 ).hex(), '125d7342b9ac11cd91a39af48aa17b4f63f175d3', 'HMAC - RFC 2202 - Test 3' );
+        equals( Digest.sha1( text_cd50, key_0119 ).hex(), '4c9007f4026250c6bc8414f9bf50c86c2d7235da', 'HMAC - RFC 2202 - Test 4' );
+        equals( Digest.sha1( text_trun, key_0c20 ).hex(), '4c1a03424b55e07fe7f27be1d58bb9324a9a5a04', 'HMAC - RFC 2202 - Test 5' );
+        equals( Digest.sha1( 96, text_trun, key_0c20 ).hex(), '4c1a03424b55e07fe7f27be1',             'HMAC - RFC 2202 - Test 5 (Trunc)' );
+        equals( Digest.sha1( text_lngK, key_aa80 ).hex(), 'aa4ae5e15272d00e95705637ce8a3b55ed402112', 'HMAC - RFC 2202 - Test 6' );
+        equals( Digest.sha1( text_lng1, key_aa80 ).hex(), 'e8e99d0f45237d786d6bbaa7965c7808bbff1a91', 'HMAC - RFC 2202 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    
-    asyncTest('SHA-1 / HMAC-SHA-1', function() {
-      setTimeout(function() {
-        expect(11);
+    asyncTest( 'SHA-224 / HMAC-SHA-224', function () {
+      setTimeout( function () {
+        expect( 10 );
         
-        equals(Digest.sha1(texts[1]).hex(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709', 'SHA-1 - ""');
-        equals(Digest.sha1(texts[3]).hex(), 'a9993e364706816aba3e25717850c26c9cd0d89d', 'SHA-1 - "abc"');
-        equals(Digest.sha1(texts[6]).hex(), '84983e441c3bd26ebaae4aa1f95129e5e54670f1', 'SHA-1 - "abcd..nopq"');
+        equals( Digest.sha224( text_none ).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', '""' );
+        equals( Digest.sha224( text_abc  ).hex(), '23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', '"abc"' );
+        equals( Digest.sha224( text_a4s  ).hex(), '75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', '"abcd..nopq"' );
         
-        equals(Digest.sha1(hmac[1].text1, hmac[1].key2).hex(), 'b617318655057264e28bc0b6fb378c8ef146be00', 'HMAC-SHA-1 - RFC 2202 Test 1');
-        equals(Digest.sha1(hmac[2].text1, hmac[2].key1).hex(), 'effcdf6ae5eb2fa2d27416d5f184df9c259a7c79', 'HMAC-SHA-1 - RFC 2202 Test 2');
-        equals(Digest.sha1(hmac[3].text1, hmac[3].key2).hex(), '125d7342b9ac11cd91a39af48aa17b4f63f175d3', 'HMAC-SHA-1 - RFC 2202 Test 3');
-        equals(Digest.sha1(hmac[4].text1, hmac[4].key1).hex(), '4c9007f4026250c6bc8414f9bf50c86c2d7235da', 'HMAC-SHA-1 - RFC 2202 Test 4');
-        equals(Digest.sha1(hmac[5].text1, hmac[5].key2).hex(), '4c1a03424b55e07fe7f27be1d58bb9324a9a5a04', 'HMAC-SHA-1 - RFC 2202 Test 5');
-        equals(Digest.sha1(96, hmac[5].text1, hmac[5].key2).hex(), '4c1a03424b55e07fe7f27be1', 'HMAC-SHA-1 - RFC 2202 Test 5 (Trunc)');
-        equals(Digest.sha1(hmac[6].text1, hmac[6].key1).hex(), 'aa4ae5e15272d00e95705637ce8a3b55ed402112', 'HMAC-SHA-1 - RFC 2202 Test 6');
-        equals(Digest.sha1(hmac[7].text1, hmac[7].key1).hex(), 'e8e99d0f45237d786d6bbaa7965c7808bbff1a91', 'HMAC-SHA-1 - RFC 2202 Test 7');
+        equals( Digest.sha224( text_hi,   key_0b20 ).hex(), '896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22',  'HMAC - RFC 4231 - Test 1' );
+        equals( Digest.sha224( text_what, key_jefe ).hex(), 'a30e01098bc6dbbf45690f3a7e9e6d0f8bbea2a39e6148008fd05e44',  'HMAC - RFC 4231 - Test 2' );
+        equals( Digest.sha224( text_dd50, key_aa20 ).hex(), '7fb3cb3588c6c1f6ffa9694d7d6ad2649365b0c1f65d69d1ec8333ea',  'HMAC - RFC 4231 - Test 3' );
+        equals( Digest.sha224( text_cd50, key_0119 ).hex(), '6c11506874013cac6a2abc1bb382627cec6a90d86efc012de7afec5a',  'HMAC - RFC 4231 - Test 4' );
+        equals( Digest.sha224( 128, text_trun, key_0c20 ).hex(), '0e2aea68a90c8d37c988bcdb9fca6fa8',                     'HMAC - RFC 4231 - Test 5 (Trunc)' );
+        equals( Digest.sha224( text_lngK, key_aa131 ).hex(), '95e9a0db962095adaebe9b2d6f0dbce2d499f112f2d2b7273fa6870e', 'HMAC - RFC 4231 - Test 6' );
+        equals( Digest.sha224( text_lng2, key_aa131 ).hex(), '3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1', 'HMAC - RFC 4231 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    
-    asyncTest('SHA-224 / HMAC-SHA-224 (32-bit)', function() {
-      setTimeout(function() {
-        expect(10);
+    asyncTest( 'SHA-256 / HMAC-SHA-256', function () {
+      setTimeout( function () {
+        expect( 10 );
         
-        equals(Digest.sha224(texts[1]).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', 'SHA-224 - ""');
-        equals(Digest.sha224(texts[3]).hex(), '23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7', 'SHA-224 - "abc"');
-        equals(Digest.sha224(texts[6]).hex(), '75388b16512776cc5dba5da1fd890150b0c6455cb4f58b1952522525', 'SHA-224 - "abcdbcde..nopq"');
+        equals( Digest.sha256( text_none ).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '""' );
+        equals( Digest.sha256( text_abc  ).hex(), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', '"abc"' );
+        equals( Digest.sha256( text_a4s  ).hex(), '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', '"abcd..nopq"' );
         
-        equals(Digest.sha224(hmac[1].text1, hmac[1].key2).hex(), '896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22', 'HMAC-SHA-224 - RFC 4231 Test 1');
-        equals(Digest.sha224(hmac[2].text1, hmac[2].key1).hex(), 'a30e01098bc6dbbf45690f3a7e9e6d0f8bbea2a39e6148008fd05e44', 'HMAC-SHA-224 - RFC 4231 Test 2');
-        equals(Digest.sha224(hmac[3].text1, hmac[3].key2).hex(), '7fb3cb3588c6c1f6ffa9694d7d6ad2649365b0c1f65d69d1ec8333ea', 'HMAC-SHA-224 - RFC 4231 Test 3');
-        equals(Digest.sha224(hmac[4].text1, hmac[4].key1).hex(), '6c11506874013cac6a2abc1bb382627cec6a90d86efc012de7afec5a', 'HMAC-SHA-224 - RFC 4231 Test 4');
-        equals(Digest.sha224(128, hmac[5].text1, hmac[5].key2).hex(), '0e2aea68a90c8d37c988bcdb9fca6fa8', 'HMAC-SHA-224 - RFC 4231 Test 5 (Trunc)');
-        equals(Digest.sha224(hmac[6].text1, hmac[6].key2).hex(), '95e9a0db962095adaebe9b2d6f0dbce2d499f112f2d2b7273fa6870e', 'HMAC-SHA-224 - RFC 4231 Test 6');
-        equals(Digest.sha224(hmac[7].text2, hmac[7].key2).hex(), '3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1', 'HMAC-SHA-224 - RFC 4231 Test 7');
+        equals( Digest.sha256( text_hi,   key_0b20 ).hex(), 'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7',  'HMAC - RFC 4231 - Test 1' );
+        equals( Digest.sha256( text_what, key_jefe ).hex(), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843',  'HMAC - RFC 4231 - Test 2' );
+        equals( Digest.sha256( text_dd50, key_aa20 ).hex(), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe',  'HMAC - RFC 4231 - Test 3' );
+        equals( Digest.sha256( text_cd50, key_0119 ).hex(), '82558a389a443c0ea4cc819899f2083a85f0faa3e578f8077a2e3ff46729665b',  'HMAC - RFC 4231 - Test 4' );
+        equals( Digest.sha256( 128, text_trun, key_0c20 ).hex(), 'a3b6167473100ee06e0c796c2955552b',                             'HMAC - RFC 4231 - Test 5 (Trunc)' );
+        equals( Digest.sha256( text_lngK, key_aa131 ).hex(), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', 'HMAC - RFC 4231 - Test 6' );
+        equals( Digest.sha256( text_lng2, key_aa131 ).hex(), '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', 'HMAC - RFC 4231 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    asyncTest('SHA-256 / HMAC-SHA-256 (32-bit)', function() {
-      setTimeout(function() {
-        expect(10);
+    asyncTest( 'SHA-384 / HMAC-SHA-384', function () {
+      setTimeout( function () {
+        expect( 10 );
         
-        equals(Digest.sha256(texts[1]).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'SHA-256 - ""');
-        equals(Digest.sha256(texts[3]).hex(), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 'SHA-256 - "abc"');
-        equals(Digest.sha256(texts[6]).hex(), '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1', 'SHA-256 - "abcdbcde..nopq"');
+        equals( Digest.sha384( text_none ).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', '""' );
+        equals( Digest.sha384( text_abc  ).hex(), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', '"abc"' );
+        equals( Digest.sha384( text_a8s  ).hex(), '09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039', '"abcdefgh..nopqrstu"' );
         
-        equals(Digest.sha256(hmac[1].text1, hmac[1].key2).hex(), 'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7', 'HMAC-SHA-256 - RFC 4231 Test 1');
-        equals(Digest.sha256(hmac[2].text1, hmac[2].key1).hex(), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843', 'HMAC-SHA-256 - RFC 4231 Test 2');
-        equals(Digest.sha256(hmac[3].text1, hmac[3].key2).hex(), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe', 'HMAC-SHA-256 - RFC 4231 Test 3');
-        equals(Digest.sha256(hmac[4].text1, hmac[4].key1).hex(), '82558a389a443c0ea4cc819899f2083a85f0faa3e578f8077a2e3ff46729665b', 'HMAC-SHA-256 - RFC 4231 Test 4');
-        equals(Digest.sha256(128, hmac[5].text1, hmac[5].key2).hex(), 'a3b6167473100ee06e0c796c2955552b', 'HMAC-SHA-256 - RFC 4231 Test 5 (Trunc)');
-        equals(Digest.sha256(hmac[6].text1, hmac[6].key2).hex(), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', 'HMAC-SHA-256 - RFC 4231 Test 6');
-        equals(Digest.sha256(hmac[7].text2, hmac[7].key2).hex(), '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', 'HMAC-SHA-256 - RFC 4231 Test 7');
+        equals( Digest.sha384( text_hi,   key_0b20 ).hex(), 'afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6',  'HMAC - RFC 4231 - Test 1' );
+        equals( Digest.sha384( text_what, key_jefe ).hex(), 'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649',  'HMAC - RFC 4231 - Test 2' );
+        equals( Digest.sha384( text_dd50, key_aa20 ).hex(), '88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27',  'HMAC - RFC 4231 - Test 3' );
+        equals( Digest.sha384( text_cd50, key_0119 ).hex(), '3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb',  'HMAC - RFC 4231 - Test 4' );
+        equals( Digest.sha384( 128, text_trun, key_0c20 ).hex(), '3abf34c3503b2a23a46efc619baef897',                                                             'HMAC - RFC 4231 - Test 5 (Trunc)' );
+        equals( Digest.sha384( text_lngK, key_aa131 ).hex(), '4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952', 'HMAC - RFC 4231 - Test 6' );
+        equals( Digest.sha384( text_lng2, key_aa131 ).hex(), '6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e', 'HMAC - RFC 4231 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    
-    asyncTest('SHA-384 / HMAC-SHA-384 (64-bit)', function() {
-      setTimeout(function() {
-        expect(10);
+    asyncTest( 'SHA-512 / HMAC-SHA-512', function () {
+      setTimeout( function () {
+        expect( 10 );
         
-        equals(Digest.sha384(texts[1]).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', 'SHA-384 - ""');
-        equals(Digest.sha384(texts[3]).hex(), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7', 'SHA-384 - "abc"');
-        equals(Digest.sha384(texts[7]).hex(), '09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039', 'SHA-384 - "abcdefgh..nopqrstu"');
+        equals( Digest.sha512( text_none ).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', '""' );
+        equals( Digest.sha512( text_abc  ).hex(), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', '"abc"' );
+        equals( Digest.sha512( text_a8s  ).hex(), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', '"abcdefgh..nopqrstu"' );
         
-        equals(Digest.sha384(hmac[1].text1, hmac[1].key2).hex(), 'afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6', 'HMAC-SHA-384 - RFC 4231 Test 1');
-        equals(Digest.sha384(hmac[2].text1, hmac[2].key1).hex(), 'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649', 'HMAC-SHA-384 - RFC 4231 Test 2');
-        equals(Digest.sha384(hmac[3].text1, hmac[3].key2).hex(), '88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27', 'HMAC-SHA-384 - RFC 4231 Test 3');
-        equals(Digest.sha384(hmac[4].text1, hmac[4].key1).hex(), '3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb', 'HMAC-SHA-384 - RFC 4231 Test 4');
-        equals(Digest.sha384(128, hmac[5].text1, hmac[5].key2).hex(), '3abf34c3503b2a23a46efc619baef897', 'HMAC-SHA-384 - RFC 4231 Test 5 (Trunc)');
-        equals(Digest.sha384(hmac[6].text1, hmac[6].key2).hex(), '4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952', 'HMAC-SHA-384 - RFC 4231 Test 6');
-        equals(Digest.sha384(hmac[7].text2, hmac[7].key2).hex(), '6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e', 'HMAC-SHA-384 - RFC 4231 Test 7');
+        equals( Digest.sha512( text_hi,   key_0b20 ).hex(), '87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854',  'HMAC - RFC 4231 - Test 1' );
+        equals( Digest.sha512( text_what, key_jefe ).hex(), '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737',  'HMAC - RFC 4231 - Test 2' );
+        equals( Digest.sha512( text_dd50, key_aa20 ).hex(), 'fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb',  'HMAC - RFC 4231 - Test 3' );
+        equals( Digest.sha512( text_cd50, key_0119 ).hex(), 'b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd',  'HMAC - RFC 4231 - Test 4' );
+        equals( Digest.sha512( 128, text_trun, key_0c20 ).hex(), '415fad6271580a531d4179bc891d87a6',                                                                                             'HMAC - RFC 4231 - Test 5 (Trunc)' );
+        equals( Digest.sha512( text_lngK, key_aa131 ).hex(), '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598', 'HMAC - RFC 4231 - Test 6' );
+        equals( Digest.sha512( text_lng2, key_aa131 ).hex(), 'e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', 'HMAC - RFC 4231 - Test 7' );
         
         start();
-      }, 10);
+      }, 10 );
     });
     
-    asyncTest('SHA-512 / HMAC-SHA-512 (64-bit)', function() {
-      setTimeout(function() {
-        expect(10);
+    asyncTest( 'Skein 1.3', function() {
+      setTimeout( function() {
+        expect( 17 );
         
-        equals(Digest.sha512(texts[1]).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', 'SHA-512 - ""');
-        equals(Digest.sha512(texts[3]).hex(), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f', 'SHA-512 - "abc"');
-        equals(Digest.sha512(texts[7]).hex(), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909', 'SHA-512 - "abcdefgh..nopqrstu"');
+        equals( Digest.skein256( 256, skein_FF ).hex(), '0B98DCD198EA0E50A7A244C444E25C23DA30C10FC9A1F270A6637F1F34E67ED2'.toLowerCase(), '256 Short' );
+        equals( Digest.skein256( 256, skein_E0 ).hex(), '8D0FA4EF777FD759DFD4044E6F6A5AC3C774AEC943DCFC07927B723B5DBF408B'.toLowerCase(), '256 Equal' );
+        equals( Digest.skein256( 256, skein_C0 ).hex(), 'DF28E916630D0B44C4A849DC9A02F07A07CB30F732318256B15D865AC4AE162F'.toLowerCase(), '256 Long' );
         
-        equals(Digest.sha512(hmac[1].text1, hmac[1].key2).hex(), '87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854', 'HMAC-SHA-512 - RFC 4231 Test 1');
-        equals(Digest.sha512(hmac[2].text1, hmac[2].key1).hex(), '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737', 'HMAC-SHA-512 - RFC 4231 Test 2');
-        equals(Digest.sha512(hmac[3].text1, hmac[3].key2).hex(), 'fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb', 'HMAC-SHA-512 - RFC 4231 Test 3');
-        equals(Digest.sha512(hmac[4].text1, hmac[4].key1).hex(), 'b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd', 'HMAC-SHA-512 - RFC 4231 Test 4');
-        equals(Digest.sha512(128, hmac[5].text1, hmac[5].key2).hex(), '415fad6271580a531d4179bc891d87a6', 'HMAC-SHA-512 - RFC 4231 Test 5 (Trunc)');
-        equals(Digest.sha512(hmac[6].text1, hmac[6].key2).hex(), '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598', 'HMAC-SHA-512 - RFC 4231 Test 6');
-        equals(Digest.sha512(hmac[7].text2, hmac[7].key2).hex(), 'e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58', 'HMAC-SHA-512 - RFC 4231 Test 7');
+        equals( Digest.skein512( 512, skein_FF ).hex(), '71B7BCE6FE6452227B9CED6014249E5BF9A9754C3AD618CCC4E0AAE16B316CC8CA698D864307ED3E80B6EF1570812AC5272DC409B5A012DF2A579102F340617A'.toLowerCase(), '512 Short' );
+        equals( Digest.skein512( 512, skein_C0 ).hex(), '45863BA3BE0C4DFC27E75D358496F4AC9A736A505D9313B42B2F5EADA79FC17F63861E947AFB1D056AA199575AD3F8C9A3CC1780B5E5FA4CAE050E989876625B'.toLowerCase(), '512 Equal' );
+        equals( Digest.skein512( 512, skein_80 ).hex(), '91CCA510C263C4DDD010530A33073309628631F308747E1BCBAA90E451CAB92E5188087AF4188773A332303E6667A7A210856F742139000071F48E8BA2A5ADB7'.toLowerCase(), '512 Long' );
+        
+        equals( Digest.skein1024( 1024, skein_FF ).hex(), 'E62C05802EA0152407CDD8787FDA9E35703DE862A4FBC119CFF8590AFE79250BCCC8B3FAF1BD2422AB5C0D263FB2F8AFB3F796F048000381531B6F00D85161BC0FFF4BEF2486B1EBCD3773FABF50AD4AD5639AF9040E3F29C6C931301BF79832E9DA09857E831E82EF8B4691C235656515D437D2BDA33BCEC001C67FFDE15BA8'.toLowerCase(), '1024 Short' );
+        equals( Digest.skein1024( 1024, skein_80 ).hex(), '1F3E02C46FB80A3FCD2DFBBC7C173800B40C60C2354AF551189EBF433C3D85F9FF1803E6D920493179ED7AE7FCE69C3581A5A2F82D3E0C7A295574D0CD7D217C484D2F6313D59A7718EAD07D0729C24851D7E7D2491B902D489194E6B7D369DB0AB7AA106F0EE0A39A42EFC54F18D93776080985F907574F995EC6A37153A578'.toLowerCase(), '1024 Equal' );
+        equals( Digest.skein1024( 1024, skein_00 ).hex(), '842A53C99C12B0CF80CF69491BE5E2F7515DE8733B6EA9422DFD676665B5FA42FFB3A9C48C217777950848CECDB48F640F81FB92BEF6F88F7A85C1F7CD1446C9161C0AFE8F25AE444F40D3680081C35AA43F640FD5FA3C3C030BCC06ABAC01D098BCC984EBD8322712921E00B1BA07D6D01F26907050255EF2C8E24F716C52A5'.toLowerCase(), '1024 Long' );
+        
+        equals( Digest.skein512( 224, []     ).hex(), '1541AE9FC3EBE24EB758CCB1FD60C2C31A9EBFE65B220086E7819E25'.toLowerCase(), '224 KAT {0}' );
+        equals( Digest.skein512( 224, [0xCC] ).hex(), '23F031A6A4378039B66A5A178BAD217EAEC094B7FCBA663A47DDCF33'.toLowerCase(), '224 KAT {8}' );
+        equals( Digest.skein512( 256, []     ).hex(), '39CCC4554A8B31853B9DE7A1FE638A24CCE6B35A55F2431009E18780335D2621'.toLowerCase(), '256 KAT {0}' );
+        equals( Digest.skein512( 256, [0xCC] ).hex(), 'A018268ED814E0AD0F2D0304E8FE3F4118FCEFC07454D07123CC2C3E40E06A4F'.toLowerCase(), '256 KAT {8}' );
+        equals( Digest.skein512( 384, []     ).hex(), 'DD5AAF4589DC227BD1EB7BC68771F5BAEAA3586EF6C7680167A023EC8CE26980F06C4082C488B4AC9EF313F8CBE70808'.toLowerCase(), '384 KAT {0}' );
+        equals( Digest.skein512( 384, [0xCC] ).hex(), '00D5A235BE7BC36A9FD68227A593F106EE831F3F7558C96DA5B71AE7D0DB3084E43D6C57D9F202E8C69CC2C0D4333B20'.toLowerCase(), '384 KAT {8}' );
+        equals( Digest.skein512( 512, []     ).hex(), 'BC5B4C50925519C290CC634277AE3D6257212395CBA733BBAD37A4AF0FA06AF41FCA7903D06564FEA7A2D3730DBDB80C1F85562DFCC070334EA4D1D9E72CBA7A'.toLowerCase(), '512 KAT {0}' );
+        equals( Digest.skein512( 512, [0xCC] ).hex(), '26D8382EBDC39072293DDCDDA6568B4ADD2449A05424A12DFBF11595228E9FBF7C542F25EC0F7348B19AD23EF5E97D45E5CFF7BB9969BE332923F33BE53A6D09'.toLowerCase(), '512 KAT {8}' );
         
         start();
-      }, 10);
+      }, 10 );
     });
-    
-    
-    asyncTest('Skein 1.3', function() {
-      setTimeout(function() {
-        expect(17);
-        
-        equals(Digest.skein256(256, skein_FF).hex(), '0B98DCD198EA0E50A7A244C444E25C23DA30C10FC9A1F270A6637F1F34E67ED2'.toLowerCase(), 'Skein-256-256 Short');
-        equals(Digest.skein256(256, skein_E0).hex(), '8D0FA4EF777FD759DFD4044E6F6A5AC3C774AEC943DCFC07927B723B5DBF408B'.toLowerCase(), 'Skein-256-256 Equal');
-        equals(Digest.skein256(256, skein_C0).hex(), 'DF28E916630D0B44C4A849DC9A02F07A07CB30F732318256B15D865AC4AE162F'.toLowerCase(), 'Skein-256-256 Long');
-        
-        equals(Digest.skein512(512, skein_FF).hex(), '71B7BCE6FE6452227B9CED6014249E5BF9A9754C3AD618CCC4E0AAE16B316CC8CA698D864307ED3E80B6EF1570812AC5272DC409B5A012DF2A579102F340617A'.toLowerCase(), 'Skein-512-512 Short');
-        equals(Digest.skein512(512, skein_C0).hex(), '45863BA3BE0C4DFC27E75D358496F4AC9A736A505D9313B42B2F5EADA79FC17F63861E947AFB1D056AA199575AD3F8C9A3CC1780B5E5FA4CAE050E989876625B'.toLowerCase(), 'Skein-512-512 Equal');
-        equals(Digest.skein512(512, skein_80).hex(), '91CCA510C263C4DDD010530A33073309628631F308747E1BCBAA90E451CAB92E5188087AF4188773A332303E6667A7A210856F742139000071F48E8BA2A5ADB7'.toLowerCase(), 'Skein-512-512 Long');
-        
-        equals(Digest.skein1024(1024, skein_FF).hex(), 'E62C05802EA0152407CDD8787FDA9E35703DE862A4FBC119CFF8590AFE79250BCCC8B3FAF1BD2422AB5C0D263FB2F8AFB3F796F048000381531B6F00D85161BC0FFF4BEF2486B1EBCD3773FABF50AD4AD5639AF9040E3F29C6C931301BF79832E9DA09857E831E82EF8B4691C235656515D437D2BDA33BCEC001C67FFDE15BA8'.toLowerCase(), 'Skein-1024-1024 Short');
-        equals(Digest.skein1024(1024, skein_80).hex(), '1F3E02C46FB80A3FCD2DFBBC7C173800B40C60C2354AF551189EBF433C3D85F9FF1803E6D920493179ED7AE7FCE69C3581A5A2F82D3E0C7A295574D0CD7D217C484D2F6313D59A7718EAD07D0729C24851D7E7D2491B902D489194E6B7D369DB0AB7AA106F0EE0A39A42EFC54F18D93776080985F907574F995EC6A37153A578'.toLowerCase(), 'Skein-1024-1024 Equal');
-        equals(Digest.skein1024(1024, skein_00).hex(), '842A53C99C12B0CF80CF69491BE5E2F7515DE8733B6EA9422DFD676665B5FA42FFB3A9C48C217777950848CECDB48F640F81FB92BEF6F88F7A85C1F7CD1446C9161C0AFE8F25AE444F40D3680081C35AA43F640FD5FA3C3C030BCC06ABAC01D098BCC984EBD8322712921E00B1BA07D6D01F26907050255EF2C8E24F716C52A5'.toLowerCase(), 'Skein-1024-1024 Long');
-        
-        equals(Digest.skein512(224, []    ).hex(), '1541AE9FC3EBE24EB758CCB1FD60C2C31A9EBFE65B220086E7819E25'.toLowerCase(), 'Skein-256-224 KAT {0}');
-        equals(Digest.skein512(224, [0xCC]).hex(), '23F031A6A4378039B66A5A178BAD217EAEC094B7FCBA663A47DDCF33'.toLowerCase(), 'Skein-256-224 KAT {8}');
-        equals(Digest.skein512(256, []    ).hex(), '39CCC4554A8B31853B9DE7A1FE638A24CCE6B35A55F2431009E18780335D2621'.toLowerCase(), 'Skein-256-256 KAT {0}');
-        equals(Digest.skein512(256, [0xCC]).hex(), 'A018268ED814E0AD0F2D0304E8FE3F4118FCEFC07454D07123CC2C3E40E06A4F'.toLowerCase(), 'Skein-256-256 KAT {8}');
-        equals(Digest.skein512(384, []    ).hex(), 'DD5AAF4589DC227BD1EB7BC68771F5BAEAA3586EF6C7680167A023EC8CE26980F06C4082C488B4AC9EF313F8CBE70808'.toLowerCase(), 'Skein-512-384 KAT {0}');
-        equals(Digest.skein512(384, [0xCC]).hex(), '00D5A235BE7BC36A9FD68227A593F106EE831F3F7558C96DA5B71AE7D0DB3084E43D6C57D9F202E8C69CC2C0D4333B20'.toLowerCase(), 'Skein-512-384 KAT {8}');
-        equals(Digest.skein512(512, []    ).hex(), 'BC5B4C50925519C290CC634277AE3D6257212395CBA733BBAD37A4AF0FA06AF41FCA7903D06564FEA7A2D3730DBDB80C1F85562DFCC070334EA4D1D9E72CBA7A'.toLowerCase(), 'Skein-512-512 KAT {0}');
-        equals(Digest.skein512(512, [0xCC]).hex(), '26D8382EBDC39072293DDCDDA6568B4ADD2449A05424A12DFBF11595228E9FBF7C542F25EC0F7348B19AD23EF5E97D45E5CFF7BB9969BE332923F33BE53A6D09'.toLowerCase(), 'Skein-512-512 KAT {8}');
-        
-        start();
-      }, 10);
-    });
-
+  
   });
 </script>
 </body>
