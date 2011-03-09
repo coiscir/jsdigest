@@ -379,8 +379,9 @@
     
     asyncTest( 'SHA-2', function () {
       setTimeout( function () {
-        expect( 4 );
+        expect( 5 );
         
+        equals( Digest.sha2( 160, '' ).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f', '160 => SHA-224' );
         equals( Digest.sha2( 224, '' ).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', '224 => SHA-224' );
         equals( Digest.sha2( 256, '' ).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '256 => SHA-256' );
         equals( Digest.sha2( 384, '' ).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', '384 => SHA-384' );
