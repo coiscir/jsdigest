@@ -351,6 +351,48 @@
         start();
       }, 10 );
     });
+    
+    
+    module( 'Autos' );
+    
+    asyncTest( 'SHA', function () {
+      setTimeout( function () {
+        expect( 5 );
+        
+        equals( Digest.sha( 160, '' ).hex(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709', '160 => SHA-1' );
+        equals( Digest.sha( 224, '' ).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', '224 => SHA-224' );
+        equals( Digest.sha( 256, '' ).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '256 => SHA-256' );
+        equals( Digest.sha( 384, '' ).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', '384 => SHA-384' );
+        equals( Digest.sha( 512, '' ).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', '512 => SHA-512' );
+        
+        start();
+      }, 10 );
+    });
+    
+    asyncTest( 'SHA-2', function () {
+      setTimeout( function () {
+        expect( 4 );
+        
+        equals( Digest.sha2( 224, '' ).hex(), 'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f', '224 => SHA-224' );
+        equals( Digest.sha2( 256, '' ).hex(), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '256 => SHA-256' );
+        equals( Digest.sha2( 384, '' ).hex(), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b', '384 => SHA-384' );
+        equals( Digest.sha2( 512, '' ).hex(), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', '512 => SHA-512' );
+        
+        start();
+      }, 10 );
+    });
+    
+    asyncTest( 'Skein', function () {
+      setTimeout( function () {
+        expect( 3 );
+        
+        equals( Digest.skein( 256,  skein_FF ).hex(), '0B98DCD198EA0E50A7A244C444E25C23DA30C10FC9A1F270A6637F1F34E67ED2'.toLowerCase(), '256 => Skein-256' );
+        equals( Digest.skein( 512,  skein_FF ).hex(), '71B7BCE6FE6452227B9CED6014249E5BF9A9754C3AD618CCC4E0AAE16B316CC8CA698D864307ED3E80B6EF1570812AC5272DC409B5A012DF2A579102F340617A'.toLowerCase(), '512 => Skein-512' );
+        equals( Digest.skein( 1024, skein_FF ).hex(), 'E62C05802EA0152407CDD8787FDA9E35703DE862A4FBC119CFF8590AFE79250BCCC8B3FAF1BD2422AB5C0D263FB2F8AFB3F796F048000381531B6F00D85161BC0FFF4BEF2486B1EBCD3773FABF50AD4AD5639AF9040E3F29C6C931301BF79832E9DA09857E831E82EF8B4691C235656515D437D2BDA33BCEC001C67FFDE15BA8'.toLowerCase(), '1024 => Skein-1024' );
+        
+        start();
+      }, 10 );
+    });
   
   });
 </script>

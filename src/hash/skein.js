@@ -211,22 +211,6 @@
     
     return Encoder( crop( size, result, false ) );
   };
-
-  self.skein = function ( size, data, key ) {
-    if ( 'number' !== typeof size ) {
-      key = data;
-      data = size;
-      size = 1024;
-    }
-    
-    if ( size <= 256 ) {
-      return calculate( 256, size, data, key );
-    } else if ( size <= 512 ) {
-      return calculate( 512, size, data, key );
-    } else {
-      return calculate( 1024, size, data, key );
-    }
-  };
   
   self.skein256 = function ( size, data, key ) {
     return calculate( 256, size, data, key );
