@@ -8,15 +8,15 @@ function factorMAC( MAC, FN, DIGEST, BLOCK ) {
     
     size = Math.max( 0, Math.min( DIGEST, size ) );
     
-    var digest;
+    var result;
 
     if ( null == key ) {
-      digest = FN( toBuffer(data) );
+      result = FN( toBuffer(data) );
     } else {
-      digest = MAC( FN, BLOCK, toBuffer(data), toBuffer(key) );
+      result = MAC( FN, BLOCK, toBuffer(data), toBuffer(key) );
     }
     
-    return Encoder( crop( size, digest, false ) );
+    return Encoder( crop( size, result, false ) );
   };
 }
 
