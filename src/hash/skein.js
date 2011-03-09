@@ -1,9 +1,9 @@
-// Skein 1.2 (c) 2010 Bruce Schneier, et al.
+// Skein 1.3 (c) 2010 Bruce Schneier, et al.
 (function () {
   var merge = mergeLeast_64,
       split = splitLeast_64,
       
-      PARITY = [ 0x55555555, 0x55555555 ],
+      PARITY = [ 0x1BD11BDA, 0xA9FC1A22 ],
       
       TWEAK = {
         KEY:         0x00,
