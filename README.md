@@ -11,13 +11,9 @@ Supports
 
 * **MD4**
 * **MD5**
-* **MD6** (PAR, SEQ)
 * **RIPEMD-160** (128)
 * **SHA-1**
-* **SHA-224**
-* **SHA-256**
-* **SHA-384** 
-* **SHA-512**
+* **SHA-2** (224, 256, 384, 512)
 * **Skein** (256, 512, 1024)
 
 
@@ -27,7 +23,7 @@ Building jsDigest
 Building jsDigest requires:
 
  * A copy of the [**jsDigest** source tree](http://github.com/coiscir/jsdigest)
- * [**Ruby 1.8** or later](http://ruby-lang.org/)
+ * [**Ruby 1.8.7** or later](http://ruby-lang.org/)
  * [**Rake 0.8.7** or later](http://rake.rubyforge.org/)
  * [**Packr 3.1.0** or later](http://rubyforge.org/projects/packr/)
 
