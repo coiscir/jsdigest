@@ -323,14 +323,6 @@
                 <b><code>md5</code></b>
               </p>
               <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>md6par</code></b> <small>(Parallel)</small>
-              </p>
-              <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>md6seq</code></b> <small>(Sequential)</small>
-              </p>
-              <p>
                 <aside><code>(size = 128)</code> <code>Function</code></aside>
                 <b><code>ripemd128</code></b>
               </p>
@@ -369,6 +361,32 @@
               <p>
                 <aside><code>(size = 1024)</code> <code>Function</code></aside>
                 <b><code>skein1024</code></b>
+              </p>
+            </details>
+          </section>
+          
+          <section>
+            <hgroup>
+              <aside><i>Chooses <code>hash</code> function by <code>size</code>.</i></aside>
+              <h4><i>Auto <code>hash</code> Functions</i></h4>
+            </hgroup>
+            
+            <details>
+              <p>
+                <aside><code>(size = 160)</code> <code>Function</code></aside>
+                <b><code>ripemd</code></b> <code>&nbsp; =&gt; ripemd128, ripemd160</code>
+              </p>
+              <p>
+                <aside><code>(size = 512)</code> <code>Function</code></aside>
+                <b><code>sha</code></b> <code>&nbsp;&nbsp;&nbsp;&nbsp; =&gt; sha1, sha224, sha256, sha384, sha512</code>
+              </p>
+              <p>
+                <aside><code>(size = 512)</code> <code>Function</code></aside>
+                <b><code>sha2</code></b> <code>&nbsp;&nbsp;&nbsp; =&gt; sha224, sha256, sha384, sha512</code>
+              </p>
+              <p>
+                <aside><code>(size = 1024)</code> <code>Function</code></aside>
+                <b><code>skein</code></b> <code>&nbsp;&nbsp; =&gt; skein256, skein512, skein1024</code>
               </p>
             </details>
           </section>
@@ -418,18 +436,16 @@
   var hashes, outputs, hashesSorted, outputsSorted;
   
   hashes ={
-    'md4':        {name: 'MD4',             keyName: 'HMAC-MD4',            keyless: true  },
-    'md5':        {name: 'MD5',             keyName: 'HMAC-MD5',            keyless: true  },
-    'md6par':     {name: 'MD6-PAR-512',     keyName: '',                    keyless: false },
-    'md6seq':     {name: 'MD6-SEQ-512',     keyName: '',                    keyless: false },
-    'sha1':       {name: 'SHA-1',           keyName: 'HMAC-SHA-1',          keyless: true  },
-    'sha224':     {name: 'SHA-224',         keyName: 'HMAC-SHA-224',        keyless: true  },
-    'sha256':     {name: 'SHA-256',         keyName: 'HMAC-SHA-256',        keyless: true  },
-    'sha384':     {name: 'SHA-384',         keyName: 'HMAC-SHA-384',        keyless: true  },
-    'sha512':     {name: 'SHA-512',         keyName: 'HMAC-SHA-512',        keyless: true  },
-    'skein256':   {name: 'Skein-256-256',   keyName: 'Skein-256-256-Key',   keyless: true  },
-    'skein512':   {name: 'Skein-512-512',   keyName: 'Skein-512-512-Key',   keyless: true  },
-    'skein1024':  {name: 'Skein-1024-1024', keyName: 'Skein-1024-1024-Key', keyless: true  }
+    'md4':        { name: 'MD4',             keyName: 'HMAC-MD4',            keyless: true  },
+    'md5':        { name: 'MD5',             keyName: 'HMAC-MD5',            keyless: true  },
+    'sha1':       { name: 'SHA-1',           keyName: 'HMAC-SHA-1',          keyless: true  },
+    'sha224':     { name: 'SHA-224',         keyName: 'HMAC-SHA-224',        keyless: true  },
+    'sha256':     { name: 'SHA-256',         keyName: 'HMAC-SHA-256',        keyless: true  },
+    'sha384':     { name: 'SHA-384',         keyName: 'HMAC-SHA-384',        keyless: true  },
+    'sha512':     { name: 'SHA-512',         keyName: 'HMAC-SHA-512',        keyless: true  },
+    'skein256':   { name: 'Skein-256-256',   keyName: 'Skein-256-256-Key',   keyless: true  },
+    'skein512':   { name: 'Skein-512-512',   keyName: 'Skein-512-512-Key',   keyless: true  },
+    'skein1024':  { name: 'Skein-1024-1024', keyName: 'Skein-1024-1024-Key', keyless: true  }
   };
   
   outputs = {
@@ -441,7 +457,7 @@
     'base64url':  'Base-64 URL'
   };
   
-  hashesSorted = ['md4', 'md5', 'md6par', 'md6seq', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'skein256', 'skein512', 'skein1024'];
+  hashesSorted = ['md4', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'skein256', 'skein512', 'skein1024'];
   outputsSorted = ['hex', 'base16', 'base32', 'base32hex', 'base64', 'base64url'];
   
   function quote(string) {
@@ -493,10 +509,10 @@
       name = hashes[hash].keyName || name;
     }
     
-    incode  = 'Digest.' + hash + '(';
+    incode  = 'Digest.' + hash + '( ';
     incode += quote(data);
     incode += keyed ? ', ' + quote(key) : '';
-    incode += ').' + out + '();';
+    incode += ' ).' + out + '();';
     
     result = Digest[hash];
     result = result.apply(Digest, [data, key]);
