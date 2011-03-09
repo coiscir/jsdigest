@@ -105,10 +105,7 @@
       equal( typeof Digest.skein1024, 'function', 'Skein-1024 is defined' );
     });
     
-    
-    module( 'Buffer' );
-    
-    test( 'toBuffer', function () {
+    test( 'Buffer', function () {
       expect(4);
       
       var u0024 = [ 0x24 ],
@@ -353,7 +350,7 @@
     });
     
     
-    module( 'Autos' );
+    module( 'Auto Hashing' );
     
     asyncTest( 'RIPEMD', function () {
       setTimeout( function () {
