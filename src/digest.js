@@ -2,7 +2,7 @@
  *  jsDigest v<%= @version %> (<%= @release %>)
  *  http://github.com/coiscir/jsdigest/
  *
- *  Copyright (c) 2010 Jonathan Lonowski
+ *  Copyright (c) 2009-2011 Jonathan Lonowski
  *  Released and distributed under the MIT License.
 **/
 
