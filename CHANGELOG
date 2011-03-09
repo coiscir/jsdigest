@@ -1,3 +1,26 @@
+Mar 09, 2011    2.0.0
+
+  Added 'Auto' hash functions, which choose a hash function by the 'size':
+    - 'ripemd' => ripemd128, ripemd160
+    - 'sha'    => sha1, sha224, sha256, sha384, sha512
+    - 'sha2'   => sha224, sha256, sha384, sha512
+    - 'skein'  => skein256, skein512, skein1024
+
+  Stashed MD6 for possible, future development.
+
+  Reduced Encoder to just RFC-4648 encodings and 'raw' (buffer) output methods.
+
+  Reduced utility functions.
+    - Removed atos, stoa, isInput, Encoder.ready.
+    - Added 'toArray' for converting strings without encoding.
+    - Added 'toBuffer' for converting strings with UTF-8 encoding.
+      - All 'data' and 'key' Strings are passed through 'toBuffer', by default.
+
+  Returned Rakefile to using ERB, adding Builder class to define bindings.
+  
+  Cleaned up code formatting in most files, all source.
+
+
 Jun 18, 2010    1.3.0
 
   Add support for Node.js.
