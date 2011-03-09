@@ -99,8 +99,6 @@
       ]
     ]);
     
-    console.log( 'bits:', Encoder( split(x) ).hex().replace( /(\w{16})/g, '$1 ' ) );
-    
     // update hash
     for ( i = 0, l = x.length; i < l; i += 16 ) {
       a = hash[0].slice();
