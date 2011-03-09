@@ -157,3 +157,5 @@ function Encoder( buffer ) {
     );
   };
 }
+
+self.Encoder = Encoder;
