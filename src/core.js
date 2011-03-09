@@ -26,7 +26,7 @@ function isBuffer( obj ) {
 
 function toBuffer( input ) {
   if ( isBuffer( input ) )
-    return input;
+    return input.slice();
   else
     return utf8( input );
 }
