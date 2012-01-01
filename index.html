@@ -13,17 +13,18 @@
       display: block;
     }
     
-    * { margin: 0; padding: 0 }
+    * { margin: 0; padding: 0; }
     
     body {
       padding: 30pt 50pt;
       font: normal 12pt/1.1 sans-serif;
       color: #333;
-      background: #667A8F;
+      background: #667a8f;
     }
     
     code, pre {
       font-family: Consolas, monospace;
+      white-space: pre;
     }
     
     img {
@@ -33,419 +34,488 @@
     aside {
       float: right;
     }
-      
-      aside#fork {
-        position: fixed;
-        top: 0;
-        right: 0;
-      }
-    
-      aside a {
-        color: #6575a4;
-        font-size: 10pt;
-      }
-    
-    div {
-      max-width: 750px;
+    aside a {
+      color: #6575a4;
+      font-size: 10pt;
     }
     
-      div#container {
-        margin: 0 auto;
-        padding: 10pt;
-        min-width: 500px;
-        -webkit-border-radius: 10pt;
-        -moz-border-radius: 10pt;
-        border-radius: 10pt;
-        background: #fff;
-      }
+    #forkme {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    
+    #container {
+      margin: 0 auto;
+      padding: 12pt;
+      max-width: 750px;
+      min-width: 500px;
+      -webkit-border-radius: 10pt;
+      -moz-border-radius: 10pt;
+      border-radius: 10pt;
+      background: #fff;
+    }
     
     header h1 {
       display: inline;
       color: #465277;
     }
-    
     header h3 {
       display: inline;
+      margin-left: 10pt;
       color: #8592b7;
     }
     
-    section {
-      margin: 40pt 0 0;
+    section.area {
+      margin-top: 20pt;
+      padding: 5pt;
+      -webkit-border-radius: 5pt;
+      -moz-border-radius: 5pt;
+      border-radius: 5pt;
+      background: #e0ebf5;
+    }
+    section.area h2 {
+      margin-bottom: 5pt;
+      color: #596897;
     }
     
-      section h2 {
-        color: #6575a4;
-      }
+    section.component {
+      padding: 5pt;
+    }
     
-      section section {
-        margin: 12pt 12pt 0;
-      }
+    section.component + section.component {
+      margin-top: 5pt;
+    }
     
-      section details,
-      section figure {
-        display: block;
-        margin: 9pt 12pt 0;
-        padding: 5pt;
-        -webkit-border-radius: 5pt;
-        -moz-border-radius: 5pt;
-        border-radius: 5pt;
-      }
-      
-      section figure {
-        font-size: 10pt;
-        background: #f3f3f3;
-        border: 1px solid #ccc;
-      }
-      
-      section details {
-        background: #e0ebf5;
-      }
-      
-        section details summary {
-          display: block;
-          font-style: italic;
-        }
-        
-        section details section {
-          margin: 12pt 6pt 0;
-        }
-        
-        section details hgroup {
-          font-size: 11pt;
-          border-bottom: 1px solid #aaa;
-        }
-        
-        section details details {
-          margin: 0;
-          padding: 0;
-          font-size: 10pt;
-        }
-        
-        section details details + details {
-          margin: 9pt 0 0;
-        }
-        
-        section details p {
-          margin: 2pt 0 0;
-        }
+    section.component .caption {
+      border-bottom: 1px solid #aaa;
+    }
+    
+    section.component hgroup.caption {
+      font-size: 11pt;
+    }
+    
+    section.detail {
+      margin-top: 3pt;
+      font-size: 10pt;
+    }
+    
+    section.detail p {
+      margin-top: 2pt;
+    }
+    
+    section.detail + section.detail {
+      margin-top: 9pt;
+    }
+    
+    section.further {
+      margin-top: 12pt;
+      background: #cddeef;
+    }
     
     #demo {
-      padding: 10pt 10pt 20pt;
-      -webkit-border-radius: 10pt;
-      -moz-border-radius: 10pt;
-      border-radius: 10pt;
-      background: #f0f5fa;
+      background: #ebf2f8;
     }
     
-      #demo section {
-        margin: 10pt 0;
-      }
-      
-        #demo section section {
-          margin: 4pt 0;
-        }
-      
-      #demo section div {
-        position: relative;
-        height: 17.5pt;
-      }
-      
-      #demo section label {
-        font: italic bold 14pt serif;
-        color: #69b;
-      }
-      
-      #hash,
-      #output,
-      #data,
-      #key,
-      #keyed,
-      #using,
-      #incode,
-      #result {
-        position: absolute;
-        top: 0pt;
-        left: 60pt;
-        padding: 0pt;
-      }
-      
-      #hash,
-      #output {
-        width: 100pt;
-      }
-      
-      #data,
-      #key {
-        width: 300pt;
-      }
-      
-      #keyed {
-        top: 3.5pt;
-        left: 45pt;
-      }
-      
-      #using {
-        font: bold 12pt serif;
-      }
-      
-      #incode,
-      #result {
-        top: 2pt;
-        font-family: Consolas, monospace;
-        font-size: 9pt;
-        white-space: pre;
-      }
+    #demo h2 {
+      color: #6575a4;
+    }
+    
+    #demo label {
+      font: italic bold 14pt serif;
+      color: #69b;
+    }
+    
+    #demo div {
+      position: relative;
+      height: 17.5pt;
+    }
+    
+    #demo aside {
+      float: none;
+      position: absolute;
+      top: 0pt;
+      left: 60pt;
+      padding: 0pt;
+    }
+    
+    #demo aside.left {
+      top: 3.5pt;
+      left: 45pt;
+    }
+    
+    #demo .group {
+      margin: 10pt 0;
+    }
+    
+    #demo .group.last {
+      margin-bottom: 20pt;
+    }
+    
+    #demo .subgroup {
+      margin: 4pt 0;
+    }
+    
+    #using {
+      font: bold 12pt serif;
+    }
+    
+    #incode, #result {
+      font-size: 9pt;
+    }
   </style>
 </head>
 <body>
-  <aside id="fork">
+  <aside id="forkme">
     <a href="http://github.com/coiscir/jsdigest" target="_blank">
       <img src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
     </a>
   </aside>
   
   <div id="container">
-    <aside>
-      <a href="test/index.html">Run Test Suite</a>
-    </aside>
-    
     <header>
+      <aside>
+        <a href="test/index.html">Run Test Suite</a>
+      </aside>
+      
       <h1>jsDigest</h1>
       <h3>Message Digest for JavaScript</h3>
     </header>
     
-    <section>
+    <section class="area" id="demo">
       <h2>Demo</h2>
       
-      <details id="demo">
-        
-        <section>
-          <section>
+      <section class="component">
+        <section class="group">
+          <section class="subgroup">
             <div>
               <label for="hash">Hash</label>
-              <select id="hash" tabindex="1"></select>
+              
+              <aside>
+                <select id="hash" tabindex="1">
+                  <option>...</option>
+                </select>
+              </aside>
             </div>
             
             <div>
               <label for="output">Output</label>
-              <select id="output" tabindex="2"></select>
-            </div>
+              
+              <aside>
+                <select id="output" tabindex="2">
+                  <option>...</option>
+                </select>
+              </aside>
           </section>
           
-          <section>
+          <section class="subgroup">
             <div>
               <label for="data">Data</label>
-              <input id="data" type="text" tabindex="3" />
+              
+              <aside>
+                <input id="data" tabindex="3">
+              </aside>
             </div>
             
             <div>
               <label for="key">Key</label>
-              <input id="keyed" type="checkbox" tabindex="4" />
-              <input id="key" type="text" tabindex="5" style="display:none;" />
+              
+              <aside class="left">
+                <input id="keyed" type="checkbox" tabindex="4">
+              </aside>
+              
+              <aside>
+                <input id="key" tabindex="5" style="display:none">
+              </aside>
             </div>
           </section>
         </section>
         
-        <section>
+        <section class="group">
           <div>
             <label>Using</label>
-            <span id="using"></span>
+            
+            <aside>
+              <b id="using"></b>
+            </aside>
           </div>
           
           <div>
             <label>Code</label>
-            <span id="incode"></span>
+            
+            <aside>
+              <code id="incode"></code>
+            </aside>
           </div>
         </section>
         
-        <section>
+        <section class="group last">
           <div>
             <label>Result</label>
-            <span id="result"></span>
+            
+            <aside>
+              <code id="result"></code>
+            </aside>
           </div>
         </section>
-        
-      </details>
+      </section>
     </section>
     
-    <section>
+    <section class="area">
       <h2>Usage</h2>
+      
+      <section class="component">
+        <hgroup class="caption">
+          <h4>
+            <aside><code>String</code></aside>
+            <code>Digest.<i>hash</i>( [ size ], data, [ key ] ).<i>output</i>()</code>
+          </h4>
+        </hgroup>
         
-      <details>
-        <summary>Syntax</summary>
+        <section class="detail">
+          <p>
+            <aside><code>Function</code></aside>
+            <b>hash</b> Hash function to use.
+          </p>
+          <p>
+            <aside><code>Function</code></aside>
+            <b>output</b> The format desired for the hash.
+          </p>
+        </section>
         
-        <section>
-          <hgroup>
-            <h4>
-              <aside><code>String</code></aside>
-              <code>Digest.<i>hash</i>( [ size ], data, [ key ] ).<i>output</i>()</code>
-            </h4>
-          </hgroup>
-          
-          <details>
-            <p>
-              <aside><code>Function</code></aside>
-              <b>hash</b> Hash function to use.
-            </p>
-            <p>
-              <aside><code>Function</code></aside>
-              <b>output</b> The format desired for the hash.
-            </p>
-          </details>
-          
-          <details>
-            <p>
-              <aside><code>Number</code></aside>
-              <b>size</b> The output size in bits.
-            </p>
-            <p>
-              <aside><code>String, Array&lt;Number&gt;</code></aside>
-              <b>data</b> The input data to be hashed.
-            </p>
-            <p>
-              <aside><code>String, Array&lt;Number&gt;</code></aside>
-              <b>key</b> An optional value to use keyed hashing.
-            </p>
-          </details>
-          
-          <section>
-            <hgroup>
-              <h4><i><code>hash</code> Functions</i></h4>
+        <section class="detail">
+          <p>
+            <aside><code>Number</code></aside>
+            <b>size</b> The output size in bits.
+          </p>
+          <p>
+            <aside><code>String, Array&lt;Number&gt;</code></aside>
+            <b>data</b> The input data to be hashed.
+          </p>
+          <p>
+            <aside><code>String, Array&lt;Number&gt;</code></aside>
+            <b>key</b> An optional value to use keyed hashing.
+          </p>
+        </section>
+        
+        <section class="area further">
+          <h3><code>Digest</code></h3>
+        
+          <section class="component">
+            <hgroup class="caption">
+              <h4><code><i>hash</i></code> Functions</h4>
             </hgroup>
             
-            <details>
+            <section class="detail">
               <p>
-                <aside><code>(size = 128)</code> <code>Function</code></aside>
-                <b><code>md4</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>md4       ( size =  128, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 128)</code> <code>Function</code></aside>
-                <b><code>md5</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>md5       ( size =  128, data, key = null )</code></b>
+              </p>
+            </section>
+            
+            <section class="detail">
+              <p>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>ripemd128 ( size =  128, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 128)</code> <code>Function</code></aside>
-                <b><code>ripemd128</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>ripemd160 ( size =  160, data, key = null )</code></b>
+              </p>
+            </section>
+            
+            <section class="detail">
+              <p>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>sha1      ( size =  160, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 160)</code> <code>Function</code></aside>
-                <b><code>ripemd160</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>sha224    ( size =  224, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 160)</code> <code>Function</code></aside>
-                <b><code>sha1</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>sha256    ( size =  256, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 224)</code> <code>Function</code></aside>
-                <b><code>sha224</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>sha384    ( size =  384, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 256)</code> <code>Function</code></aside>
-                <b><code>sha256</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>sha512    ( size =  512, data, key = null )</code></b>
+              </p>
+            </section>
+            
+            <section class="detail">
+              <p>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>skein256  ( size =  256, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 384)</code> <code>Function</code></aside>
-                <b><code>sha384</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>skein512  ( size =  512, data, key = null )</code></b>
               </p>
               <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>sha512</code></b>
+                <aside><code>Digest.Encoder</code></aside>
+                <b><code>skein1024 ( size = 1024, data, key = null )</code></b>
               </p>
-              <p>
-                <aside><code>(size = 256)</code> <code>Function</code></aside>
-                <b><code>skein256</code></b>
-              </p>
-              <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>skein512</code></b>
-              </p>
-              <p>
-                <aside><code>(size = 1024)</code> <code>Function</code></aside>
-                <b><code>skein1024</code></b>
-              </p>
-            </details>
+            </section>
           </section>
           
-          <section>
-            <hgroup>
-              <aside><i>Chooses <code>hash</code> function by <code>size</code>.</i></aside>
-              <h4><i>Auto <code>hash</code> Functions</i></h4>
+          <section class="component">
+            <hgroup class="caption">
+              <aside><i>Chooses related <code>hash</code> function by <code>size</code>.</i></aside>
+              <h4>Auto <code><i>hash</i></code> Functions</h4>
             </hgroup>
             
-            <details>
-              <p>
-                <aside><code>(size = 160)</code> <code>Function</code></aside>
-                <b><code>ripemd</code></b> <code>&nbsp; =&gt; ripemd128, ripemd160</code>
-              </p>
-              <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>sha</code></b> <code>&nbsp;&nbsp;&nbsp;&nbsp; =&gt; sha1, sha224, sha256, sha384, sha512</code>
-              </p>
-              <p>
-                <aside><code>(size = 512)</code> <code>Function</code></aside>
-                <b><code>sha2</code></b> <code>&nbsp;&nbsp;&nbsp; =&gt; sha224, sha256, sha384, sha512</code>
-              </p>
-              <p>
-                <aside><code>(size = 1024)</code> <code>Function</code></aside>
-                <b><code>skein</code></b> <code>&nbsp;&nbsp; =&gt; skein256, skein512, skein1024</code>
-              </p>
-            </details>
-          </section>
-          
-          <section>
-            <hgroup>
-              <h4><i><code>output</code> Formats</i></h4>
-            </hgroup>
-            
-            <details>
-              <p>
-                <aside><code>( 0-9 a-f (lower) )</code> <code>Function</code></aside>
-                <b><code>hex</code></b>
-              </p>
-              <p>
-                <aside><code>( 0-9 A-F (upper) )</code> <code>Function</code></aside>
-                <b><code>base16</code></b>
-              </p>
-              <p>
-                <aside><code>( A-Z 2-7 (upper) )</code> <code>Function</code></aside>
-                <b><code>base32</code></b>
-              </p>
-              <p>
-                <aside><code>( 0-9 a-v (lower) )</code> <code>Function</code></aside>
-                <b><code>base32hex</code></b>
-              </p>
-              <p>
-                <aside><code>( A-Z a-z 0-9 + / )</code> <code>Function</code></aside>
-                <b><code>base64</code></b>
-              </p>
-              <p>
-                <aside><code>( A-Z a-z 0-9 - _ )</code> <code>Function</code></aside>
-                <b><code>base64url</code></b>
-              </p>
-            </details>
+            <section class="component">
+              <section class="detail">
+                <div class="caption">
+                  <p>
+                    <aside><code>Digest.Encoder</code></aside>
+                    <b><code>ripemd    ( size =  160, data, key = null )</code></b>
+                  </p>
+                </div>
+                <p>
+                  <code>ripemd128 ( size <= 128 )</code>
+                </p>
+                <p>
+                  <code>ripemd160 ( size <= 160 )</code>
+                </p>
+              </section>
+              
+              <section class="detail">
+                <div class="caption">
+                  <p>
+                    <aside><code>Digest.Encoder</code></aside>
+                    <b><code>sha       ( size =  512, data, key = null )</code></b>
+                  </p>
+                </div>
+                <p>
+                  <code>sha1      ( size <= 160 )</code>
+                </p>
+                <p>
+                  <code>sha224    ( size <= 224 )</code>
+                </p>
+                <p>
+                  <code>sha256    ( size <= 256 )</code>
+                </p>
+                <p>
+                  <code>sha384    ( size <= 384 )</code>
+                </p>
+                <p>
+                  <code>sha512    ( size <= 512 )</code>
+                </p>
+              </section>
+              
+              <section class="detail">
+                <div class="caption">
+                  <p>
+                    <aside><code>Digest.Encoder</code></aside>
+                    <b><code>sha2      ( size =  512, data, key = null )</code></b>
+                  </p>
+                </div>
+                <p>
+                  <code>sha224    ( size <= 224 )</code>
+                </p>
+                <p>
+                  <code>sha256    ( size <= 256 )</code>
+                </p>
+                <p>
+                  <code>sha384    ( size <= 384 )</code>
+                </p>
+                <p>
+                  <code>sha512    ( size <= 512 )</code>
+                </p>
+              </section>
+              
+              <section class="detail">
+                <div class="caption">
+                  <p>
+                    <aside><code>Digest.Encoder</code></aside>
+                    <b><code>skein     ( size = 1024, data, key = null )</code></b>
+                  </p>
+                </div>
+                <p>
+                  <code>skein256  ( size <= 256 )</code>
+                </p>
+                <p>
+                  <code>skein512  ( size <= 512 )</code>
+                </p>
+                <p>
+                  <code>skein1024 ( size <= 1024 )</code>
+                </p>
+              </section>
+            </section>
           </section>
         </section>
-      </details>
+        
+        <section class="area further">
+          <h3><code>Digest.Encoder</code></h3>
+          
+          <section class="component">
+            <hgroup class="caption">
+              <h4><code><i>output</i></code> Methods</h4>
+            </hgroup>
+            
+            <section class="detail">
+              <p>
+                <aside><code>String ( 0-9 a-f {lower} )</code></aside>
+                <b><code>hex()</code></b>
+              </p>
+              <p>
+                <aside><code>String ( 0-9 A-F {UPPER} )</code></aside>
+                <b><code>base16()</code></b>
+              </p>
+              
+              <p>
+                <aside><code>String ( A-Z 2-7 {UPPER} )</code></aside>
+                <b><code>base32()</code></b>
+              </p>
+              <p>
+                <aside><code>String ( 0-9 a-v {lower} )</code></aside>
+                <b><code>base32hex()</code></b>
+              </p>
+              
+              <p>
+                <aside><code>String ( A-Z a-z 0-9 + / )</code></aside>
+                <b><code>base64()</code></b>
+              </p>
+              <p>
+                <aside><code>String ( A-Z a-z 0-9 - _ )</code></aside>
+                <b><code>base64url()</code></b>
+              </p>
+            </section>
+          </section>
+        </section>
+      </section>
     </section>
   </div>
-
-<script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script src="lib/latest/digest.js"></script>
 <script>
 (function ($) {
 
   var hashes, outputs, hashesSorted, outputsSorted;
   
-  hashes ={
-    'md4':        { name: 'MD4',             keyName: 'HMAC-MD4',            keyless: true  },
-    'md5':        { name: 'MD5',             keyName: 'HMAC-MD5',            keyless: true  },
-    'sha1':       { name: 'SHA-1',           keyName: 'HMAC-SHA-1',          keyless: true  },
-    'sha224':     { name: 'SHA-224',         keyName: 'HMAC-SHA-224',        keyless: true  },
-    'sha256':     { name: 'SHA-256',         keyName: 'HMAC-SHA-256',        keyless: true  },
-    'sha384':     { name: 'SHA-384',         keyName: 'HMAC-SHA-384',        keyless: true  },
-    'sha512':     { name: 'SHA-512',         keyName: 'HMAC-SHA-512',        keyless: true  },
-    'skein256':   { name: 'Skein-256-256',   keyName: 'Skein-256-256-Key',   keyless: true  },
-    'skein512':   { name: 'Skein-512-512',   keyName: 'Skein-512-512-Key',   keyless: true  },
-    'skein1024':  { name: 'Skein-1024-1024', keyName: 'Skein-1024-1024-Key', keyless: true  }
+  hashes = {
+    'md4':        { name: 'MD4',             keyed: 'HMAC-MD4'            },
+    'md5':        { name: 'MD5',             keyed: 'HMAC-MD5'            },
+    'ripemd128':  { name: 'RIPEMD-128',      keyed: 'HMAC-RIPEMD-128'     },
+    'ripemd160':  { name: 'RIPEMD-160',      keyed: 'HMAC-RIPEMD-160'     },
+    'sha1':       { name: 'SHA-1',           keyed: 'HMAC-SHA-1'          },
+    'sha224':     { name: 'SHA-224',         keyed: 'HMAC-SHA-224'        },
+    'sha256':     { name: 'SHA-256',         keyed: 'HMAC-SHA-256'        },
+    'sha384':     { name: 'SHA-384',         keyed: 'HMAC-SHA-384'        },
+    'sha512':     { name: 'SHA-512',         keyed: 'HMAC-SHA-512'        },
+    'skein256':   { name: 'Skein-256-256',   keyed: 'Skein-256-256-Key'   },
+    'skein512':   { name: 'Skein-512-512',   keyed: 'Skein-512-512-Key'   },
+    'skein1024':  { name: 'Skein-1024-1024', keyed: 'Skein-1024-1024-Key' }
   };
   
   outputs = {
@@ -457,20 +527,21 @@
     'base64url':  'Base-64 URL'
   };
   
-  hashesSorted = ['md4', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'skein256', 'skein512', 'skein1024'];
+  hashesSorted = ['md4', 'md5', 'ripemd128', 'ripemd160', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'skein256', 'skein512', 'skein1024'];
   outputsSorted = ['hex', 'base16', 'base32', 'base32hex', 'base64', 'base64url'];
   
-  function quote(string) {
+  function serialize(string) {
     var escapes = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        metas = {
-          '"'  : '\\"',
-          '\b' : '\\b',
-          '\f' : '\\f',
-          '\n' : '\\n',
-          '\r' : '\\r',
-          '\t' : '\\t',
-          '\\' : '\\\\'
-        };
+      metas = {
+        '"'  : '\\"',
+        '\b' : '\\b',
+        '\f' : '\\f',
+        '\n' : '\\n',
+        '\r' : '\\r',
+        '\t' : '\\t',
+        '\\' : '\\\\'
+      };
+    
     return '"' + (
       escapes.test(string) ?
         string.replace(escapes, function (chr) {
@@ -500,59 +571,56 @@
       out = $('#output').val(),
       data = $('#data').val(),
       key = null,
-      name = hashes[hash].name,
       keyed = $('#keyed').is(':checked'),
+      hashName = hashes[hash].name,
       outName = outputs[out];
-        
+    
     if (keyed) {
       key = $('#key').val();
-      name = hashes[hash].keyName || name;
+      name = hashes[hash].keyed || name;
     }
     
     incode  = 'Digest.' + hash + '( ';
-    incode += quote(data);
-    incode += keyed ? ', ' + quote(key) : '';
+    incode += serialize(data);
+    incode += keyed ? ', ' + serialize(key) : '';
     incode += ' ).' + out + '();';
     
-    result = Digest[hash];
-    result = result.apply(Digest, [data, key]);
-    result = result[out]();
-    result = linebreak(result);
+    result = Digest[hash](data, key)[out]();
     
-    $('#using').text([name, outName].join(' '));
+    $('#using').text(hashName + ' ' + outName);
     $('#incode').text(incode);
-    $('#result').text(result);
+    $('#result').text(linebreak(result));
   }
   
-  $(document).ready(function () {
-    
-    $.fn.append.apply($('#hash'),
-      $.map(hashesSorted, function (key) {
-        return $('<option>').
-          val(key).
-          text(hashes[key].name).
-          attr('selected', (key === 'skein1024'));
-      })
-    );
-    
-    $.fn.append.apply($('#output'),
-      $.map(outputsSorted, function (key) {
-        return $('<option>').
-          val(key).
-          text(outputs[key]).
-          attr('selected', (key === 'base64'));
-      })
-    );
-    
-    $('#hash,#output,#data,#key').change(calculate).keyup(calculate);
-    $('#keyed').click(calculate).click(function () {
-      $('#key').toggle($(this).is(':checked'));
+  $(function () {
+    var hashOptions = $.map(hashesSorted, function (hash) {
+      return $('<option>').val(hash).text(hashes[hash].name).get(0);
     });
     
-    $('#keyed').attr('checked', true);
+    var outputOptions = $.map(outputsSorted, function (output) {
+      return $('<option>').val(output).text(outputs[output]).get(0);
+    });
+    
+    $('#hash').html(hashOptions).val('skein1024');
+    $('#output').html(outputOptions).val('base64');
+  });
+    
+  $(function () {
+    $('#hash, #output, #data, #key').change(calculate).keyup(calculate);
+    
+    $('#keyed').click(function () {
+      $('#key').toggle($(this).is(':checked'));
+      calculate();
+    });
+  });
+    
+  $(function () {
     $('#data').val('message').select().focus();
+    $('#keyed').prop('checked', true);
     $('#key').val('passphrase').show();
-  }).ready(calculate);
+    
+    calculate();
+  });
 
 })(jQuery);
 </script>
