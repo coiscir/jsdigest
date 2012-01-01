@@ -17,7 +17,7 @@ var self = { Version: '<%= @version %>' };
 /* Export */
 
 if ( 'undefined' === typeof exports )
-  this.Digest = self;
+  window.Digest = self;
 else
   module.exports = self;
 
