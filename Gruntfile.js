@@ -22,7 +22,10 @@ module.exports = function (grunt) {
 
       dist: {
         files: {
-          'dist/digest.js': []
+          'dist/digest.js': [
+            'src/_intro.js',
+            'src/_outro.js'
+          ]
         }
       }
     },
