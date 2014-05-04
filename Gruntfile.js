@@ -11,6 +11,10 @@ module.exports = function (grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    release: {
+      time: new Date()
+    },
+
     clean: {
       dist: ['dist/digest*.js']
     },

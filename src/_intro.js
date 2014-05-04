@@ -1,8 +1,8 @@
 /*
-  <%= pkg.name %> v<%= pkg.version %> (<%= grunt.template.today('UTC:ddd, mmm dd yyyy HH:MM:ss Z') %>)
+  <%= pkg.name %> v<%= pkg.version %> (<%= grunt.template.date(release.time, 'UTC:ddd, mmm dd yyyy HH:MM:ss Z') %>)
   <%= pkg.homepage %>
 
-  Copyright (c) 2009, <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>
+  Copyright (c) 2009, <%= grunt.template.date(release.time, 'yyyy') %> <%= pkg.author.name %>
   Released and distributed under the <%= pkg.license %> license.
 */
 
