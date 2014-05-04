@@ -17,7 +17,27 @@ module.exports = function (grunt) {
 
     concat: {
       options: {
-        process: true
+        hints: /^\/\*\s*(?:jshint|globals?).*?\*\/\s*/,
+
+        indent: {
+          width: 2,
+          ignore: '_*'
+        },
+
+        process: function (src, filename) {
+          // strip jshint comments
+          src = src.replace(this.hints, '');
+
+          // indent to align with intro/outro
+          var prefix = grunt.util.repeat(this.indent.width, ' ');
+          var matching = { matchBase: true };
+
+          if (!grunt.file.isMatch(matching, this.indent.ignore, filename)) {
+            src = src.replace(/^(?=.)/gm, prefix);
+          }
+
+          return grunt.template.process(src);
+        }
       },
 
       dist: {
