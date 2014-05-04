@@ -1,7 +1,7 @@
 Jan 01, 2012    2.0.1
 
   Fix export in strict mode, changing `this` to `window`.
-  
+
   Update documentations.
 
 
@@ -24,7 +24,7 @@ Mar 09, 2011    2.0.0
       - All 'data' and 'key' Strings are passed through 'toBuffer', by default.
 
   Returned Rakefile to using ERB, adding Builder class to define bindings.
-  
+
   Cleaned up code formatting in most files, all source.
 
 
@@ -32,7 +32,7 @@ Jun 18, 2010    1.3.0
 
   Add support for Node.js.
     - Required removal of `fn`.
-  
+
   Revised Rakefile.
     - Removed intro/outro source files.
     - Replaced .\VERSION file with git-describe.
@@ -40,63 +40,63 @@ Jun 18, 2010    1.3.0
 
 
 Feb 02, 2010    1.2.1
-  
+
   Add optional `size` argument too all hash functions.
     - Unifying hash result cropping.
-  
+
   Removed string copyrights from hash files/closures.
-  
+
   Made HMAC a private function.
-  
+
   Switch from JSMin to Packr for minifying.
-  
+
   Switch to QUnit for test suite.
 
 
 Jan 15, 2010    1.2.0
-  
+
   Added RIPEMD-160 (128).
-  
+
   Reduced build to a single global closure:
     - Pre-define all merge/split functions (src/word).
     - Pre-define all UInt/ULong functions (src/math).
-  
+
   Improved performance by employing better caching:
     - Change switch functions to cached arrays.
       - Add 'r' round variables.
     - Reduced uses of `ulong` in MD6 and SHA-512.
-  
+
   Create a FireUnit test file.
 
 
 Dec 23, 2009    1.1.1
-  
+
   Bug fix release:
     - Base-64 encoding would fail in IE6.
 
 
 Dec 13, 2009    1.1.0
-  
+
   Combined jsDigest More into jsDigest.
-  
+
   Revise basic hash functions to handle HMAC themselves.
     - Simplified HMAC, resulting in not being as well-suited for direct use.
     - Removed Digest.configure.
-  
+
   Changed input encoding rules:
     - All Strings are UTF-8 encoded.
     - All Array elements are truncated.
     - Digest.Encoder objects treated the same as Arrays.
-  
+
   Define utility functions for handling inputs:
     - Digest.atos -- "Array to String" conversion.
     - Digest.stoa -- "String to Array" conversion.
     - Digest.isInput -- Limit acceptable input types.
     - Digest.Encoder.ready -- Process an input per above encoding rules.
-  
+
   Shrunk Digest.Encoder by limiting input encodings to Array output only.
     - `split`, `trunc`, and `utf8`
-  
+
   Development:
     - Added copyright strings so they're included in minified build.
     - Moved common functions to the closures rather than inside an algorithm.
@@ -106,24 +106,24 @@ Dec 13, 2009    1.1.0
 
 
 Oct 31, 2009    1.0.5
-  
+
   Fix missing padding of zero-length messages in MD6.
-  
+
   Remove ANSI references, changing `ansi` to `trunc`.
-  
+
   Explicitly set array lengths in Skein.
 
 
 Oct 08, 2009    1.0.4
 
   Added Skein (256, 512, 1024) to jsDigest More.
-  
+
   Change UTF-8 decoding in Digest.Encoder to prevent accidental decoding.
-  
+
   Revise Rakefile:
   - Add memory for version number
   - Rename `include` to `import` to prevent conflicts/confusion
-  
+
   Added jsDigest More details in README
 
 
@@ -133,7 +133,7 @@ Sep 27, 2009    1.0.3
 
   Add jsDigest More:
   - Including MD6-PAR and MD6-SEQ
-  
+
   Development:
   - Renamed source files to shorten them.
   - Changed suffix names to `digest.js` (minified) and `digest-dev.js` (full)
@@ -143,7 +143,7 @@ Sep 27, 2009    1.0.2
 
   Order of arguments:
   - Function are a reduction of `(function, message, key, encoding)`.
-  
+
   `ulong` helper functions:
   - Revised to reduce runtime.
 
@@ -153,7 +153,7 @@ Sep 21, 2009    1.0.1
   Digest.Encoder unicode support:
   - Rename `unicode` to `utf8` to be more specific.
   - Add UTF-8 decoding to Digest.Encoder.
-  
+
   Encoding arguments:
   - Renamed `ansi` to `utf8` with default value of `true`.
 

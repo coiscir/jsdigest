@@ -1,1 +1,2 @@
-*.diff
+.DS_Store
+Thumbs.db
