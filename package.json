@@ -1,0 +1,29 @@
+{
+  "name": "jsdigest",
+  "version": "3.0.0-pre",
+  "license": "ISC",
+  "author": {
+    "name": "Jonathan Lonowski",
+    "email": "<coiscir@gmail.com>"
+  },
+  "homepage": "https://github.com/coiscir/jsdigest",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coiscir/jsdigest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coiscir/jsdigest/issues"
+  },
+  "main": "dist/digest.js",
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "grunt": "^0.4.4",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-mocha-test": "^0.10.2",
+    "load-grunt-tasks": "^0.4.0",
+    "mocha": "^1.18.2"
+  }
+}
