@@ -105,12 +105,13 @@ module.exports = function (grunt) {
     },
 
     mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec'
-        },
-        src: ['test/**/*.js']
-      }
+      options: {
+        mocha: require('mocha'),
+        reporter: 'spec',
+        ui: 'tdd'
+      },
+
+      test: ['test/**/*.js']
     }
 
   });
