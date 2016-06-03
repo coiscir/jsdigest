@@ -15,8 +15,8 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script src="qunit/qunit.js"></script>
-<script src="../lib/latest/digest.js"></script>
 <script src="../lib/digest.js"></script>
+<script>if (!window.Digest) document.write('<script src="../lib/latest/digest.js"><\/script>');</script>
 <script>
   function times( str, num ) {
     return new Array( num + 1 ).join( str );
