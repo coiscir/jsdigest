@@ -24,11 +24,31 @@ function isBuffer( obj ) {
   return '[object Array]' === Object.prototype.toString.call( obj );
 }
 
-function toBuffer( input ) {
+function toBuffer( input, format ) {
   if ( isBuffer( input ) )
     return input.slice();
-  else
-    return utf8( input );
+
+  if ( format === 'hex' )
+    return parseHex( input );
+
+  return utf8( input );
+}
+
+function parseHex( input ) {
+  var result = [];
+
+  while ( input.length >= 2 ) {
+    result.push(parseInt(input.substr(0, 2), 16));
+    input = input.substr(2);
+  }
+
+  // when containing a single, trailing digit,
+  // fill in further trialing `0`
+  if ( input.length ) {
+    result.push(parseInt(input + '0', 16 ));
+  }
+
+  return result;
 }
 
 function utf8( input ) {

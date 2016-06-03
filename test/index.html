@@ -104,8 +104,8 @@
       equal( typeof Digest.skein512,  'function', 'Skein-512 is defined' );
       equal( typeof Digest.skein1024, 'function', 'Skein-1024 is defined' );
     });
-    
-    test( 'Buffer', function () {
+
+    test( 'Buffer (text)', function () {
       expect(4);
       
       var u0024 = [ 0x24 ],
@@ -118,8 +118,15 @@
       
       same( Digest.toBuffer( u0024 ), u0024, 'Prevent re-encoding' );
     });
-    
-    
+
+    test( 'Buffer (hex)', function () {
+      expect(2);
+
+      same( Digest.toBuffer( '0123456789', 'hex' ), [ 0x01, 0x23, 0x45, 0x67, 0x89 ], 'Parse hex 01..89');
+      same( Digest.toBuffer( '012345678', 'hex' ),  [ 0x01, 0x23, 0x45, 0x67, 0x80 ], 'Parse hex 01..89');
+    });
+
+
     module( 'Hashing' );
     
     asyncTest( 'MD4', function () {
