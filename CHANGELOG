@@ -1,3 +1,10 @@
+Jun 03, 2016    2.1.0
+
+  Change to UMD for AMD, Node, and browsers.
+
+  Add `format` option to `toBuffer()` for parsing hexidecimal strings.
+
+
 Jan 01, 2012    2.0.1
 
   Fix export in strict mode, changing `this` to `window`.
