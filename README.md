@@ -1,6 +1,8 @@
 jsDigest
 ===
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/coiscir/jsdigest?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A Message Digest module for JavaScript. (IE 5.5+, FF 2+, Chrome 2+, Opera 9+)
 
 <http://coiscir.github.com/jsdigest/>
